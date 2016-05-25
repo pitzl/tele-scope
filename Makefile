@@ -2,7 +2,7 @@
 # user:
 # set path to eudaq and GBL:
 # export EUDAQ=/home/YOURID/eudaq
-# export GBL=/home/YOURID/GBL/V01-17-00/cpp/lib/
+# export GBL=/home/YOURID/GBL/V01-17-00/cpp/
 
 ROOTCFLAGS = $(shell $(ROOTSYS)/bin/root-config --cflags)
 
