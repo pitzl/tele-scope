@@ -35,6 +35,11 @@ quad3D: quad3D.cc
 	-L$(GBL)/lib -lGBL $(ROOTLIBS) -L$(EUDAQ)/lib -lEUDAQ
 	@echo 'done: quad3D'
 
+evds: evds.cc
+	g++ $(CXXFLAGS) -o evds evds.cc \
+	$(ROOTGLIBS) -L$(EUDAQ)/lib -lEUDAQ
+	@echo 'done: evds'
+
 evd: evd.cc
 	g++ $(CXXFLAGS) -o evd evd.cc \
 	$(ROOTGLIBS) -L$(EUDAQ)/lib -lEUDAQ
