@@ -26,6 +26,7 @@
 #include <vector>
 #include <unistd.h> // usleep
 
+//------------------------------------------------------------------------------
 class MyMainFrame:public TGMainFrame
 {
 private:
@@ -38,6 +39,7 @@ public:
   TCanvas *GetCanvas(  );
 };
 
+//------------------------------------------------------------------------------
 using namespace std;
 using namespace eudaq;
 
@@ -60,10 +62,11 @@ struct cluster {
   double z3;
 };
 
+//------------------------------------------------------------------------------
 // globals:
 
-pixel pb[66560]; // global declaration: vector of pixels with hit
-int fNHit; // global
+pixel pb[66560]; // vector of pixels with hit, 16*4160 = 66560
+int fNHit; // used in getClus
 
 //------------------------------------------------------------------------------
 MyMainFrame::MyMainFrame( const TGWindow * p, UInt_t w, UInt_t h )
