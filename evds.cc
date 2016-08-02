@@ -1,8 +1,8 @@
 
-// Daniel Pitzl, DESY Jul 2015
+// Daniel Pitzl, DESY Jul 2016
 // event display 4 module planes, B-field, sagitta A C D
 
-// evdB -l 19 2338 # 0.8 GeV, 1.4 T, sagitta spacing
+// evds -l 19 2321 # 2.0 GeV, 1.4 T, sagitta spacing
 
 #include "eudaq/FileReader.hh"
 #include "eudaq/PluginManager.hh"
@@ -51,7 +51,7 @@ struct pixel {
 struct cluster {
   vector <pixel> vpix;
   int size;
-  int sumA; // DP
+  int sumA;
   double charge;
   double col,row;
   bool bigx, bigy;
@@ -722,7 +722,7 @@ int main( int argc, char* argv[] )
 
     int nADCy = 0;
 
-    vector <TF1> xps;
+    vector <TF1> tracks;
 
     for( vector<cluster>::iterator cA = cl[A].begin(); cA != cl[A].end(); ++cA ) {
 
@@ -772,7 +772,7 @@ int main( int argc, char* argv[] )
 
 	  // parabola through 3 points:
 
-	  TF1 f1( "f1", "[1]+[2]*(x-[0])+[3]*(x-[0])*(x-[0])", zA-25, zD+35 );
+	  TF1 f1( "f1", "[1]+[2]*(x-[0])+[3]*(x-[0])*(x-[0])", zA-5, zD+5 );
 	  f1.SetParameter( 0, zC );
 	  f1.SetParameter( 1, xC );
 	  double det = (zA-zC)*(zD-zC)*(zD-zC) - (zD-zC)*(zA-zC)*(zA-zC);
@@ -782,12 +782,15 @@ int main( int argc, char* argv[] )
 	  f1.SetParameter( 3, c );
 	  f1.SetLineColor(1);
 	  f1.SetLineWidth(1);
-	  xps.push_back( f1 );
-	  double R = 0.0005/fabs(c); // track radius [m]
+	  double R = 0.0005/c; // track radius [m]
 	  double p = 0.3*R*T; // [GeV]
 	  cout << "  ADC track radius " << R << " m"
 	       << ", p " << p
 	       << endl;
+
+	  if( fabs(p) > 0.02 )
+	    tracks.push_back( f1 );
+
 	} // cl C
 
       } // cl D
@@ -804,8 +807,8 @@ int main( int argc, char* argv[] )
     xview.Draw( "colz" );
     //xview.Write();
 
-    for( size_t ii = 0; ii < xps.size(); ++ii )
-      xps[ii].Draw( "same" );
+    for( size_t ii = 0; ii < tracks.size(); ++ii )
+      tracks[ii].Draw( "same" );
 
     xview.Draw( "colsame" ); // once more. on top
 
