@@ -26,22 +26,10 @@
 #include <vector>
 #include <unistd.h> // usleep
 
-//------------------------------------------------------------------------------
-class MyMainFrame:public TGMainFrame
-{
-private:
-  TGMainFrame * fMain;
-  TRootEmbeddedCanvas *fEcanvas;
-public:
-  MyMainFrame( const TGWindow * p, UInt_t w, UInt_t h );
-  //virtual ~ MyMainFrame(  );
-  ~MyMainFrame(  );
-  TCanvas *GetCanvas(  );
-};
-
-//------------------------------------------------------------------------------
 using namespace std;
 using namespace eudaq;
+
+//------------------------------------------------------------------------------
 
 struct pixel {
   int col;
@@ -67,6 +55,19 @@ struct cluster {
 
 pixel pb[66560]; // vector of pixels with hit, 16*4160 = 66560
 int fNHit; // used in getClus
+
+//------------------------------------------------------------------------------
+class MyMainFrame:public TGMainFrame
+{
+private:
+  TGMainFrame * fMain;
+  TRootEmbeddedCanvas *fEcanvas;
+public:
+  MyMainFrame( const TGWindow * p, UInt_t w, UInt_t h );
+  //virtual ~ MyMainFrame(  );
+  ~MyMainFrame(  );
+  TCanvas *GetCanvas(  );
+};
 
 //------------------------------------------------------------------------------
 MyMainFrame::MyMainFrame( const TGWindow * p, UInt_t w, UInt_t h )
@@ -111,7 +112,7 @@ TCanvas *MyMainFrame::GetCanvas(  )
   return ( fEcanvas->GetCanvas(  ) );
 }
 
-// ----------------------------------------------------------------------
+//------------------------------------------------------------------------------
 vector<cluster> getClus()
 {
   // returns clusters with local coordinates
@@ -216,7 +217,6 @@ vector<cluster> getClus()
 }
 
 //------------------------------------------------------------------------------
-
 int main( int argc, char* argv[] )
 {
   cout << "main " << argv[0] << " called with " << argc << " arguments" << endl;
@@ -325,7 +325,7 @@ int main( int argc, char* argv[] )
 
   gPad->Update(  ); // required
 
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // geometry:
 
   double pi = 4*atan(1);
@@ -393,7 +393,7 @@ int main( int argc, char* argv[] )
 
   double T = 1.35; // [T]
 
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // alignments:
 
   const int A = 0;
@@ -513,7 +513,7 @@ int main( int argc, char* argv[] )
 
   ialignFile.close();
 
-  //------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   //event loop:
 
   size_t nev = 0;
