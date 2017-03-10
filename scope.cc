@@ -3375,6 +3375,9 @@ int main( int argc, char* argv[] )
 
       int ipl = plane.ID();
 
+      if ( ipl < 7 && run > 28000 )
+	ipl = ipl - 1;
+
       int npx = 0;
 
       for( size_t ipix = 0; ipix < pxl.size(); ++ipix ) {
