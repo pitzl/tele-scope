@@ -1092,7 +1092,8 @@ int main( int argc, char* argv[] )
       // /home/pitzl/eudaq/main/include/eudaq/CMSPixelHelper.hh
 
       int ipl = plane.ID();
-
+      if ( ipl < 7 && run > 28000 )
+	ipl = ipl - 1;
       if( ipl >= 6 ) continue; // only telescope here
 
       int npx = 0;

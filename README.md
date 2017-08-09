@@ -34,6 +34,13 @@ test beam pixel telescope analysis based on eudaq only
   sudo ln -s /home/YOU/release/build/libftd2xx.so.1.3.6  libftd2xx.so  
   ```
 * for pXar you need to install the libusb-1.0-0-dev package for your system
+  ```
+  https://sourceforge.net/projects/libusb/files/libusb-1.0/libusb-1.0.20/
+  instruction for installation
+  ./configure
+  make
+  make instal
+  ```
 
 * if you want to analyse CMS pixel data you need pXar:  
   ```
@@ -51,7 +58,7 @@ test beam pixel telescope analysis based on eudaq only
   or like this:  
   ```
   git clone https://github.com/eudaq/eudaq.git  
-  git checkout  v1.5-dev
+  git checkout v1.6.0
   cd eudaq  
   mkdir build  
   cd build  
