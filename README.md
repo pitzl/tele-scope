@@ -103,24 +103,28 @@ test beam pixel telescope analysis based on eudaq only
   ```
   change /home/pitzl/eudaq everywhere to your location of eudaq
   ```
+  export LD_LIBRARY_PATH=/home/pitzl/ROOT/root/build/lib:/home/pitzl/eudaq-1p6/lib:
+  ```
 
 
 
 * step 0:  
   prepare a geo.dat file with the telescope and DUT/REF planes  
   (see one of the examples)  
-  set a symbolic link to the directory with the eudaq raw data  
-  ln -s /data/eudaq/data data  
-  (raw data files are called run020833.raw)  
+
+  mkdir data
+
+  get data:
+  scp -p YOU@desy-cms010:/data/group/pixel/testbeam/native/run025447.raw data/.
 
 * step 1: telescope triplet alignment
   ```
   make tele  
-  tele -g geo.dat 20833  
-  (reads data/run020833.raw  
-  (writes align_20833.dat and hot_20833.dat)  
+  tele -l 99999 -g geo_2016_04f.dat -p 5.6 25447
+  (reads data/run025447.raw  
+  (writes align_25447.dat and hot_25447.dat)  
   iterate at least once (re-run)  
-  creates tele_20833.root  
+  creates tele_25447.root  
   ```
 * step 2: telescope with DUT and REF  
   prepare a runs.dat file with any needed constants (see example)  
