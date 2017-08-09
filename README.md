@@ -58,6 +58,7 @@ test beam pixel telescope analysis based on eudaq only
   or like this:  
   ```
   git clone https://github.com/eudaq/eudaq.git  
+  cd eudaq
   git checkout v1.6.0
   cd eudaq  
   mkdir build  
