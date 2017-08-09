@@ -4,14 +4,8 @@
 // triplet pre-alignment
 
 // make tele
-// tele -g geo_2015_01b.dat 13117  # empty telescope Jan 2015, narrow triplet
-// tele -g geo_2015_04g.dat -l 99999 15678  # c239i
-// tele -g geo_2015_04x.dat 19037  # tilted DUT 504
-// tele -g geo_2015_07b.dat 20833  #  66k tilted DUT 504
-// tele -g geo_2015_07b.dat 20842  # 521k tilted DUT 504
-// tele -g geo_2016_03a.dat 23133
-// tele -l 99999 -g geo_2016_03b.dat 23407
-// tele -l 99999 -g geo_2017_03a.dat 28024
+// export LD_LIBRARY_PATH=/home/pitzl/ROOT/root/build/lib:/home/pitzl/eudaq-1p6/lib:
+// tele -l 99999 -g geo_2016_04f.dat -p 5.6 25447
 
 #include "eudaq/FileReader.hh"
 #include "eudaq/PluginManager.hh"
