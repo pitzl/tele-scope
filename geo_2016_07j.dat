@@ -1,0 +1,66 @@
+
+# telescope geometry for Datura in Jul 2016
+
+plane 0
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 0
+
+plane 1
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 152
+
+plane 2
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 305
+
+plane 3
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 447
+
+plane 4
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 598
+
+plane 5
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 750
+
+plane 7  # DUT
+type psi46digplus
+sizex 7.8
+sizey 8.0
+npixelx 52
+npixely 80
+zpos 44 # relative to plane 2
+
+plane 8  # REF
+type psi46digv2p1respin
+sizex 7.8
+sizey 8.0
+npixelx 52
+npixely 80
+zpos 120 # relative to plane 5
