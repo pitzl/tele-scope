@@ -171,15 +171,15 @@ int main( int argc, char* argv[] )
   cout << "run " << run << endl;
   FileReader * reader;
   if( run < 100 )
-    reader = new FileReader( runnum.c_str(), "data/run0000$2R$X");
+    reader = new FileReader( runnum, "data/run0000$2R$X");
   else if( run < 1000 )
-    reader = new FileReader( runnum.c_str(), "data/run000$3R$X");
+    reader = new FileReader( runnum, "data/run000$3R$X");
   else if( run < 10000 )
-    reader = new FileReader( runnum.c_str(), "data/run00$4R$X");
+    reader = new FileReader( runnum, "data/run00$4R$X");
   else if( run < 100000 )
-    reader = new FileReader( runnum.c_str(), "data/run0$5R$X");
+    reader = new FileReader( runnum, "data/run0$5R$X");
   else
-    reader = new FileReader( runnum.c_str(), "data/run$6R$X");
+    reader = new FileReader( runnum, "data/run$6R$X");
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // further arguments:
@@ -1791,7 +1791,7 @@ int main( int argc, char* argv[] )
 
   } while( reader->NextEvent() && event_nr < lev );
 
-  delete reader;
+  //delete reader;
 
   cout << "done after " << event_nr << " events" << endl;
   histoFile->Write();
