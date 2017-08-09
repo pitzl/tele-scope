@@ -91,7 +91,6 @@ test beam pixel telescope analysis based on eudaq only
   export GBL=/home/YOURID/GeneralBrokenLines/trunk/cpp
   ```
 
-
 ## tele-scope
 * ceckout the tele-scope package
   ```
@@ -106,16 +105,15 @@ test beam pixel telescope analysis based on eudaq only
   export LD_LIBRARY_PATH=/home/pitzl/ROOT/root/build/lib:/home/pitzl/eudaq-1p6/lib:
   ```
 
-
-
 * step 0:  
   prepare a geo.dat file with the telescope and DUT/REF planes  
   (see one of the examples)  
 
-  mkdir data
-
   get data:
+  ```
+  mkdir data
   scp -p YOU@desy-cms010:/data/group/pixel/testbeam/native/run025447.raw data/.
+  ```
 
 * step 1: telescope triplet alignment
   ```
@@ -127,7 +125,7 @@ test beam pixel telescope analysis based on eudaq only
   creates tele_25447.root  
   ```
 * step 2: telescope with DUT and REF  
-  prepare a runs.dat file with any needed constants (see example)  
+  update runs.dat with run number, geo, GeV
   ```
   make scope  
   scope 20833  
