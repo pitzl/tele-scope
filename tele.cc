@@ -5,11 +5,13 @@
 
 // make tele
 // tele -g geo_2015_01b.dat 13117  # empty telescope Jan 2015, narrow triplet
+// tele -g geo_2015_04g.dat -l 99999 15678  # c239i
 // tele -g geo_2015_04x.dat 19037  # tilted DUT 504
 // tele -g geo_2015_07b.dat 20833  #  66k tilted DUT 504
 // tele -g geo_2015_07b.dat 20842  # 521k tilted DUT 504
 // tele -g geo_2016_03a.dat 23133
 // tele -l 99999 -g geo_2016_03b.dat 23407
+// tele -l 99999 -g geo_2017_03a.dat 28024
 
 #include "eudaq/FileReader.hh"
 #include "eudaq/PluginManager.hh"
@@ -158,8 +160,8 @@ int main( int argc, char* argv[] )
 {
   cout << "main " << argv[0] << " called with " << argc << " arguments" << endl;
 
-  if( argc == 1 ) {
-    cout << "give run number" << endl;
+  if( argc < 4 ) {
+    cout << "format: tele -g geo_year_mon.dat run" << endl;
     return 1;
   }
 
@@ -371,7 +373,7 @@ int main( int argc, char* argv[] )
 
       string line;
       getline( ihotFile, line );
-      cout << line << endl;
+      //cout << line << endl;
 
       if( line.empty() ) continue;
 
@@ -500,6 +502,8 @@ int main( int argc, char* argv[] )
   } // alignFile
 
   ialignFile.close();
+
+  if( aligniteration == 0 ) f *= 3; // wider binning
 
   // z position for triplet-driplet matching = DUT material:
 
@@ -918,8 +922,8 @@ int main( int argc, char* argv[] )
 
   // driplets - triplets
 
-  TH1I hsixdx = TH1I( "sixdx", "six dx;#Deltax [mm];triplet-driplet pairs", 100, -1*f, 1*f );
-  TH1I hsixdy = TH1I( "sixdy", "six dy;#Deltay [mm];triplet-driplet pairs", 100, -1*f, 1*f );
+  TH1I hsixdx = TH1I( "sixdx", "six dx;#Deltax [mm];triplet-driplet pairs", 800, -4*f, 4*f );
+  TH1I hsixdy = TH1I( "sixdy", "six dy;#Deltay [mm];triplet-driplet pairs", 400, -2*f, 2*f );
   TH1I hsixdxc = TH1I( "sixdxc", "six dx;#Deltax [mm];triplet-driplet pairs", 200, -0.4*f, 0.4*f );
   TH1I hsixdxcsi = TH1I( "sixdxcsi", "six dx Si;#Deltax [mm];triplet-driplet pairs in Si", 200, -0.4*f, 0.4*f );
   TH1I hsixdxccu = TH1I( "sixdxccu", "six dx Cu;#Deltax [mm];triplet-driplet pairs in Cu", 200, -0.4*f, 0.4*f );
@@ -1092,8 +1096,9 @@ int main( int argc, char* argv[] )
       // /home/pitzl/eudaq/main/include/eudaq/CMSPixelHelper.hh
 
       int ipl = plane.ID();
-      if ( ipl < 7 && run > 28000 )
-	ipl = ipl - 1;
+      if( run > 28000 && ipl > 0 && ipl < 7 ) // 2017, eudaq 1.7: Mimosa 1..6
+	ipl -= 1;
+
       if( ipl >= 6 ) continue; // only telescope here
 
       int npx = 0;
@@ -1792,7 +1797,7 @@ int main( int argc, char* argv[] )
 
   } while( reader->NextEvent() && event_nr < lev );
 
-  //delete reader;
+  delete reader;
 
   cout << "done after " << event_nr << " events" << endl;
   histoFile->Write();
@@ -1801,9 +1806,11 @@ int main( int argc, char* argv[] )
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // hot pixels:
 
+  cout << endl << "Mimosa hot pixel list for run " << run << endl;
+
   ofstream hotFile( outputDirectory+"/"+hotFileName.str() );
 
-  hotFile << "# telescope hot pixel ist for run " << run << endl;
+  hotFile << "# telescope hot pixel list for run " << run << endl;
 
   for( int ipl = 0; ipl < 6; ++ipl ) {
     hotFile << endl;
@@ -1823,12 +1830,13 @@ int main( int argc, char* argv[] )
 	hotFile << "pix " << setw(4) << ix << setw(5) << iy << endl;
       }
     } // jpx
-    cout << ipl
-	 << ": active " << pxmap[ipl].size()
-	 << ", sum " << ntot
-	 << ", max " << nmax
-	 << ", hot " << nhot
-	 << endl;
+    cout
+      << "  " << ipl
+      << ": active " << pxmap[ipl].size()
+      << ", sum " << ntot
+      << ", max " << nmax
+      << ", hot " << nhot
+      << endl;
   } // ipl
 
   cout << "hot pixel list written to " << hotFileName.str() << endl;
@@ -1837,6 +1845,8 @@ int main( int argc, char* argv[] )
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // alignment fits:
+
+  cout << endl << "alignmen fits:" << endl;
 
   for( int ipl = 0; ipl < 6; ++ipl ) {
 
@@ -1894,17 +1904,22 @@ int main( int argc, char* argv[] )
 
     // x-y rotation from profiles:
 
-    if( aligniteration ) {
+    if( aligniteration && dxvsy[ipl].GetEntries() > 999 ) {
 
       dxvsy[ipl].Fit( "pol1", "q", "", -midy[ipl], midy[ipl] );
       TF1 * fdxvsy = dxvsy[ipl].GetFunction( "pol1" );
       cout << endl << dxvsy[ipl].GetTitle() << " slope " << fdxvsy->GetParameter(1) << endl;
 
+      rotx[ipl] += fdxvsy->GetParameter(1);
+
+    }
+
+    if( aligniteration && dyvsx[ipl].GetEntries() > 999 ) {
+
       dyvsx[ipl].Fit( "pol1", "q", "", -midx[ipl], midx[ipl] );
       TF1 * fdyvsx = dyvsx[ipl].GetFunction( "pol1" );
       cout << endl << dyvsx[ipl].GetTitle() << " slope " << fdyvsx->GetParameter(1) << endl;
 
-      rotx[ipl] += fdxvsy->GetParameter(1);
       roty[ipl] -= fdyvsx->GetParameter(1); // sign
 
     }
@@ -1913,25 +1928,28 @@ int main( int argc, char* argv[] )
 
   // z-shift of last planes:
 
-  if( aligniteration ) {
+  if( aligniteration > 1 ) {
 
     for( int itd = 0; itd < 2; ++itd ) {
       cout << endl;
       int ipl = 2+3*itd;
-      tridxvstx[itd].Fit( "pol1", "q", "", -0.002, 0.002 );
-      TF1 * f1 = tridxvstx[itd].GetFunction( "pol1" );
-      cout << tridxvstx[itd].GetTitle()
-	   << " dz " << f1->GetParameter(1)
-	   << " plane " << ipl
-	   << " new zpos " << zz[2+3*itd] + f1->GetParameter(1)
-	   << endl;
-      alignz[ipl] += f1->GetParameter(1);
+
+      if( tridxvstx[itd].GetEntries() > 999 ) {
+	tridxvstx[itd].Fit( "pol1", "q", "", -0.002, 0.002 );
+	TF1 * f1 = tridxvstx[itd].GetFunction( "pol1" );
+	cout << tridxvstx[itd].GetTitle()
+	     << " dz " << f1->GetParameter(1)
+	     << " plane " << ipl
+	     << " new zpos " << zz[2+3*itd] + f1->GetParameter(1)
+	     << endl;
+	alignz[ipl] += f1->GetParameter(1);
+      }
     }
   }
 
   // driplet vs triplet:
 
-  if( aligniteration && hsixdx.GetMaximum() > 99 ) {
+  if( aligniteration > 2 && hsixdx.GetMaximum() > 99 ) {
 
     double nb = hsixdx.GetNbinsX();
     double ne = hsixdx.GetSumOfWeights();
@@ -1989,17 +2007,20 @@ int main( int argc, char* argv[] )
 
     // x-y rotation from profiles:
 
-    sixdxvsy.Fit( "pol1", "q", "", -midy[2], midy[2] );
-    TF1 * fdxvsy = sixdxvsy.GetFunction( "pol1" );
-    cout << endl << sixdxvsy.GetTitle() << " slope " << fdxvsy->GetParameter(1) << endl;
+    if( sixdxvsy.GetEntries() > 999 ) {
+      sixdxvsy.Fit( "pol1", "q", "", -midy[2], midy[2] );
+      TF1 * fdxvsy = sixdxvsy.GetFunction( "pol1" );
+      cout << endl << sixdxvsy.GetTitle() << " slope " << fdxvsy->GetParameter(1) << endl;
+      for( int ipl = 3; ipl < 6; ++ipl )
+	rotx[ipl] += fdxvsy->GetParameter(1);
+    }
 
-    sixdyvsx.Fit( "pol1", "q", "", -midx[2], midx[2] );
-    TF1 * fdyvsx = sixdyvsx.GetFunction( "pol1" );
-    cout << endl << sixdyvsx.GetTitle() << " slope " << fdyvsx->GetParameter(1) << endl;
-
-    for( int ipl = 3; ipl < 6; ++ipl ) {
-      rotx[ipl] += fdxvsy->GetParameter(1);
-      roty[ipl] -= fdyvsx->GetParameter(1); // sign
+    if( sixdyvsx.GetEntries() > 999 ) {
+      sixdyvsx.Fit( "pol1", "q", "", -midx[2], midx[2] );
+      TF1 * fdyvsx = sixdyvsx.GetFunction( "pol1" );
+      cout << endl << sixdyvsx.GetTitle() << " slope " << fdyvsx->GetParameter(1) << endl;
+      for( int ipl = 3; ipl < 6; ++ipl )
+	roty[ipl] -= fdyvsx->GetParameter(1); // sign
     }
 
     // dz from dy vs ty:
