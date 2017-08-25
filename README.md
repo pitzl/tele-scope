@@ -17,9 +17,9 @@ test beam pixel telescope analysis based on eudaq only
   ```
   sudo apt-get install cmake
   ```
-* (you may need to have svn installed)
+* (for GeneralBrokenLines you need to have svn installed)
 
-* for pXar you need the USB driver from FTDI:  
+* for proc600 data you need the USB driver from FTDI:  
   ```
   download from http://www.ftdichip.com/Drivers/D2XX.htm  
   (for Linux: x64 (64 bit))  
@@ -33,7 +33,7 @@ test beam pixel telescope analysis based on eudaq only
   cd /usr/local/lib  
   sudo ln -s /home/YOU/release/build/libftd2xx.so.1.3.6  libftd2xx.so  
   ```
-* for pXar you need to install the libusb-1.0-0-dev package for your system
+* for proc600 data you need to install the libusb-1.0-0-dev package for your system
   ```
   https://sourceforge.net/projects/libusb/files/libusb-1.0/libusb-1.0.20/
   instruction for installation
@@ -42,7 +42,7 @@ test beam pixel telescope analysis based on eudaq only
   make instal
   ```
 
-* if you want to analyse CMS pixel data you need pXar:  
+* for proc600 data you need pXar:  
   ```
   see https://twiki.cern.ch/twiki/bin/viewauth/CMS/Pxar  
   or like this:  
@@ -59,6 +59,7 @@ test beam pixel telescope analysis based on eudaq only
   ```
   git clone https://github.com/eudaq/eudaq.git  
   cd eudaq
+  git tag  (list of tags)
   git checkout v1.6.0
   cd eudaq  
   mkdir build  
@@ -75,7 +76,52 @@ test beam pixel telescope analysis based on eudaq only
   +#include "../api/api.h"	
   ```
 
-* for quad you need GBL:
+## tele-scope
+* ceckout the tele-scope package:
+  ```
+  git clone https://github.com/pitzl/tele-scope.git
+  cd tele-scope	
+  ```
+
+* adjust the makefile according to your setup:
+  ```
+  change /home/pitzl/eudaq everywhere to your location of eudaq
+  ```
+  export LD_LIBRARY_PATH=/home/pitzl/ROOT/root/build/lib:/home/pitzl/eudaq-1p6/lib:
+  ```
+
+* step 0:  
+  prepare a geo.dat file with the telescope and DUT/REF/MOD planes  
+  (see one of the examples)  
+
+  get data:
+  ```
+  mkdir data
+  scp -p YOU@desy-cms010:/data/group/pixel/testbeam/native/run025447.raw data/.
+  ```
+
+* step 1: telescope triplet alignment:
+  ```
+  make tele  
+  tele -l 99999 -g geo_2016_04f.dat -p 5.6 25447
+  (reads data/run025447.raw  
+  (writes align_25447.dat and hot_25447.dat)  
+  iterate at least three times (simply re-run)  
+  creates tele_25447.root  
+  ```
+* step 2: telescope with DUT and MOD:  
+  update runs.dat with run number, geo, GeV
+  ```
+  make scopem  
+  scope 20833  
+  (reads runs.dat, which must a link to geo.dat)  
+  (reads align_20833.dat and hot_20833.dat)  
+  (write alignDUT_20833.dat)  
+  iterate 3 times  
+  creates scope_20833.root  
+  ```
+
+* for quad module data you need GBL:
   ```
   svn co https://svnsrv.desy.de/desy/GeneralBrokenLines/
   cd GeneralBrokenLines
@@ -90,53 +136,6 @@ test beam pixel telescope analysis based on eudaq only
   make install
   export GBL=/home/YOURID/GeneralBrokenLines/trunk/cpp
   ```
-
-## tele-scope
-* ceckout the tele-scope package
-  ```
-  git clone https://github.com/pitzl/tele-scope.git
-  cd tele-scope	
-  ```
-
-* adjust the makefile according to your setup
-  ```
-  change /home/pitzl/eudaq everywhere to your location of eudaq
-  ```
-  export LD_LIBRARY_PATH=/home/pitzl/ROOT/root/build/lib:/home/pitzl/eudaq-1p6/lib:
-  ```
-
-* step 0:  
-  prepare a geo.dat file with the telescope and DUT/REF planes  
-  (see one of the examples)  
-
-  get data:
-  ```
-  mkdir data
-  scp -p YOU@desy-cms010:/data/group/pixel/testbeam/native/run025447.raw data/.
-  ```
-
-* step 1: telescope triplet alignment
-  ```
-  make tele  
-  tele -l 99999 -g geo_2016_04f.dat -p 5.6 25447
-  (reads data/run025447.raw  
-  (writes align_25447.dat and hot_25447.dat)  
-  iterate at least once (re-run)  
-  creates tele_25447.root  
-  ```
-* step 2: telescope with DUT and REF  
-  update runs.dat with run number, geo, GeV
-  ```
-  make scope  
-  scope 20833  
-  (reads runs.dat, which must a link to geo.dat)  
-  (reads align_20833.dat and hot_20833.dat)  
-  (write alignDUT_20833.dat)  
-  iterate 3 times  
-  creates scope_20833.root  
-  ```
-
-* present and publish!
 
 ## Trouble shooting
 
