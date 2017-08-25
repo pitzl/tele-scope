@@ -54,7 +54,7 @@ test beam pixel telescope analysis based on eudaq only
   make VERBOSE=1 -j4 install  
   ```
 * install eudaq as described in  
-  https://github.com/eudaq/eudaq/blob/v1.5-dev/README.md  
+  https://github.com/eudaq/eudaq/README.md  
   or like this:  
   ```
   git clone https://github.com/eudaq/eudaq.git  
