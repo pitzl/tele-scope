@@ -1919,7 +1919,8 @@ int main( int argc, char* argv[] )
     }
 
   } // ipl
-
+  cout << "that was alignment step 1" << endl;
+  
   // z-shift of last planes:
 
   if( aligniteration > 1 ) {
@@ -1939,6 +1940,7 @@ int main( int argc, char* argv[] )
 	alignz[ipl] += f1->GetParameter(1);
       }
     }
+    cout << "that was alignment step 2" << endl;
   }
 
   // driplet vs triplet:
@@ -1999,6 +2001,8 @@ int main( int argc, char* argv[] )
       aligny[ipl] += fgp0y->GetParameter(1);
     }
 
+    cout << "that was alignment step 3" << endl;
+
     // x-y rotation from profiles:
 
     if( sixdxvsy.GetEntries() > 999 ) {
@@ -2015,6 +2019,8 @@ int main( int argc, char* argv[] )
       cout << endl << sixdyvsx.GetTitle() << " slope " << fdyvsx->GetParameter(1) << endl;
       for( int ipl = 3; ipl < 6; ++ipl )
 	roty[ipl] -= fdyvsx->GetParameter(1); // sign
+
+      cout << "that was alignment step 4" << endl;
     }
 
     // dz from dy vs ty:
