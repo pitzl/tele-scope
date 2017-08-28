@@ -21,10 +21,10 @@ tele: tele.cc
 	$(ROOTLIBS) -L$(EUDAQ)/lib -lEUDAQ
 	@echo 'done: tele'
 
-scope: scope.cc
-	g++ $(CXXFLAGS) -o scope scope.cc \
+scopem: scopem.cc
+	g++ $(CXXFLAGS) -o scopem scopem.cc \
 	$(ROOTLIBS) -L$(EUDAQ)/lib -lEUDAQ
-	@echo 'done: scope'
+	@echo 'done: scopem'
 
 quad: quad.cc
 	g++ $(CXXFLAGS) -I$(GBL)/include -o quad quad.cc \
