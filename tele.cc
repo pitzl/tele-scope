@@ -163,9 +163,10 @@ int main( int argc, char* argv[] )
 
   string runnum( argv[argc-1] );
   int run = atoi( argv[argc-1] );
-
   cout << "run " << run << endl;
-  FileReader * reader;
+  
+  FileReader * reader; // eudaq
+
   if( run < 100 )
     reader = new FileReader( runnum, "data/run0000$2R$X");
   else if( run < 1000 )
@@ -1038,7 +1039,7 @@ int main( int argc, char* argv[] )
 
   do {
     // Get next event:
-    DetectorEvent evt = reader->GetDetectorEvent();
+    DetectorEvent evt = reader->GetDetectorEvent(); // eudaq
 
     if( evt.IsBORE() )
       eudaq::PluginManager::Initialize(evt);
