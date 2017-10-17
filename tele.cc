@@ -4,8 +4,10 @@
 // triplet pre-alignment
 
 // make tele
-// export LD_LIBRARY_PATH=/home/pitzl/ROOT/root/build/lib:/home/pitzl/eudaq-1p6/lib:
-// tele -l 99999 -g geo_2016_04f.dat -p 5.6 25447
+// tele -l 99999 -g geo_2016_04c.dat -p 5.6 25230
+// cp align_25230.dat align_25231.dat
+// tele -l 99999 -g geo_2016_04c.dat -p 1.2 25231
+// tele -l 99999 -g geo_2016_04f.dat 25447  # thr 6
 
 #include "eudaq/FileReader.hh"
 #include "eudaq/PluginManager.hh"
@@ -15,7 +17,6 @@
 #include <TProfile.h>
 #include <TProfile2D.h>
 #include <TF1.h>
-#include <TSystem.h>
 
 #include <sstream> // stringstream
 #include <fstream> // filestream
@@ -163,20 +164,19 @@ int main( int argc, char* argv[] )
 
   string runnum( argv[argc-1] );
   int run = atoi( argv[argc-1] );
-  cout << "run " << run << endl;
-  
-  FileReader * reader; // eudaq
 
+  cout << "run " << run << endl;
+  FileReader * reader;
   if( run < 100 )
-    reader = new FileReader( runnum, "data/run0000$2R$X");
+    reader = new FileReader( runnum.c_str(), "data/run0000$2R$X");
   else if( run < 1000 )
-    reader = new FileReader( runnum, "data/run000$3R$X");
+    reader = new FileReader( runnum.c_str(), "data/run000$3R$X");
   else if( run < 10000 )
-    reader = new FileReader( runnum, "data/run00$4R$X");
+    reader = new FileReader( runnum.c_str(), "data/run00$4R$X");
   else if( run < 100000 )
-    reader = new FileReader( runnum, "data/run0$5R$X");
+    reader = new FileReader( runnum.c_str(), "data/run0$5R$X");
   else
-    reader = new FileReader( runnum, "data/run$6R$X");
+    reader = new FileReader( runnum.c_str(), "data/run$6R$X");
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // further arguments:
@@ -326,26 +326,13 @@ int main( int argc, char* argv[] )
   double drng = 0.2*f; // wide spacing
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Create directory based on run number
-
-  stringstream run_number;
-  run_number << run;
-
-  // Directory will be made in the current working directory (cwd)
-  std::string outputDirectory = std::string(gSystem->WorkingDirectory())+"/run_"+run_number.str();
-
-  // Check first that it does not already exit
-  if(!gSystem->MakeDirectory(TString(outputDirectory)))
-    gSystem->MakeDirectory(TString(outputDirectory));
-
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // hot pixels:
 
   ostringstream hotFileName; // output string stream
 
   hotFileName << "hot_" << run << ".dat";
 
-  ifstream ihotFile( outputDirectory+"/"+hotFileName.str() );
+  ifstream ihotFile( hotFileName.str() );
 
   set <int> hotset[6];
 
@@ -427,7 +414,7 @@ int main( int argc, char* argv[] )
 
   alignFileName << "align_" << run << ".dat";
 
-  ifstream ialignFile( outputDirectory+"/"+alignFileName.str() );
+  ifstream ialignFile( alignFileName.str() );
 
   cout << endl;
   if( ialignFile.bad() || ! ialignFile.is_open() ) {
@@ -502,25 +489,10 @@ int main( int argc, char* argv[] )
 
   // z position for triplet-driplet matching = DUT material:
 
-  double DUTz = 70 + zz[2];
+  double DUTz = 0.5 * ( zz[2] + zz[3] );
 
   if( run >= 13000 && run < 14000 ) // Jan 2015 empty Datura
-    DUTz =  ( 1*zz[3] + 2*zz[2] ) / 3; // driplet more spacing
-
-  if( run >= 23000 ) // 2016
-    //DUTz = 50 + zz[2]; // Apr 2016, 24152 sixdxc 20.9 um
-    //DUTz = 60 + zz[2]; // Apr 2016, 24152 sixdxc 18.9 um
-    //DUTz = 70 + zz[2]; // Apr 2016, 24152 sixdxc 17.8 um
-    DUTz = 80 + zz[2]; // Apr 2016, 24152 sixdxc 17.3 um
-    //DUTz = 90 + zz[2]; // Apr 2016, 24152 sixdxc 17.7 um
-
-  if( run >= 24290 ) // 603, tilt 180
-    //DUTz = 50 + zz[2]; // Apr 2016, 24295 sixdxcsi 16.3 um
-    DUTz = 60 + zz[2]; // Apr 2016, 24295 sixdxcsi 15.7 um
-    //DUTz = 70 + zz[2]; // Apr 2016, 24295 sixdxcsi 16.2 um
-
-  if( DUTz > zz[3] )
-    DUTz = 0.5 * ( zz[2] + zz[3] );
+    DUTz = ( 1*zz[3] + 2*zz[2] ) / 3; // driplet more spacing
 
   // DUT Cu window in x: from sixdtvsx
 
@@ -542,6 +514,14 @@ int main( int argc, char* argv[] )
     xminCu = -9.8;
     xmaxCu =  3.2;
   }
+  if( run >= 24230 ) { // 501
+    xminCu = -10.0;
+    xmaxCu =  3.0;
+  }
+  if( run >= 31044 ) { // R4S 102 2017 
+    xminCu = -6.2;
+    xmaxCu =  6.6;
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // (re-)create root file:
@@ -550,7 +530,7 @@ int main( int argc, char* argv[] )
 
   rootFileName << "tele" << run << ".root";
 
-  TFile* histoFile = new TFile( (outputDirectory+"/"+rootFileName.str(  )).c_str(  ), "RECREATE" );
+  TFile* histoFile = new TFile( rootFileName.str(  ).c_str(  ), "RECREATE" );
 
   // book histos:
 
@@ -927,6 +907,10 @@ int main( int argc, char* argv[] )
   TH1I hsixdycsi = TH1I( "sixdycsi", "six dy Si;#Deltay [mm];triplet-driplet pairs in Si", 200, -0.4*f, 0.4*f );
   TH1I hsixdyccu = TH1I( "sixdyccu", "six dy Cu;#Deltay [mm];triplet-driplet pairs in Cu", 200, -0.4*f, 0.4*f );
 
+  TH2I * hsixxy = new
+    TH2I( "sixxy", "sixplet x-y;sixplet x_{mid} [mm];sixplet y_{mid} [mm];sixplets",
+	  240, -12, 12, 120, -6, 6 );
+
   TProfile sixdxvsx =
     TProfile( "sixdxvsx",
 	      "six #Deltax vs x;xB [mm];<driplet - triplet #Deltax [mm]",
@@ -991,15 +975,6 @@ int main( int argc, char* argv[] )
 		"driplet - triplet #Delta_{xy} vs x-y;x_{mid} [mm];y_{mid} [mm];<sqrt(#Deltax^{2}+#Deltay^{2})> [rad]",
 		110, -11, 11, 55, -5.5, 5.5, 0, 0.1*f );
 
-  TH1I hsixdtx =
-    TH1I( "sixdtx",
-	  "driplet slope x - triplet slope x;driplet slope x - triplet slope x;driplet-triplet pairs",
-	  100, -0.0025*f, 0.0025*f );
-  TH1I hsixdty =
-    TH1I( "sixdty",
-	  "driplet slope y - triplet slope y;driplet slope y - triplet slope y;driplet-triplet pairs",
-	  100, -0.0025*f, 0.0025*f );     
-
   TH1I hsixdtxsi =
     TH1I( "sixdtxsi",
 	  "driplet triplet #Delta#theta_{x} Si;driplet - triplet #Delta#theta_{x} [rad];driplet-triplet pairs in Si",
@@ -1021,7 +996,7 @@ int main( int argc, char* argv[] )
   TProfile sixdtvsx =
     TProfile( "sixdtvsx",
 	      "driplet - triplet slope_{xy} vs x;x_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
-	      110, -11, 11, 0, 0.1*f );
+	      220, -11, 11, 0, 0.1*f );
   TProfile2D * sixdtvsxy = new
     TProfile2D( "sixdtvsxy",
 		"driplet - triplet slope_{xy} vs x-y;x_{mid} [mm];y_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
@@ -1039,7 +1014,7 @@ int main( int argc, char* argv[] )
 
   do {
     // Get next event:
-    DetectorEvent evt = reader->GetDetectorEvent(); // eudaq
+    DetectorEvent evt = reader->GetDetectorEvent();
 
     if( evt.IsBORE() )
       eudaq::PluginManager::Initialize(evt);
@@ -1078,58 +1053,66 @@ int main( int argc, char* argv[] )
 
     StandardEvent sevt = eudaq::PluginManager::ConvertToStandard(evt);
 
-    vector <cluster> cl[6];
+    string MIM("MIMOSA26");
+    int mpl = 0; // Mimosa planes
 
-    for( size_t iplane = 0; iplane < sevt.NumPlanes(); ++iplane) {
+    vector <cluster> cl[6]; // Mimosa planes
 
-      const eudaq::StandardPlane &plane = sevt.GetPlane(iplane);
+    for( size_t ipl = 0; ipl < sevt.NumPlanes(); ++ipl ) {
+
+      const eudaq::StandardPlane &plane = sevt.GetPlane(ipl);
+
+      if( ldbg )
+	std::cout
+	  << "plane " << plane.ID()
+	  << " " << plane.Type()
+	  << " " << plane.Sensor()
+	  << " frames " << plane.NumFrames()
+	  << " pivot " << plane.PivotPixel()
+	  << " total " << plane.TotalPixels()
+	  << " hits " << plane.HitPixels()
+	  ;
+
+      if( plane.Sensor() != MIM ) continue;
 
       std::vector<double> pxl = plane.GetPixels<double>();
 
-      if( ldbg ) std::cout << "PLANE " << plane.ID() << ": ";
-
       // /home/pitzl/eudaq/main/include/eudaq/CMSPixelHelper.hh
-
-      int ipl = plane.ID();
-      if( run > 28000 && ipl > 0 && ipl < 7 ) // 2017, eudaq 1.7: Mimosa 1..6
-	ipl -= 1;
-
-      if( ipl >= 6 ) continue; // only telescope here
 
       int npx = 0;
 
       for( size_t ipix = 0; ipix < pxl.size(); ++ipix ) {
 
 	if( ldbg ) 
-	  std::cout << plane.GetX(ipix)
+	  std::cout << ": " << plane.GetX(ipix)
 		    << " " << plane.GetY(ipix)
-		    << " " << plane.GetPixel(ipix) << " ";
+		    << " " << plane.GetPixel(ipix);
 
 	int ix = plane.GetX(ipix); // col pixel index
 	int iy = plane.GetY(ipix); // row pixel index
 	
-	hcol0[ipl].Fill( ix );
-	hrow0[ipl].Fill( iy );
+	hcol0[mpl].Fill( ix );
+	hrow0[mpl].Fill( iy );
 
-	int ipx = ix*ny[ipl] + iy;
-	if( pxmap[ipl].count(ipx) )
-	  ++pxmap[ipl][ipx];
+	int ipx = ix*ny[mpl] + iy;
+	if( pxmap[mpl].count(ipx) )
+	  ++pxmap[mpl][ipx];
 	else
-	  pxmap[ipl].insert( make_pair( ipx, 1 ) );
+	  pxmap[mpl].insert( make_pair( ipx, 1 ) );
 
 	// fill pixel block for clustering:
 
-	if( hotset[ipl].count(ipx) ) continue; // skip hot
+	if( hotset[mpl].count(ipx) ) continue; // skip hot
 
-	hcol[ipl].Fill( ix );
-	hrow[ipl].Fill( iy );
+	hcol[mpl].Fill( ix );
+	hrow[mpl].Fill( iy );
 
 	pb[npx].col = ix;
 	pb[npx].row = iy;
 	++npx;
 
 	if( npx == 999 ) {
-	  cout << "pixel buffer overflow in plane " << ipl
+	  cout << "pixel buffer overflow in plane " << mpl
 	       << ", event " << event_nr
 	       << endl;
 	  break;
@@ -1137,7 +1120,7 @@ int main( int argc, char* argv[] )
 
       } // pix
       
-      hnpx[ipl].Fill(npx);
+      hnpx[mpl].Fill(npx);
 
       if( ldbg ) std::cout << std::endl;
 
@@ -1145,33 +1128,36 @@ int main( int argc, char* argv[] )
 
       fNHit = npx; // for cluster search
 
-      cl[ipl] = getClus();
+      cl[mpl] = getClus();
 
-      if( ldbg ) cout << "A clusters " << cl[ipl].size() << endl;
+      if( ldbg ) cout << "A clusters " << cl[mpl].size() << endl;
 
-      hncl[ipl].Fill( cl[ipl].size() );
+      hncl[mpl].Fill( cl[mpl].size() );
 
-      for( vector<cluster>::iterator cA = cl[ipl].begin(); cA != cl[ipl].end(); ++cA ) {
+      for( vector<cluster>::iterator cA = cl[mpl].begin(); cA != cl[mpl].end(); ++cA ) {
 
-	hsiz[ipl].Fill( cA->size );
-	hncol[ipl].Fill( cA->ncol );
-	hnrow[ipl].Fill( cA->nrow );
+	hsiz[mpl].Fill( cA->size );
+	hncol[mpl].Fill( cA->ncol );
+	hnrow[mpl].Fill( cA->nrow );
 
 	// cluster isolation:
 
 	double mindxy = 99.9;
 
-	for( vector<cluster>::iterator cD = cl[ipl].begin(); cD != cl[ipl].end(); ++cD ) {
+	for( vector<cluster>::iterator cD = cl[mpl].begin(); cD != cl[mpl].end(); ++cD ) {
 	  if( cD == cA ) continue; // self
-	  double dx = (cD->col - cA->col)*ptchx[ipl];
-	  double dy = (cD->row - cA->row)*ptchy[ipl];
+	  double dx = (cD->col - cA->col)*ptchx[mpl];
+	  double dy = (cD->row - cA->row)*ptchy[mpl];
 	  double dxy = sqrt( dx*dx + dy*dy );
 	  if( dxy < mindxy ) mindxy = dxy;
 	}
 	cA->mindxy = mindxy;
-	hmindxy[ipl].Fill( mindxy );
+	hmindxy[mpl].Fill( mindxy );
 
       } // cl A
+
+      ++mpl;
+      if( mpl > 5 ) break;
 
     } // planes
 
@@ -1733,6 +1719,7 @@ int main( int argc, char* argv[] )
 	    if( fabs( dtx ) < 0.0005 )
 	      hsixdxcsid.Fill( dx );
 	  } // Si
+
 	} // dy
 
 	if( fabs(dx) < 0.1 ) {
@@ -1752,15 +1739,16 @@ int main( int argc, char* argv[] )
 	    sixmadyvsty.Fill( slyA, fabs(dy) );
 	    sixmadyvsdty.Fill( dty, fabs(dy) ); // U-shape
 	  }
+
 	}
 
 	// compare slopes:
 
 	if( fabs(dy) < 0.1 && fabs(dx) < 0.1 ) {
 
+	  hsixxy->Fill( xA, yA );
 	  sixdxyvsxy->Fill( xA, yA, dxy );
 
-	  hsixdtx.Fill( dtx );
 	  if( xA > xminCu && xA < xmaxCu ) { // no Cu
 	    hsixdtxsi.Fill( dtx );
 	    hsixdtysi.Fill( dty );
@@ -1769,7 +1757,7 @@ int main( int argc, char* argv[] )
 	    hsixdtxcu.Fill( dtx );
 	    hsixdtycu.Fill( dty );
 	  }
-	  hsixdty.Fill( dty ); // width: 0.3 mrad
+
 	  sixdtvsx.Fill( xA, dtxy );
 	  sixdtvsxy->Fill( xA, yA, dtxy );
 
@@ -1803,7 +1791,7 @@ int main( int argc, char* argv[] )
 
   cout << endl << "Mimosa hot pixel list for run " << run << endl;
 
-  ofstream hotFile( outputDirectory+"/"+hotFileName.str() );
+  ofstream hotFile( hotFileName.str() );
 
   hotFile << "# telescope hot pixel list for run " << run << endl;
 
@@ -1920,8 +1908,7 @@ int main( int argc, char* argv[] )
     }
 
   } // ipl
-  cout << "that was alignment step 1" << endl;
-  
+
   // z-shift of last planes:
 
   if( aligniteration > 1 ) {
@@ -1941,7 +1928,6 @@ int main( int argc, char* argv[] )
 	alignz[ipl] += f1->GetParameter(1);
       }
     }
-    cout << "that was alignment step 2" << endl;
   }
 
   // driplet vs triplet:
@@ -2002,8 +1988,6 @@ int main( int argc, char* argv[] )
       aligny[ipl] += fgp0y->GetParameter(1);
     }
 
-    cout << "that was alignment step 3" << endl;
-
     // x-y rotation from profiles:
 
     if( sixdxvsy.GetEntries() > 999 ) {
@@ -2013,15 +1997,12 @@ int main( int argc, char* argv[] )
       for( int ipl = 3; ipl < 6; ++ipl )
 	rotx[ipl] += fdxvsy->GetParameter(1);
     }
-
     if( sixdyvsx.GetEntries() > 999 ) {
       sixdyvsx.Fit( "pol1", "q", "", -midx[2], midx[2] );
       TF1 * fdyvsx = sixdyvsx.GetFunction( "pol1" );
       cout << endl << sixdyvsx.GetTitle() << " slope " << fdyvsx->GetParameter(1) << endl;
       for( int ipl = 3; ipl < 6; ++ipl )
 	roty[ipl] -= fdyvsx->GetParameter(1); // sign
-
-      cout << "that was alignment step 4" << endl;
     }
 
     // dz from dy vs ty:
@@ -2031,7 +2012,7 @@ int main( int argc, char* argv[] )
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // write alignment to file:
 
-  ofstream alignFile( outputDirectory+"/"+alignFileName.str() );
+  ofstream alignFile( alignFileName.str() );
 
   alignFile << "# telescope alignment for run " << run << endl;
   ++aligniteration;
