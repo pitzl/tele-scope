@@ -21,6 +21,11 @@ tele: tele.cc
 	$(ROOTLIBS) -L$(EUDAQ)/lib -lEUDAQ
 	@echo 'done: tele'
 
+scopes: scopes.cc
+	g++ $(CXXFLAGS) -o scopes scopes.cc \
+	$(ROOTLIBS) -L$(EUDAQ)/lib -lEUDAQ
+	@echo 'done: scopes'
+
 scopem: scopem.cc
 	g++ $(CXXFLAGS) -o scopem scopem.cc \
 	$(ROOTLIBS) -L$(EUDAQ)/lib -lEUDAQ
