@@ -1,9 +1,9 @@
 
 # runs list for scope DUT analysis
 # format:
-# tag val (rest of the line is ignored)
+# tagname value (rest of the line is ignored)
 # known tags up to the run under study are parsed
-# (entries below therun under study are ignored)
+# (entries below the run under study are ignored)
 
 weib 3 # gain file format for 2015
 
@@ -11,6 +11,9 @@ chip 504
 tilt 20
 geo geo_2015_02a.dat
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim30tb-gaincal.dat
+
+refchip 404
+refgain /home/pitzl/psi/dtb/tst215/phroc-c404-trim32.dat
 
 run 14614
 run 14615
@@ -146,6 +149,23 @@ run 15464  713  62  62  one event remaining
 run 15467  779  62  68  eff 99.806  sy 7.12
 
 #-------------------------------------------------------------------------------
+# Sat 11.4.2015: chip 239i
+# IA27, Vdig 6, trim 40
+# same GEAR 04g: 0  152  305  DUT  503  655  807  REF
+# set tilt -21 (forward /), get 18.4
+# chiller -20
+chip 239
+gain /home/pitzl/psi/dtb/tst400/c239-ia27-vd6-cold-trim40-gaincal.dat
+geo geo_2015_04g.dat
+tilt 18.4
+
+run 15678
+
+tilt 19.4
+
+run 15710
+
+#-------------------------------------------------------------------------------
 # Mon 27.4.2015 chip 504 tilt 19
 # REF 404
 # chip 504, trim 27  tilt 19.6  ia 24 mA  bias 200  chiller 15  no box
@@ -161,7 +181,7 @@ geo geo_2015_04x.dat
 
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim27-gaincal.dat
 
-run 19037  delay 20   100  59  66  eff 99.5   sy 7.04
+run 19037  delay 20   100  59  66  eff 99.5   sy 7.04  .x fittp0.C("cmsdyfcq4nod",-0.022,0.022
 run 19038             312  59  66  eff 99.4   sy      7.35
 run 19042  delay 16   101  59  67  eff 99.7   sy 7.15 7.33
 run 19043  delay 16   262  59  67  eff 99.74  sy      7.40 7.23
@@ -255,6 +275,68 @@ run 19130             778          eff 99.90  sy 7.15
 run 19131             780          eff 99.92  sy 7.18
 run 19132             781          eff 99.90  sy 7.10
 run 19133           -7780          loose sync, run control crash
+
+# chip 505
+run 19194
+
+#-------------------------------------------------------------------------------
+#Sat 2.5.2015 chip 504, tilt scan in row direction
+
+#bias -150, ia24 mA, trim 28, WBC 141, no cooling
+chip 504
+gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim28-gaincal.dat
+
+#gear  787  635  482  305  153  0
+geo geo_2015_05.dat
+GeV 5.6
+
+tilt 2
+run 19269 # tele -g geo_2015_05.dat 19269 for alignment
+
+tilt 19
+run 19271
+
+tilt 35
+run 19273
+
+tilt 46
+run 19274
+
+tilt 54
+run 19275
+
+tilt 59.5
+run 19276 # -s
+
+tilt 64
+run 19277
+
+tilt 70
+run 19278
+
+tilt 75.2
+run 19279 # -s
+
+tilt 77
+run 19280 # -s
+
+tilt 79
+run 19281 # -s
+
+tilt 81
+run 19282
+
+tilt 83
+run 19283
+
+tilt 84
+run 19284
+
+tilt 86
+run 19285
+
+tilt 87
+run 19286
 
 #-------------------------------------------------------------------------------
 #Mon 25.5.2015
@@ -353,6 +435,7 @@ run 19694           400  eff 99.92
 #chip 504 tilt scan
 # ref 501 trim 30
 
+refchip 501
 refgain /home/pitzl/psi/dtb/tst400/c501-ia24-trim30tb-gaincal.dat
 
 chip 504
@@ -459,11 +542,94 @@ run 20248   1.0  170  65  69  eff 99.79  sy 34.9  row 1.182  col 1.118  Lan 20.2
 
 #close the telescope, gear 06e: 753  603  451  304  151  0
 geo geo_2015_06e.dat
-tilt  0
-run 20249   0
-run 20250   0
-run 20251   0
-run 20251   0
+tilt  0    REF yield 54%
+run 20249  
+run 20250  eff 99.83
+run 20251  eff 99.83
+run 20252  eff 99.85
+run 20253  eff 99.85
+run 20254  eff 99.86
+run 20255  eff 99.86
+run 20256  eff 99.865
+run 20257  eff 99.86
+run 20258  eff 99.85
+run 20259  eff 99.84
+
+run 20260  eff 99.84
+run 20261  eff 99.83
+run 20262  
+run 20263  
+run 20264  
+run 20265  
+run 20266  
+run 20267  
+run 20268  
+run 20269  
+
+run 20270  eff 99.84
+run 20271  
+run 20272  
+run 20273  
+run 20274  
+run 20275  
+run 20276  
+run 20277  
+run 20278  
+run 20279  
+
+run 20280  eff 99.84
+run 20281  
+run 20282  
+run 20283  
+run 20284  
+run 20285  
+run 20286  
+run 20287  
+run 20288  
+run 20289  
+
+run 20290  eff 99.84
+run 20291  
+run 20292  
+run 20293  
+run 20294  
+run 20295  eff 99.84
+run 20296  eff 99.84
+run 20297  eff 99.85
+# 20250-97  eff 99.85
+#          REF yield drops to 20%
+run 20298  -s eff 99.80
+run 20299  -s
+
+run 20300  -s
+run 20301  -s
+run 20302  -s
+run 20303  -s
+run 20304  -s
+run 20305  -s
+run 20306  -s
+run 20307  -s
+run 20308  -s
+run 20309  -s  eff 99.80
+
+run 20310  -s
+run 20311  -s
+run 20312  -s
+run 20313  -s
+run 20314  -s
+run 20315  -s
+run 20316  -s
+run 20317  -s
+run 20318  -s
+run 20319  -s
+
+run 20320  -s
+run 20321  -s
+run 20322  -s
+run 20323  -s
+run 20324  -s
+run 20325  -s  eff 99.78
+
 #all night
 
 #-------------------------------------------------------------------------------
@@ -690,11 +856,13 @@ run 20821   4.5  271  66  73  eff 99.94  sy 25.1  row 1.269  col 1.101  Lan 20.9
 #trim 36, tilt 18.8
 
 tilt 18.8
+GeV 5.2
+geo geo_2015_07b.dat
 
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36tb-chiller17-Jul-gaincal.dat
 
 run 20823                58  63  72  DUT eff 99.95
-	gate 8 ns    
+#	gate 8 ns    
 run 20824  delay 16      61  64  73  DUT eff 99.93
 run 20825  delay 18          64  71  DUT eff 99.88
 run 20827  delay 14      70  64  73  DUT eff 99.94
@@ -702,13 +870,13 @@ run 20828  delay 15      73  64  73  DUT eff 99.91
 run 20829  delay 17      89  64  72  
 
 tilt 19.2
-run 20830  delay 16    ++521  64  72  
-run 20831              ++522  64  72  
+run 20830  delay 16     +521  64  72  
+run 20831               +522  64  72  
 run 20832                126  64  72  
 
 #gate 11 ns, delay 16
 run 20833                 66  64  73  DUT eff 99.97
-run 20834              ++344  64  73  
+run 20834               +344  64  73  
 
 #trim 32
 run 20835                 66  64  73  
@@ -724,38 +892,38 @@ run 20840  delay 15       65  64  73
 run 20841                102  64  73  
 
 #trim 36
-run 20842  delay 16      521          eff 99.97  sy 7.09  row 1.921  col 1.096  Lan 21.71  edg 1.62
-run 20843                             eff 99.97  sy 7.09  row 1.920  col 1.096  Lan 21.71  edg 1.62
-run 20844                             eff 99.96  sy 7.01  row 1.921  col 1.096  Lan 21.69  edg 1.61
-run 20845                             eff 99.98  sy 7.03  row 1.919  col 1.095  Lan 21.68  edg 1.61
-run 20846                             eff 99.97  sy 7.07  row 1.921  col 1.095  Lan 21.69  edg 1.60
-run 20847                             eff 99.96  sy 7.02  row 1.920  col 1.096  Lan 21.68  edg 1.62
-run 20848                             eff 99.97  sy 7.13  row 1.921  col 1.096  Lan 21.69  edg 1.59
-run 20849                             eff 99.97  sy 7.07  row 1.921  col 1.097  Lan 21.66  edg 1.59
-run 20850                             eff 99.96  sy 6.99  row 1.921  col 1.097  Lan 21.68  edg 1.60
-run 20851                             eff 99.96  sy 7.03  row 1.921  col 1.097  Lan 21.68  edg 1.62
-run 20852                             eff 99.96  sy 6.95  row 1.917  col 1.094  Lan 21.96  edg 1.64
-run 20853                             eff 99.96  sy 7.03  row 1.922  col 1.096  Lan 21.70  edg 1.61
-run 20854                             eff 99.96  sy 7.08  row 1.919  col 1.097  Lan 21.71  edg 1.62
-run 20855                             eff 99.97  sy 7.00  row 1.922  col 1.095  Lan 21.74  edg 1.63
-run 20856                             eff 99.97  sy 7.08  row 1.920  col 1.096  Lan 21.73  edg 1.63
-run 20857                             eff 99.96  sy 6.97  row 1.918  col 1.095  Lan 21.73  edg 1.63
-run 20858                             eff 99.96  sy 7.06  row 1.919  col 1.095  Lan 21.76  edg 1.66
-run 20859                             eff 99.97  sy 7.04  row 1.919  col 1.095  Lan 21.75  edg 1.65
-run 20860                             eff 99.96  sy 7.03  row 1.920  col 1.095  Lan 21.75  edg 1.66
-run 20861                             eff 99.97  sy 7.03  row 1.919  col 1.097  Lan 21.73  edg 1.65
-run 20862                             eff 99.96  sy 6.96  row 1.919  col 1.095  Lan 21.76  edg 1.63
-run 20863                             eff 99.97  sy 7.05  row 1.919  col 1.097  Lan 21.76  edg 1.65
-run 20864                             eff 99.97  sy 7.05  row 1.920  col 1.095  Lan 21.72  edg 1.64
-run 20865                             eff 99.96  sy 7.03  row 1.919  col 1.096  Lan 21.74  edg 1.63
-run 20866                             eff 99.96  sy 7.03  row 1.918  col 1.096  Lan 21.70  edg 1.62
-run 20867                             eff 99.97  sy 7.01  row 1.918  col 1.094  Lan 21.75  edg 1.65
-run 20868                             eff 99.97  sy 7.04  row 1.919  col 1.095  Lan 21.71  edg 1.64
-run 20869                             eff 99.96  sy 7.08  row 1.920  col 1.095  Lan 21.75  edg 1.64
-run 20870                             eff 99.97  sy 7.02  row 1.919  col 1.096  Lan 21.74  edg 1.65
-run 20871                             eff 99.96  sy 7.11  row 1.920  col 1.096  Lan 21.73  edg 1.64
-run 20872                             eff 99.97  sy 7.05  row 1.919  col 1.095  Lan 21.77  edg 1.66
-run 20873                             eff 99.97  sy 7.08  row 1.919  col 1.096  Lan 21.78  edg 1.67
+run 20842  delay 16      521 18:45    eff 99.97  sy 6.99  row 1.911  Lan 21.99  edg 1.77
+run 20843                             eff 99.98  sy 7.04  row 1.910  Lan 21.99  edg 1.78
+run 20844                             eff 99.97  sy 7.03  row 1.911  Lan 21.97  edg 1.76
+run 20845                             eff 99.98  sy 7.08  row 1.910  Lan 21.97  edg 1.76
+run 20846                             eff 99.97  sy 7.06  row 1.911  Lan 21.98  edg 1.76
+run 20847                             eff 99.97  sy 7.01  row 1.911  Lan 21.99  edg 1.77
+run 20848                             eff 99.97  sy 7.14  row 1.912  Lan 21.97  edg 1.74
+run 20849                             eff 99.97  sy 7.13  row 1.910  Lan 21.95  edg 1.74
+run 20850                             
+run 20851                             
+run 20852                             
+run 20853                             
+run 20854                             
+run 20855                             
+run 20856                             
+run 20857                             
+run 20858                             
+run 20859                             
+run 20860                             
+run 20861                             
+run 20862                             
+run 20863                             
+run 20864                             
+run 20865                             
+run 20866                             
+run 20867                             
+run 20868                             
+run 20869                             
+run 20870                             
+run 20871                             
+run 20872                             
+run 20873                             
 run 20874                             
 run 20875                             
 run 20876                             
@@ -776,17 +944,20 @@ run 20890
 run 20891                             
 run 20892                             
 run 20893                             
-run 20894                401  64  73  
-#running all night
-
-# 11.3.2016
-GeV 5.2
+run 20894                401  64  73  eff 99.97  sy 7.08  row 1.909  Lan 21.94  edg 1.78
+# 20842-20894  13.7. 11:06            eff 99.98  sy 6.97  row 1.910  Lan 22.01  edg 1.79
+#running all night: 17 h
+#-------------------------------------------------------------------------------
+# 2016
+#-------------------------------------------------------------------------------
+# Fri 11.3.2016
+GeV 4.8
 chip 504
 refchip 500
 tilt 2
 geo geo_2016_03a.dat
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim30tb-gaincal.dat
-refgain /home/pitzl/psi/dtb/tst400/c500-ia24-trim30-chiller15-gaincal.dat
+refgain /home/pitzl/psi/dtb/tst400/c500-ia24-trim32-2016-03-gaincal.dat
 
 run 23133
 
@@ -1387,7 +1558,7 @@ run 24272 # 362k, tele align, 2 eff drops
 # Vthr_Comp 70  eff 99.95  sy 10.8  row 1.679  Lan 22.54  edg 6.37
 run 24282 # 500k  eff 99.95 flat, reflk 28%
 
-# tilt DUT by 180 degree, 5 cm cable to DTB, upsigny -1 (shoot from back)
+# tilt DUT by 180 degree, 5 cm cable to DTB, upsigny -1
 tilt 18.9
 
 # Vthr_Comp 60
@@ -1625,7 +1796,7 @@ geo geo_2016_04c.dat # 0 153 305 DUT 393 539 MOD 697 REF
 # /data2/CMSPixel_2016_05/
 
 GeV 4.8
-tilt 19 # upside down (shoot from back)
+tilt 19
 
 # trim 32
 run 25007 # 207 k  tele - g geo_2016_04c.dat -p 4.8 25007  loose sync
@@ -1888,7 +2059,7 @@ GeV 5.6 # tele -p 5.6 -g geo_2016_04c.dat 25230
 run 25230 # 360 k  eff 99.68  sy 6.19  row 1.955  Lan 22.16  edg 2.19  ntr 4.51  kx 0.309 ky 0.309
 
 # p scan for material budget:
-
+# cp align_25230.dat align_25231.dat
 GeV 1.2
 run 25231 # 493 k  eff 99.68  sy 11.10 row 1.951  Lan 22.06  edg 2.17  ntr 6.50  kx 1.233 ky 1.227
 
@@ -2341,7 +2512,9 @@ run 695 # partial 189k  clsz7 1.395: not tilted ?
 
 #-------------------------------------------------------------------------------
 # Tue 12.7.2016
+# TB22
 # empty Duranta plane 2 changed
+# spacing 114 mm
 geo geo_2016_07e.dat
 GeV 5.6
 
@@ -2483,70 +2656,69 @@ gain /home/pitzl/psi/dtb/tst400/c701-trim40-tb21-gaincal.dat
 tilt 0.5
 geo geo_2016_07i.dat # 709 557 405 305 152 0
 
-# ext151-48: 5.0 um at 4.8 GeV
-
-run 27054 # 258k  eff 99.87%
+run 27054 # 258k  24%
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Sat 23.7.2016
 # PROC600v2 701 in Datura
-# bias 150V
+# bias -150V
 
 # gate 3 ns
 # delay scan
 GeV 4.8
 tilt 0.5
 
-run 27057 # 20 ns  100k  eff 99.982  edg 2.53
-run 27058 # 22 ns  100k  eff 99.87 two PETRA fills? edg 2.68
-run 27059 # 24 ns  100k  eff 99.986  edg 2.87
-run 27060 #  0 ns  100k  eff 99.944  edg 2.88
-run 27061 #  2 ns  100k  eff 97.5  edg 3.19
-run 27062 #  4 ns  100k  eff 53.7  edg 3.89
+run 27057 # 20 ns  100k  eff 99.982
+run 27058 # 22 ns  100k  eff 99.87 two PETRA fills?
+run 27059 # 24 ns  100k  eff 99.986
+run 27060 #  0 ns  100k  eff 99.944
+run 27061 #  2 ns  100k  eff 97.5
+run 27062 #  4 ns  100k  eff 53.7
 run 27063 #  6 ns  100k  eff  5.3
 run 27064 #  8 ns  100k  eff  0.07
 run 27065 # 10 ns  100k  eff  0
 run 27066 # 12 ns  100k  eff  0.03
 run 27067 # 14 ns  100k  eff  
 run 27068 # 16 ns  100k  eff  0.2
-run 27069 # 18 ns  100k  eff 70.0  edg 2.59
-run 27070 # 22 ns  100k  eff 99.987 without PETRA fill  edg 2.95
+run 27069 # 18 ns  100k  eff 70.0
+run 27070 # 22 ns  100k  eff 99.987 without PETRA fill
 
 # gate 6 ns
 # delay 22 ns
 run 27071 # 100k  eff 99.992
-run 27072 # 500k  eff 
-run 27073 # 500k  eff 
-run 27074 # 500k  eff 99.95  edg 2.74
-run 27075 # 500k  eff 
-run 27076 # 500k  eff 
+run 27072 #+500k  eff 
+run 27073 #+500k  eff 
+run 27074 # 500k  eff 99.95
+run 27075 #+500k  eff 
+run 27076 #+500k  eff 
 
 tilt 19
-run 27078 # 500k  eff 99.96  cmsdyfcq3 8.7  cmsdyfcqeverow3 8.3  thr 3.55
-run 27079 # 500  
-run 27080 # 133  
+run 27078 # 500k  eff 99.96  cmsdyfcq3 8.7  cmsdyfcqeverow3 8.3
+run 27079 #+500  55  54
+run 27080 # 133  55  55
 
-tilt 73.5
+tilt 285 = 75 deg incidence
 geo geo_2016_07j.dat # 750  598  447  305  152  0
 
-run 27081 # 501  tele align  nrow 10
-run 27084 # 494  
+run 27081 #+501  20  58
+run 27084 #+494  20  57
 
-tilt 78.5
-run 27085 # 481  PKAM  nrow 14
+tilt 280 = 80 deg incidence
+run 27085 #+481  16  57
 
-tilt 82.5
-run 27086 # 501  
+tilt 276 = 84 deg incidence
+run 27086 #+501  16  58
+
+geo geo_2016_07i.dat # 709 557 405 305 152 0
 
 #over night:
-geo geo_2016_07i.dat # 709 557 405 305 152 0
 tilt 19
-run 27088 # 37M  eff 99.93  edg 3.46  cmsdyfcq4eve 8.5
+run 27088 # 37'035k  54  54
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Sun 24.7.2016
 # PROC600v2 701 in Datura
-# bias 150V
+# bias -150V
 tilt 19
 
 # trim35
@@ -2571,7 +2743,7 @@ run 27107
 run 27108 
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#changing setup for turn (simple sample holder arm)
+#changing setup for turn
 # PROC600v2 701 in Datura
 #DUT is upside down            
 tilt 0.5
@@ -2605,35 +2777,24 @@ run 27122 #+217k  10  52  cluster size peak at 12.5, flat x map
 #for the night
 turn 27
 run 27124 #+
-#-------------------------------------------------------------------------------
-Mon 25.7.2016
-take reference measurments with a Layer 2-4 ROC
-DUT = 502
-REF = 501
-turn 87
-run 27125 # U-shaped column map
 
 #-------------------------------------------------------------------------------
 # 2017
 #-------------------------------------------------------------------------------
-# Tue 7.3.2017
+# Tue  7.3.2017
 # DUT 523i, chiller -20 deg
-# REF 502, bias 150V
-# MOD D4294 ?, bias 150V
-# MOD D4139, bias 150V
-# online: eudaq 1.6
+# REF 502, bias -150V
+# MOD D4294, bias -150V
+# online: eudaq 1.7
 # Mimosa  plane counting changed: 1-6
 # DUT = 7
 # REF = 8
-# MOD = TRP = 6 collides with Mimosa
+# TRP = 6 collides with Mimosa
 
 geo geo_2017_03a.dat
 GeV 4.8
-# DUT dz 84.6
-# ex 151 at 4.8 GeV: 6.85 um
 
-#modgain /home/pitzl/psi/dtb/tst400/D4294-trim35-tb22-gaincal.dat
-modgain /home/pitzl/psi/dtb/tst400/D4139-trim35-tb21-gaincal.dat
+modgain /home/pitzl/psi/dtb/tst400/D4294-trim35-tb22-gaincal.dat
 
 refchip 502
 refgain /home/pitzl/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
@@ -2646,66 +2807,50 @@ turn 0
 
 # MOD = QUAD = 9
 
-# bias 150  uA 25.57
+# bias -150
 run 28027 # eff 
 
-# bias 10  uA 6.21
+# bias -10
 run 28028 # eff 42%
 
-# bias 20  uA 8.76
+# bias -20
 run 28029 # eff 86%
 
-# bias 30  uA 10.82
+# bias -30
 run 28030 # eff 94%
 
-# bias 40  uA 12.62
+# bias -40
 run 28031 # eff 96%
 
-# bias 50  uA 14.29
-
-# bias 60  uA 15.76
-
-# bias 80  uA 18.43
-
-# bias 100  uA 22.07
-
-# bias 120  uA 22.85
-
-# bias 200  uA 29.51
+# bias -200
 run 28037 # -s
 
-# bias 250  uA 31.44
+# bias -250
 run 28038 # -s
 
-# bias 300  uA 32.95
+# bias -300
 run 28039 # -s
 
-# bias 400  uA 36.50
+# bias -400
 run 28040 # -s
 
-# bias 500  uA 41.10
+# bias -500
 run 28041 # -s
 
-# bias 600  uA 45.86
+# bias -600
 run 28042 # -s
 
-# bias 700, tilt 17.5  uA 50.58
+# bias -700
 run 28043 # -s
 
-# bias 140  uA 24.56
+# bias -140
 run 28044 # -s
 
-# bias 160  uA 26.15
-
-# bias 180  uA 27.74
-
-# bias 220  uA 30.04
-
 # RunControl: configure
-# bias 350  uA 34.03
+# bias -350
 run 28048 # -s
 
-# bias 600 over night  uA 44.6
+# bias -600
 run 28049 # -s
 run 28050 # -s
 run 28051 # -s
@@ -2729,271 +2874,225 @@ run 28067 # -s
 # runs with re-sync have low track-cluster yield
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Wed 8.3.2017 continue 523i
-tilt 17.5
+# Wed 8.3.2017
 
-# bias 15  uA 6.94
+# bias -15
 run 28069 #
 
-# bias 25  uA 8.46
+# bias -25
 run 28070 #
 
-# bias 140  uA 22.25
+# bias -140
 run 28071 #
 
-# bias 160  uA 24.01
+# bias -160
 run 28072 #
 
-# bias 180  uA 25.66
+# bias -180
 run 28073 #
 
-# bias 200  uA 26.99
+# bias -200
 run 28074 #
 
-# bias 220  uA 28.33
+# bias -220
 run 28075 #
 
-# bias 250  uA 29.88
+# bias -250
 run 28076 #
 
-# bias 300  uA 31.67
+# bias -300
 run 28077 #
 
-# bias 350  uA 33.07
+# bias -350
 run 28078 #
 
-# bias 400  uA 34.26
+# bias -400
 run 28079 #
 
-# bias 500  uA 37.96
 
-# bias 600  uA 41.08
-
-# bias 700  uA 45.05
-
-# bias 800  uA 51.23
-
-# bias 120  uA 20.23
-
-# bias 100  uA 18.25
-
-# bias 80  uA 16.18
+# bias -80
 run 28086 #
 
-# bias 60  uA 13.56
+# bias -60
 run 28087 # low yield
 
-# bias 50  uA 12.26
-
-# bias 40  uA 10.87
-
-# bias 30  uA 9.29
-
-# bias 20  uA 7.61
-
-# bias 10  uA 5.63
-
-# bias 30  uA 9.62
-
-# bias 40  uA 11.68
-
-# bias 50  uA 12.66
-
-# bias 60  uA 14.06
-
-# bias 250  uA 30.25
+# bias -250
 run 28098 #
 
-# bias 10  uA 5.43
-
-# bias 20  uA 7.72
-
-# bias 30  uA 9.62
-
-# bias 40  uA 11.31
-
-# bias 50  uA 12.89
-
-# bias 60  uA 14.31
-
 # trigger gate from 8 to 5 ns
-# bias 250  uA 31.31
+# bias -250
 run 28106
 
-# over night -600 V at chill -20 deg  uA 42.66
+# over night -600 V at chill -20 deg
 
-# +copy+
-
-run 28123 # 1101k  ntr 3.61  eff 99.91  ry 13.11  col 1.112  row 1.780  Lan 16.12  edg 2.18
-#                                                                       2 ke trend in y
+run 28123 # eff 99.91
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 9.3.2017
 # field-assisted anti-annealing?
 # repeat bias scan for 523i
 
-# bias 10  uA 3.4
+# bias -10V
 run 28125 # eff 16.8  Q0 2.64
 
-# bias 15  uA 5.70
+# bias -15V
 run 28126 # eff 36.7  Q0 2.30
 
-# bias 20  uA 6.66
+# bias -20V
 run 28127 # eff 59.4  Q0 2.21
 
-# bias 25  uA 7.48
+# bias -25V
 run 28128 # eff 76.1  Q0 2.265
 
-# bias 30  uA 8.32
+# bias -30V
 run 28129 # eff 85.2  Q0 2.36
 
-# bias 40  uA 9.88
+# bias -40V
 run 28130 # eff 92.6  Q0 2.60
 
-# bias 50  uA 11.22
+# bias -50V
 run 28131 # eff 95.2  Q0 2.90
 
-# bias 60  uA 12.54
+# bias -60V
 run 28132 # eff 96.9  Q0 3.19
 
-# bias 70  uA 13.74
+# bias -70V
 run 28133 # eff 98.0  Q0 3.54
 
-# bias 80  uA 15.03
+# bias -80V
 run 28134 # eff 98.6  Q0 3.89
 
-# bias 100  uA 17.29
+# bias -100V
 run 28135 # eff 99.3  Q0 4.58
 
-# bias 120  uA 19.39
+# bias -120V
 run 28136 # eff 99.6  Q0 5.25
 
-# bias 140  uA 21.34
+# bias -140V
 run 28137 # eff 99.7  Q0 5.89
 
-# bias 160  uA 23.44
+# bias -160V
 run 28138 # eff 99.8  Q0 6.57
 
-# bias 180  uA 24.99
+# bias -180V
 run 28139 # eff 99.9  Q0 7.34
 
-# bias 200  uA 26.44
+# bias -200V
 run 28141 # eff 99.9  Q0 8.33
 
-# bias 220  uA 27.79
+# bias -220V
 run 28142 # eff 99.9  Q0 9.38
 
-# bias 250  uA 29.44
+# bias -250V
 run 28143 # eff 99.9  Q0 11.2
 
-# bias 300  uA 31.46
+# bias -300V
 run 28144 # eff 99.9  Q0 12.95
 
-# bias 350  uA 32.94
+# bias -350V
 run 28145 # eff 99.9  Q0 13.9
 
-# bias 400  uA 34.2
+# bias -400V
 run 28146 # eff 99.9  Q0 14.5
 
-# bias 500  uA 36.9
+# bias -500V
 run 28147 # eff 99.9  Q0 15.2
 
-# bias 600  uA 40.6
-run 28148 #   ntr 3.97  eff 99.89  ry 12.91  col 1.112  row 1.784  Lan 15.84  edg 1.95
+# bias -600V
+run 28148 # eff 99.9  Q0 15.8
 
-# bias 700  uA 44.3
+# bias -700V
 run 28149 # eff 99.9  Q0 16.2
 
-# bias 800, tilt 17.5  uA 49.9
+# bias -800V
 run 28150 # eff 99.9  Q0 16.4
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Thu Mar  9 11:44:37 2017  hv08a.log
 # 523i
 # shallow angle: 78 deg
-tilt 78.3
 
-# bias 400  uA 37
+tilt 78
+
+# bias 400
 run 28153
 
-# bias  50  uA 12
+# bias  50
 run 28154
 
-# bias  60  uA 13.3
+# bias  60
 run 28155
 
-# bias  80  uA 15.8
+# bias  80
 run 28156
 
-# bias 100  uA 18.1
+# bias 100
 run 28157 # double peak starts
 
-# bias 120  uA 20.3
+# bias 120
 run 28158
 
-# bias 140  uA 22.4
+# bias 140
 run 28159 # double peak
 
-# bias 160  uA 24.3
+# bias 160
 run 28160 # double peak and dip
 
-# bias 180  uA 25.9
-run 28161 #  no deep charge island
+# bias 180
+run 28161
 
-# bias 200  uA 27.4
+# bias 200
 run 28162
 
-# bias 220  uA 28.7
+# bias 220
 run 28163
 
-# bias 250  uA 30.3
+# bias 250
 run 28164
 
-# bias 300  uA 32.1
+# bias 300
 run 28165
 
-# bias 600  uA 42.9
+# bias 600
 run 28166
 
-# bias 800  uA 52.9
+# bias 800
 run 28167
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Thu 9.3.2017 afternoon
 # install chip528i: 1.5E15 p/cm2
 
 chip 528
 gain /home/pitzl/psi/dtb/tst400/c528i-chill-m20-trim35-gaincal.dat
 
-tilt 18.7
-# bias 400
+tilt 19
+# bias -400
 run 28172
 
-# bias 600
+# bias -600
 run 28178 # 96.3
 
-# bias 700
+# bias -700
 run 28179 # eff 99.93  Q0 12.1
 
-# bias 800
-run 28180 # 268k  ntr 4.18  eff 99.42  ry 13.05  col 1.114  row 1.820  Lan 12.44  edg 1.39
+# bias -800
+run 28180 # eff 99.4  Q0 12.4
 
-# bias 500
+# bias -500
 run 28181 # eff 93%
 
-# bias 450
+# bias -450
 run 28182 # eff 93.7
 
-# bias 400
+# bias -400
 run 28183 # eff 99.9 
 
-# bias 350
+# bias -350
 run 28184 # eff 99.6
 
-# bias 600
-run 28185 # eff 99.94  ry 14.2
+# bias -600
+run 28185 # eff 99.94
 
-# bias 450
+# bias -450
 run 28186 # eff poor
 
 # bias 250 over night
@@ -3004,250 +3103,245 @@ run 28186 # eff poor
 # threshold was 35 Vcal
 # go to 38 Vcal
 
-# bias 500  uA 57.4
+# bias -500 V
 run 28215 # eff 89%, lots PKAM
 
-# bias 600  uA 63.4
-run 28216 # ntr 3.40  eff 99.88  ry 13.85  col 1.098  row 1.766  Lan 11.70  edg 1.66
+# bias -600 V
+run 28216 # eff 99.88  Q0 11.66
 
-# bias 500  uA 55.3
-run 28218 # ntr 3.71  eff 99.77  ry 14.02  col 1.093  row 1.739  Lan 11.04  edg 1.72
+# bias -500 V
+run 28218 # eff 99.76  Q0 11.04
 
-# bias 10  uA 6.6               cmsdyfc
-run 28219 # ntr 3.70  eff 5.36  ry 37.39  col 1.010  row 1.016  Lan 2.46  edg 2.07
+# bias -10 V
+run 28219 # eff  5.36  Q0  2.47
 
-# bias 20  uA 9.2
-run 28220 # ntr 3.40  eff 18.05  ry 36.41  col 1.012  row 1.016  Lan 2.13  edg 1.80
+# bias -20 V
+run 28220 # eff 18.05  Q0 2.13
 
-# bias 30  uA 11.3
-run 28221 # ntr 3.76  eff 41.99  ry 35.12  col 1.009  row 1.014  Lan 2.00  edg 1.74
+# bias -30 V
+run 28221 # eff 41.98  Q0 1.98
 
-# bias 40  uA 13.15
-run 28222 # ntr 3.99  eff 63.94  ry 34.83  col 1.009  row 1.013  Lan 2.07  edg 1.79
+# bias -40 V
+run 28222 # eff 63.92  Q0 2.06
 
-# bias 50  uA 14.9
-run 28223 # ntr 3.46  eff 76.79  ry 35.16  col 1.010  row 1.016  Lan 2.20  edg 1.88
+# bias -50 V
+run 28223 # eff 76.78  Q0 2.19
 
-# bias 60  uA 16.5
-run 28224 # ntr 3.98  eff 83.40  ry 35.72  col 1.011  row 1.019  Lan 2.34  edg 1.99
+# bias -60 V
+run 28224 # eff 83.37  Q0 2.35
 
-# bias 80  uA 19.4
-run 28225 # ntr 3.55  eff 89.57  ry 36.63  col 1.013  row 1.030  Lan 2.61  edg 2.13
+# bias -80 V
+run 28225 # eff 89.55  Q0 2.60
 
-# bias 100  uA 22.1
-run 28226 # ntr 3.73  eff 92.80  ry 36.21  col 1.017  row 1.047  Lan 2.91  edg 2.25
+# bias -100 V
+run 28226 # eff 92.79  Q0 2.92
 
-# bias 120  uA 24.7
-run 28227 # ntr 3.71  eff 94.81  ry 35.14  col 1.020  row 1.071  Lan 3.27  edg 2.26
+# bias -120 V
+run 28227 # eff 94.81  Q0 3.27
 
-# bias 140  uA 26.9
-run 28228 # ntr 4.08  eff 96.17  ry 34.24  col 1.025  row 1.101  Lan 3.68  edg 2.25
+# bias -140 V
+run 28228 # eff 96.16  Q0 3.69
 
-# bias 160  uA 29.1
-run 28229 # ntr 4.05  eff 97.06  ry 32.72  col 1.029  row 1.132  Lan 4.07  edg 2.17
+# bias -160 V
+run 28229 # eff 97.06  Q0 4.07
 
-# bias 180  uA 31.5
-run 28230 # ntr 3.10  eff 97.57  ry 31.29  col 1.034  row 1.162  Lan 4.48  edg 2.15
+# bias -180 V
+run 28230 # eff 97.57  Q0 4.48
 
-# bias 200  uA 33.6
-run 28231 # ntr 3.69  eff 98.16  ry 29.74  col 1.041  row 1.200  Lan 4.86  edg 2.02
+# bias -200 V
+run 28231 # eff 98.16  Q0 4.87
 
-# bias 220  uA 35.3
-run 28232 # ntr 3.28  eff 98.52  ry 28.07  col 1.047  row 1.240  Lan 5.27  edg 1.94
+# bias -220 V
+run 28232 # eff 98.52  Q0 5.28
 
-# bias 240  uA 37.1
-run 28233 # ntr 3.77  eff 98.73  ry 26.64  col 1.053  row 1.294  Lan 5.64  edg 1.82
+# bias -240 V
+run 28233 # eff 98.73  Q0 5.64
 
-# bias 260  uA 38.8
-run 28234 # ntr 4.08  eff 99.04  ry 24.53  col 1.060  row 1.357  Lan 6.10  edg 1.81
+# bias -260 V
+run 28234 # eff 99.04  Q0 6.10
 
-# bias 280  uA 40.6
-run 28235 # ntr 4.14  eff 99.32  ry 22.43  col 1.068  row 1.426  Lan 6.70  edg 1.81
+# bias -280 V
+run 28235 # eff 99.32  Q0 6.70
 
-# bias 300  uA 42.3
-run 28236 # ntr 3.54  eff 99.39  ry 20.23  col 1.072  row 1.496  Lan 7.37  edg 1.81
+# bias -300 V
+run 28236 # eff 99.39  Q0 7.37
 
-# bias 320  uA 44.2
-run 28237 # ntr 3.47  eff 98.82  ry 18.89  col 1.075  row 1.557  Lan 8.00  edg 1.80
+# bias -320 V
+run 28237 # eff 98.83  Q0 8.00
 
-# bias 340  uA 46.4
-run 28238 # ntr 2.55  eff 99.55  ry 17.43  col 1.078  row 1.607  Lan 8.65  edg 1.79
+# bias -340 V
+run 28238 # eff 99.56  Q0 8.65
 
-# bias 360  uA 47.4
-run 28239 # ntr 3.27  eff 99.70  ry 16.67  col 1.081  row 1.643  Lan 9.08  edg 1.75
+# bias -360 V
+run 28239 # eff 99.70  Q0 9.08
 
-# bias 380  uA 49.9
-run 28240 # ntr 2.52  eff 99.76  ry 16.04  col 1.085  row 1.673  Lan 9.57  edg 1.77
+# bias -380 V
+run 28240 # eff 99.76  Q0 9.58
 
-# bias 400  uA 51.6
-run 28241 # ntr 3.28  eff 99.65  ry 15.60  col 1.085  row 1.687  Lan 9.83  edg 1.72
+# bias -400 V
+run 28241 # eff 99.65  Q0 9.82
 
-# bias 420  uA 52.1
+# bias -420 V
 #run 28242 # eff 93
 
-# bias 440  uA 53.8
+# bias -440 V
 #run 28243 # eff 85
 
-# bias 460  uA 54.9
-run 28244 # ntr 3.77  eff 99.38  ry 14.95  col 1.092  row 1.727  Lan 10.56  edg 1.67
+# bias -460 V
+run 28244 # eff 99.38  Q0 10.55
 
-# bias 480  uA 55.7
-run 28245 # ntr 3.86  eff 99.86  ry 14.65  col 1.094  row 1.735  Lan 10.84  edg 1.71
+# bias -480 V
+run 28245 # eff 99.86  Q0 10.84
 
-# bias 500  uA 54.6
+# bias -500 V
 #run 28246 # eff 85
 
-# bias 550  uA 59.6
+# bias -550 V
 #run 28247 # eff 98 dropping
 
-# bias 600  uA 59.6, 62.6 after 145 s
+# bias -600 V
 #run 28248 # eff 95%, >99% after 145 s
 
-# bias 650  uA 66.9
-run 28249 # ntr 3.79  eff 99.93  ry 13.85  col 1.098  row 1.777  Lan 12.00  edg 1.68
+# bias -650 V
+run 28249 # eff 99.93  Q0 12.00
 
-# bias 700  uA 69.6
-run 28250 # ntr 3.71  eff 99.92  ry 13.94  col 1.104  row 1.781  Lan 12.16  edg 1.64
+# bias -700 V
+run 28250 # eff 99.92  Q0 12.16
 
-# bias 800  uA 77.0
-run 28251 # ntr 3.20  eff 99.91  ry 13.47  col 1.103  row 1.791  Lan 12.43  edg 1.55
-# 258k                     cmsdyfcq 13.08
+# bias -800 V
+run 28251 # eff 99.91  Q0 12.43
 
-# bias 600  uA 63.0
-run 28253 # ntr 4.00  eff 99.67  ry 14.02  col 1.098  row 1.769  Lan 11.53  edg 1.56
+# bias -600 V
+run 28253 # eff 99.91 after 15 s  Q0 11.53
 
-# bias 550  uA 59.5
-run 28254 # ntr 3.97  eff 99.59  ry 14.39  col 1.098  row 1.758  Lan 11.28  edg 1.63
+# bias -550 V
+run 28254 # eff 99.86 after 40 s  Q0 11.28
 
-# bias 500  uA 57.3
-run 28255 # ntr 3.09  eff 99.64  ry 14.35  col 1.093  row 1.739  Lan 11.00  edg 1.69
+# bias -500 V
+run 28255 # eff 99.64  Q0 11.01
 
-# bias 440  uA 53.0
-run 28256 # ntr 3.19  eff 99.72  ry 15.19  col 1.092  row 1.714  Lan 10.38  edg 1.75
+# bias -440 V
+run 28256 # eff 99.72  Q0 10.38
 
-# bias 420  uA 51.6
-run 28257 # ntr 3.49  eff 99.60  ry 15.33  col 1.088  row 1.702  Lan 10.03  edg 1.72
+# bias -420 V
+run 28257 # eff 99.60  Q0 10.03
 
-# bias 500  uA 56.8
-run 28258 # ntr 3.29  eff 99.67  ry 14.42  col 1.097  row 1.745  Lan 11.02  edg 1.71
+# bias -500 V
+run 28258 # eff 99.67  Q0 11.01
 
-# bias 250 over night  uA 37.5
+# bias 250 over night
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Sat 11.3.2017  hv11a.log
+# Sat 11.3.2017
 # continue 528i
 # shallow angle: 78 deg
 
-tilt 77.7
+tilt 78
 
-#bias 600  uA 63.1
+#bias 600
 run 28291 # 
 
-#bias 800  uA 77.0
+#bias 800
 run 28292 # 
 
-#bias 500  uA 59.3
+#bias 500
 run 28293 # 
 
-#bias 400  uA 53.1
+#bias 400
 run 28294 # 
 
-#bias 350  uA 48.4
+#bias 350
 run 28295 # 
 
-#bias 300  uA 41.7
-run 28296 # cmsqrowvsd: double peak, no deep charge island
+#bias 300
+run 28296 # cmsqrowvsd: double peak
 
-#bias 250  uA 36.2
+#bias 250
 run 28297 # cmsqrowvsd: double peak
 
-#bias 200  uA 31.6
+#bias 200
 run 28298 # 
 
-#bias 150  uA 26.1
+#bias 150
 run 28299 # 
 
-#bias 100  uA 20.0
+#bias 100
 run 28300 # 
 
-#bias  50  uA 13.3
+#bias  50
 run 28301 # 
 
-#bias 325  uA 45.4
+#bias 325
 run 28302 # 
 
-#bias 275  uA 39.4
-run 28303 # cmsqyvsd: double peak
+#bias 275
+run 28303 # cmsqrowvsd: double peak
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Sat 11.3.2017 afternoon
 # install chip 529i: 1.9E15 p/cm2
 
 chip 529
 gain /home/pitzl/psi/dtb/tst400/c529i-chill-m20-trim35-gaincal.dat
 
-tilt 19.7
+tilt 19
 
-# bias 800, gate delay 4  uA 88
-run 28315 # Q0 10.42
+# bias 800, gate delay 4
+run 28315
 
-# bias 350  uA 49.8
-
-# bias 600, gate delay 0  uA 67.9
-run 28317 # 89k  eff 92.4  Q0 9.36  PKAM
+# bias 600, gate delay 0
+run 28317
 
 # bias 600, gate delay 2
-run 28319 # 91k  eff 82.0  Q0 9.28
+run 28319
 
 # bias 600, gate delay 1
-run 28320 # Q0 9.31
+run 28320
 
 # bias 600, gate delay 0, 8 ns wide
-run 28321 # Q0 9.19
+run 28321
 
 # bias 600, gate delay 0, 8 ns wide, thr 64 (from 72, from 80)
-run 28323 # Q0 9.21
+run 28323
 
 # bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 60 -> 90
-run 28325 # Q0 9.21
+run 28325
 
 # bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 110
-run 28326 # one dead DC # Q0 9.99
+run 28326 # one dead DC
 
 # bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 60 -> 10
-run 28328 # Q0 8.37
+run 28328
 
 # bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 60 -> 10, Vdig 9 -> 12
-run 28329 # eff 98.3  Q0 8.88
+run 28329 # eff 98.3
 
 # bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 10, Vdig 15
-run 28330 # eff 98.3  Q0 9.03
+run 28330 # eff 98.3
 
 # bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 10, Vdig 15
-run 28332 # eff 98.3  Q0 9.03
+run 28332 # eff 98.3
 
-# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 10, Vdig 15, VthrComp 72
-run 28333 -l 246000 # ntr 4.29  eff 96.99  ry 15.89  col 1.068  row 1.631  Lan 9.35  edg 3.01
-#         segmentation violation
+# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 10, Vdig 15, VthrComp 64 -> 72
+run 28333 -l 246000 # eff 98.3
 
-# bias 500 over night  uA 65.4
+# bias 500 over night
 # DAQ crashed: no data
 
 #-------------------------------------------------------------------------------
 # Sun 12.3.2017
 # continue chip 529i after one night at -500V
 
-# bias 500  uA 60.0
+# bias -500
 run 28337 # eff 97.4  Q0 6.48
 
-# bias 500, WBC 141 -> 56
+# bias -500, WBC 141 -> 56
 run 28338 # eff 97.3  Q0 6.48
 
 # gate delay 0 -> 4 ns
 run 28339 # eff 97.1  Q0 6.49
 
 # gate delay 4 ns
-# bias 800  uA 93.5
+# bias -800
 run 28340 # eff 98.3  Q0 9.71
 
 # VthrComp 64 -> 72
@@ -3256,96 +3350,88 @@ run 28341 # eff 98.6  Q0 9.82
 # VthrComp 80 (orig)
 run 28342 # eff 98.7  Q0 10.05
 
-# bias 700  uA 77.3
+# bias -700
 run 28343 # eff 97.9 rising  Q0 9.69
 
-# bias 600  uA 69.6
-run 28344 # 264k  ntr 4.48  eff 95.92  ry 15.94  col 1.073  row 1.656  Lan 8.92  edg 2.67
+# bias -600
+run 28344 # eff 95.9  q0 8.93
 
-# bias 550  uA 64.8
+# bias -550
 run 28345 # eff 96.2  Q0 8.28
 
-# bias 500  uA 63.1
+# bias -500
 run 28346 # eff 98.4  Q0 7.32
 
-# bias 450  uA 54.5
+# bias -450
 run 28347 # eff 92.1 falling  Q0 6.19
 
-# bias 400  uA 65.4
+# bias -800
+run 28356 # eff 98.4  Q0 10.18
 
-# bias 800  uA 93.2
-
-# bias 475  uA 58.0
-
-# bias 525  uA 65.9
-
-# bias 800  uA 93.2
-run 28356 # 1103k  ntr 4.37  eff 98.76  ry 14.84  col 1.084  row 1.737  Lan 10.19  edg 2.53
-#                                                                       1 ke U in y
-# bias 600  uA 69.6
-run 28358 #  261k  ntr 4.21  eff 96.60  ry 15.96  col 1.074  row 1.654  Lan 8.93  edg 2.73
+# bias -600
+run 28358 # eff 96.6  Q0 8.94
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 529i
 # shallow angle: 79 deg
 #
-tilt 78.75
-# bias 800  uA 94
+tilt 79
+# bias -800
 run 28360
 
-# bias 700  uA 83.2
+# bias -700
 run 28361
 
-# bias 600  uA 69.5
+# bias -600
 run 28362
 
-# bias s 500  uA 60.6
+# bias -500
 run 28363
 
-# bias 400, threshold 80 -> 72, else noisy  uA 47.9
+# bias -400, threshold 80 -> 72, else noisy
 run 28365
 
-# bias 450  uA 55.0
+# bias -450
 run 28366
 
-# bias 550  uA 64.6
+# bias -550
 run 28367
 
-# bias 475  uA 61.1  double junction
+# bias -475
 run 28368
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 529i
-# back to tilt 19, thr 72, try lower Vbias
-
+# back to tilt 19, thr 72
+#
 tilt 19
 
-# bias 400  uA 55.6
+# bias -400
 run 28369 # eff 79.5  Q0 5.44
 
-# bias 350  uA 46.9
+# bias -350
 run 28370 # eff 82.7  Q0 4.84
 
-# bias 300  uA 41.0
+# bias -300
 run 28371 # eff 94.5  Q0 4.385
 
-# bias 250  uA 36.8
+# bias -250
 run 28372 # eff 91.7  Q0 4.04
 
-# bias 200  uA 
+# bias -200
 run 28373 # eff 87.4  Q0 3.75
 
-# bias 150  uA 26.8
+# bias -150
 run 28374 # eff 80.3  Q0 3.45
 
-# bias 100  uA 21.3
+# bias -100
 run 28375 # eff 59.7  Q0 3.27
 
-# bias 50  uA 15.3
+# bias -50
 run 28376 # eff 15.5  Q0 3.76
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# install chip 519i (1E15) rot 90
+# install chip 519i rot 90i
 
 chip 519
 gain /home/pitzl/psi/dtb/tst400/c519i-chill-m20-trim35-gaincal.dat
@@ -3360,80 +3446,80 @@ run 28381 # -s
 # Mon 13.3.2017
 # continue 519i
 tilt 27
-# bias 800
+# bias -800
 run 28406 # Q0 13.6
 
 tilt 0
-# bias 800
+# bias -800
 run 28409 # eff 99.8   Q0 13.3
 
 # threshold 95 -> 80
-# bias 700
+# bias -700
 run 28413 # eff 99.87  Q0 13.11
 
-# bias 600
+# bias -600
 run 28414 # eff 99.2   Q0 12.84
 
-# bias 500
+# bias -500
 run 28415 # eff 99.86  Q0 12.44
 
-# bias 400
+# bias -400
 run 28416 # eff 99.86  Q0 11.95
 
-# bias 350
+# bias -350
 run 28417 # eff 99.88  Q0 11.53
 
-# bias 275
+# bias -275
 run 28421 # eff 99.83  Q0 10.50
 
-# bias 300
+# bias -300
 run 28422 # eff 99.85  Q0 10.85
 
-# bias 250
+# bias -250
 run 28423 # eff 99.86  Q0 9.89
 
-# bias 225
+# bias -225
 run 28424 # eff 99.86  Q0 9.12
 
-# bias 200
+# bias -200
 run 28425 # eff 99.77  Q0 8.01
 
-# bias 175
+# bias -175
 run 28426 # eff 99.61  Q0 6.76
 
-# bias 150
+# bias -150
 run 28427 # eff 99.61  Q0 5.78
 
-# bias 125
+# bias -125
 run 28429 # eff 99.10  Q0 4.94
 
-# bias 100
+# bias -100
 run 28430 # eff 98.4   Q0 4.19
 
-# bias 80
+# bias -80
 run 28431 # eff 97.5   Q0 3.61
 
-# bias 60
+# bias -60
 run 28432 # eff 95.6   Q0 3.07
 
-# bias 40
+# bias -40
 run 28433 # eff 90.5   Q0 2.53
 
-# bias 20
+# bias -20
 run 28434 # eff 45.7   Q0 2.26
 
-# bias 10
+# bias -10
 run 28435 # eff 12.0   Q0 2.44
 
-# bias 30
+# bias -30
 run 28436 # eff 79.8   Q0 2.32
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# 519i (1E15) rot90
+# 519i rot90
 # shallow angle: 79 deg
 #
 tilt 79
-# bias 50  PKAM
+# bias 50
 run 28437
 
 # bias 75
@@ -3451,7 +3537,7 @@ run 28441
 # bias 175
 run 28442
 
-# bias 200  no deep charge island
+# bias 200
 run 28443
 
 # bias 250
@@ -3470,22 +3556,17 @@ run 28448
 run 28449
 
 # bias 800
-run 28450 # 361k
+run 28450
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Mon 13.3.2017 afternoon
 # install 515i: 1.5E15, rot90
 chip 515
 gain /home/pitzl/psi/dtb/tst400/c515i-chill-m20-trim35-gaincal.dat
 tilt 29
-
 # bias 275 over night
-
-run 28456 # + 1M
+run 28456 # 1M
 # tele
-run 28457 # 1101k  ntr 4.25  eff 99.08  ry 25.82  col 1.743  row 1.266  Lan 7.46  edg 0.76
-#                                                                      1.5 ke rise in y
-# +copy+
+run 28457 
 run 28458 
 run 28459 
 run 28460 
@@ -3495,168 +3576,167 @@ run 28463
 run 28464
 run 28465
 run 28466
-run 28467 # 20M +
+run 28467 # 20M
 
 #-------------------------------------------------------------------------------
 # Tue 14.3.2017
 # 515i shallow angle
 
-tilt 82.2
-# bias 800  uA 61.1
-run 28469 # 503k
+tilt 82
+# bias 800
+run 28469
 
-# bias 600  uA 52.6
+# bias 600
 run 28470
 
-# bias 400  uA 43.0
+# bias 400
 run 28471
 
-# bias 300  uA 38.0  deep charge island separates
+# bias 300
 run 28472
 
-# bias 250  uA 34.6  deep charge island
+# bias 250
 run 28473
 
-# bias 200  uA 30.2  deep charge island
+# bias 200
 run 28474
 
-# bias 150  uA 25.5
+# bias 150
 run 28475
 
-# bias 225  uA 32.5  deep charge island
+# bias 225
 run 28476
 
-# bias 100  uA 20.1
+# bias 100
 run 28477
 
-# bias 350  uA 41.0
+# bias 350
 run 28478
 
-# bias 275  uA 37.5
+# bias 275
 run 28479
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# chip 515i
-tilt 28.1
-# bias 800  uA 61.3
-run 28480 # eff 98.52  Q0 12.64
+tilt 28
+# bias 800
+run 28480 # eff 98.55  Q0 12.53
 
-# bias 10  uA 6.2
+# bias 10
 run 28481 # eff 36.90  Q0 1.07
 
-# bias 20  uA 8.8
+# bias 20
 run 28482 # eff 78.57  Q0 1.23
 
-# bias 40  uA 12.5
+# bias 40
 run 28483 # eff 93.13  Q0 1.63
 
-# bias 60  uA 15.6
+# bias 60
 run 28484 # eff 96.80  Q0 1.95
 
-# bias 80  uA 18.4
+# bias 80
 run 28485 # eff 98.20  Q0 2.39
 
-# bias 100  uA 20.9
+# bias 100
 run 28486 # eff 98.81  Q0 2.86
 
-# bias 120  uA 23.2
-run 28487 # eff 99.03  Q0 3.29
+# bias 120
+run 28487
 
-# bias 140  uA 25.4
-run 28488 # eff 99.12  Q0 3.73
+# bias 140
+run 28488
 
-# bias 160  uA 27.5
-run 28489 # eff 99.22  Q0 4.14
+# bias 160
+run 28489
 
-# bias 180  uA 29.4
-run 28490 # eff 99.20  Q0 4.53
+# bias 180
+run 28490
 
-# bias 200  uA 31.3
-run 28491 # eff 99.23  Q0 5.00
+# bias 200
+run 28491
 
-# bias 220  uA 33.1
-run 28492 # eff 99.13  Q0 5.44
+# bias 220
+run 28492 # eff 99.24
 
-# bias 240  uA 34.8
-run 28493 # eff 99.20  Q0 6.01
+# bias 240
+run 28493 # eff 99.29
 
-# bias 260  uA 36.3
-run 28494 # eff 99.17  Q0 6.56
+# bias 260
+run 28494 # eff 99.24
 
-# bias 280  uA 37.8
-run 28495 # eff 99.02  Q0 7.27
+# bias 280
+run 28495 # eff 99.14
 
-# bias 300  uA 39.1
-run 28496 # eff 98.98  Q0 7.93
+# bias 300
+run 28496 # eff 99.10
 
-# bias 320  uA 40.2
-run 28497 # eff 99.01  Q0 8.54
+# bias 320
+run 28497 # eff 99.11
 
-# bias 340  uA 41.1
-run 28498 # eff 98.90  Q0 9.12
+# bias 340
+run 28498 # eff 98.98
 
-# bias 360  uA 42.0
-run 28499 # eff 98.74  Q0 9.56
+# bias 360
+run 28499 # eff 98.82
 
-# bias 380  uA 42.8
-run 28500 # eff 98.70  Q0 9.92
+# bias 380
+run 28500
 
-# bias 400  uA 43.55
-run 28501 # eff 98.62  Q0 10.33
+# bias 400
+run 28501
 
-# bias 420  uA 44.4
-run 28502 # eff 98.66  Q0 10.56
+# bias 420
+run 28502
 
-# bias 440  uA 45.15
-run 28503 # eff 98.68  Q0 10.82
+# bias 440
+run 28503
 
-# bias 460  uA 45.75
-run 28504 # eff 98.55  Q0 11.03
+# bias 460
+run 28504
 
-# bias 480  uA 46.7
-run 28505 # eff 98.56  Q0 11.22
+# bias 480
+run 28505
 
-# bias 500  uA 47.2
-run 28506 # eff 98.28  Q0 11.33
+# bias 500
+run 28506
 
-# bias 550  uA 50.1
-run 28507 # eff 98.31  Q0 11.65
+# bias 550
+run 28507
 
-# bias 600  uA 51.9
-run 28508 # eff 98.24  Q0 11.89
+# bias 600
+run 28508
 
-# bias 650  uA 53.3
-run 28509 # eff 98.21  Q0 12.10
+# bias 650
+run 28509
 
-# bias 700  uA 56.1
-run 28510 # eff 98.20  Q0 12.31
+# bias 700
+run 28510
 
-# bias 750  uA 58.5
-run 28511 # eff 98.08  Q0 12.49
+# bias 750
+run 28511
 
-# bias 800  uA 60.3
-run 28512 # eff 97.15  Q0 12.72
+# bias 800
+run 28512
 
-# bias 30  uA 10.4
-run 28513 # eff 89.22  Q0 1.38
+# bias 30
+run 28513
 
-# bias 15  uA 7.3
-run 28514 # eff 65.47  Q0 1.07
+# bias 15
+run 28514
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # install 516i, 1.9E15 p/cm2, rot90
 chip 516
 gain /home/pitzl/psi/dtb/tst400/c516i-chill-m20-trim35-gaincal.dat
-tilt 27.3
-# bias 350 over night
+tilt 28
+# bias -350 V over night
 
 #-------------------------------------------------------------------------------
-# Wed 15.3.2017: c516i
+# Wed 15.3.2017: c516
 
-# bias 10
+# bias 800 ?
 run 28530 # eff 11%
 
-# bias 800, gate delay 0  uA 77.4
+# bias 800, gate delay 0
 run 28533 # eff 99.16
 
 # bias 800, gate delay 2
@@ -3671,140 +3751,138 @@ run 28536 # eff 99.72
 # bias 800, gate delay 23
 run 28538 # eff 99.16
 
-# bias 10, gate delay 0  uA 6.2
+# bias 10, gate delay 0
 run 28540 # eff 12.3  Q0 1.41
 
-# bias 15, gate delay 0  uA 7.6
+# bias 15, gate delay 0
 run 28541 # eff 25.7  Q0 1.41
 
-# bias 20, gate delay 0  uA 9.15
+# bias 20, gate delay 0
 run 28542 # eff 43.6  Q0 1.43
 
-# bias 30, gate delay 0  uA 11.2
+# bias 30, gate delay 0
 run 28543 # eff 69.2  Q0 1.45
 
-# bias 40, gate delay 2  uA 12.95
-run 28544 # ntr 4.55  eff 79.62  ry 52.30  col 1.011  row 1.013  Lan 1.55  edg 1.40
+# bias 40, gate delay 2
+run 28544 # eff 79.7  Q0 1.55
 
-# bias 50, gate delay 2  uA 14.55
+# bias 50, gate delay 2
 run 28545 # eff 85.8  Q0 1.67
 
-# bias 60, gate delay 2  uA 16.05
+# bias 60, gate delay 2
 run 28546 # eff 89.3  Q0 1.80
 
-# bias 80, gate delay 2  uA 18.7
+# bias 80, gate delay 2
 run 28547 # eff 93.2  Q0 2.04
 
-# bias 100, gate delay 2  uA 21.1
+# bias 100, gate delay 2
 run 28548 # eff 95.6  Q0 2.25
 
-# bias 125, gate delay 2  uA 23.9
+# bias 125, gate delay 2
 run 28549 # eff 97.3  Q0 2.57
 
-# bias 150, gate delay 2  uA 26.7
+# bias 150, gate delay 2
 run 28550 # eff 98.3  Q0 2.92
 
-# bias 175, gate delay 2  uA 29.2
+# bias 175, gate delay 2
 run 28551 # eff 98.8  Q0 3.21
 
-# bias 200, gate delay 2  uA 31.7
+# bias 200, gate delay 2
 run 28552 # eff 99.2  Q0 3.60
 
-# bias 225, gate delay 2  uA 33.9
+# bias 225, gate delay 2
 run 28553 # eff 99.39  Q0 3.91
 
-# bias 250, gate delay 2  uA 36.3
-run 28554 # eff 99.53  Q0 4.18  ry 38
+# bias 250, gate delay 2
+run 28554 # eff 99.53  Q0 4.18
 
-# bias 275, gate delay 2  uA 38.6
+# bias 275, gate delay 2
 run 28555 # eff 99.68  Q0 4.51
 
-# bias 300, gate delay 2  uA 40.5
-run 28557 # eff 99.68  Q0 4.96  ry 34
+# bias 300, gate delay 2
+run 28557 # eff 99.68  Q0 4.96
 
-# bias 325, gate delay 2  uA 42.9
+# bias 325, gate delay 2
 run 28558 # eff 99.74  Q0 5.31
 
-# bias 350, gate delay 2  uA 45.1
+# bias 350, gate delay 2
 run 28559 # eff 99.76  Q0 5.72
 
-# bias 375, gate delay 2  uA 47.3
+# bias 375, gate delay 2
 run 28560 # eff 99.70  Q0 6.30
 
-# bias 400, gate delay 2  uA 49.2
+# bias 400, gate delay 2
 run 28561 # PKAM, noisy  eff 84.5  Q0 6.84
 
-# bias 425  uA 51.7
+# bias 425
 run 28562 # PKAM  eff 74.5  Q0 7.11
 
-# bias 450  uA 54.5
+# bias 450
 run 28563 # PKAM  eff 84.0  Q0 7.63
 
-# bias 475  uA 55.2
+# bias 475
 run 28564 # clean eff 99.83  Q0 8.13
 
-# bias 500  uA 57.1
-run 28565 # 785k  eff 99.81  Q0 8.46
+# bias 500
+run 28565 # eff 99.81  Q0 8.46
 
-# bias 525  uA 58.5
+# bias 525
 run 28566 # eff 99.80  Q0 8.77
 
-# bias 550  uA 60.2
+# bias 550
 run 28567 # eff 99.82  Q0 9.00
 
-# bias 575  uA 62.0
+# bias 575
 run 28568 # eff 99.80  Q0 9.23
 
-# bias 600  uA 63.2
+# bias 600
 run 28569 # eff 99.77  Q0 9.42
 
-# bias 625  uA 64.9
+# bias 625
 run 28571 # eff 99.79  Q0 9.67
 
-# bias 650  uA 66.5
+# bias 650
 run 28572 # eff 99.76  Q0 9.82
 
-# bias 675  uA 68.4
+# bias 675
 run 28573 # eff 99.70  Q0 9.96
 
-# bias 700  uA 69.3
+# bias 700
 run 28574 # eff 99.84  Q0 10.00
 
-# bias 725  uA 72.3
+# bias 725
 run 28575 # eff 99.81  Q0 10.08
 
-# bias 750  uA 73.4
+# bias 750
 run 28576 # eff 99.82  Q0 10.16
 
-# bias 775  uA 75.9
+# bias 775
 run 28577 # eff 99.83  Q0 10.31
 
-# bias 800  uA 77.4
+# bias 800
 run 28578 # eff 99.82  Q0 10.41
 
-# bias 450 repeat  uA 52.2
+# bias 450 repeat
 run 28579 # eff 99.82  Q0 7.36
 
-# bias 425 repeat  uA 50.2
+# bias 425 repeat
 run 28580 # eff 99.79  Q0 6.88
 
-# bias 400 repeat  uA 47.9
-
-# bias 800  uA 77.3
+# bias 800
 run 28583 # eff 99.84  Q0 10.30
 
-# bias 400 repeat  uA 47.8
+# bias 400 repeat
 run 28584 # PKAM eff 83.0
 
-# bias 800  uA 77.4
-run 28585 # 695k  ntr 4.38  eff 99.79  ry 17.37  col 1.787  row 1.265  Lan 10.41  edg 1.44
+# bias 800
+run 28585 # eff 99.81  Q0 10.41
 
-# Vbias 350 over night  uA 43.6
+# Vbias 350 over night
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 16.3.2017
-# chip 516i shallow angle
-tilt 82.4
+# c516i shallow angle
+tilt 82
 
 # bias 800
 run 28600
@@ -3821,7 +3899,7 @@ run 28603
 # bias 375
 run 28604 # charge low
 
-# bias 325  deep charge 'island'
+# bias 325
 run 28605
 
 # bias 275
@@ -3837,31 +3915,9 @@ run 28609
 run 28610
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# partial depletion, more tilt, better resolution? no
-
-tilt 42 # not enough ?
-
-# bias 250
-run 28611 # eff 99.7  ry 42
-
-#bias 300
-run 28612 # eff 99.7  ry 36
-
-#-------------------------------------------------------------------------------
-# Thu 16.3.2017 noon
-# re-install 523 after 1 week in the fridge
-chip 523
-gain /home/pitzl/psi/dtb/tst400/c523i-chill-m20-trim35-gaincal.dat
-
-# copy
-run 28616
-
-run 28641
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# re-install 519i: 1E15 rot90
+# install 519i: 1E15 rot90
 # over night with LV on, HV off
-# temperature annealing? no
+# temperature annealing?
 
 # Fri 17.3.2017
 chip 519
@@ -3869,161 +3925,111 @@ gain /home/pitzl/psi/dtb/tst400/c519i-chill-m20-trim35-gaincal.dat
 tilt 28
 
 # bias 800
-run 28648 # tele  eff 99.36  Q0 13.37
+run 28648 # tele  eff 99.7
 
 # bias 600
-run 28650 # 252k  ntr 4.37  eff 99.50  ry 16.72  col 1.803  row 1.209  Lan 12.98  edg 1.13
-#                                                                    non-uniform Q
+run 28650 #
+
 # bias 500
-run 28651 # eff 99.51  Q0 12.58
+run 28651 #
 
 # bias 400
-run 28652 # eff 99.58  Q0 12.11
+run 28652 #
 
 # bias 350
-run 28653 # eff 99.53  Q0 11.78
+run 28653 #
 
 # bias 300
-run 28654 # eff 99.61  Q0 11.31
+run 28654 #
 
 # bias 275
-run 28655 # eff 99.65  Q0 11.00
+run 28655 #
 
 # bias 250
-run 28656 # eff 99.64  Q0 10.59
+run 28656 #
 
 # bias 225
-run 28657 # eff 99.63  Q0 10.07
+run 28657 #
 
 # bias 200
-run 28658 # eff 99.70  Q0 9.31
+run 28658 #
 
 # bias 175
-run 28659 # eff 99.73  Q0 7.99
+run 28659 #
 
 # bias 150
-run 28660 # eff 99.69  Q0 6.56
+run 28660 # eff 
 
 # bias 125
-run 28661 # eff 99.73  Q0 5.41
+run 28661 # eff 99.73
 
 # bias 100
-run 28662 # eff 99.74  Q0 4.55
+run 28662 # eff 99.74
 
 # bias 80
-run 28663 # eff 99.67  Q0 3.88
+run 28663 # eff 99.67
 
 # bias 60
-run 28664 # eff 99.54  Q0 3.18
+run 28664 # eff 99.54
 
 # bias 40
-run 28665 # eff 98.85  Q0 2.41
+run 28665 # eff 98.85
 
 # bias 20
-run 28666 # eff 93.3  Q0 1.7
+run 28666 # eff 93.3
 
 # bias 10
-run 28667 # eff 65.59  Q0 1.42
+run 28667 # eff 65.5
 
 # bias 30
-run 28668 # eff 97.3  Q0 2.04
+run 28668 # eff 97.3
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # install 511i: 5E14 rot90
 chip 511
 gain /home/pitzl/psi/dtb/tst400/c511i-chill-m20-trim35-gaincal.dat
+tilt 28
 
 # bias 500
-# tele
-tilt 27.5
-run 28692 # eff 99.64  Q0 15.00
+run 28692 # eff 99.64
 
 # bias 10
-run 28693 # eff 97.50  Q0 1.05
+run 28693 # eff 97.50
 
 # bias 15
-run 28694 # eff 98.89  Q0 1.54
+run 28694 # eff 98.89
 
 # bias 20
-run 28695 # eff 99.30  Q0 2.08
+run 28695 # eff 99.30
 
 # bias 25
-run 28696 # eff 99.35  Q0 2.48
+run 28696 # eff 99.35
 
 # bias 30
-run 28697 # eff 99.35  Q0 2.95
+run 28697 # eff 99.35
 
 # bias 40
-run 28698 # eff 99.33  Q0 3.76
+run 28698 # eff 99.33
 
 # bias 50
-run 28699 # eff 99.46  Q0 4.56
+run 28699 # eff 99.46
 
 # bias 60
-run 28700 # eff 99.46  Q0 5.17
+run 28700
 
 # bias 70
-run 28701 # eff 99.43  Q0 5.90
+run 28701
 
 # bias 80
-run 28702 # eff 99.52  Q0 6.74
+run 28702
 
 # bias 90
-run 28703 # eff 99.45  Q0 7.59
+run 28703
 
 # bias 100
-run 28704 # eff 99.59  Q0 8.57
+run 28704
 
-# bias 120
-run 28705 # eff 99.57  Q0 10.36
-
-# bias 140
-run 28706 # eff 99.64  Q0 11.53
-
-# bias 160
-run 28707 # eff 99.63  Q0 12.20
-
-# bias 180
-run 28708 # eff 99.60  Q0 12.71
-
-# bias 200
-run 28709 # eff 99.64  Q0 13.08
-
-# bias 110
-run 28711 # eff 99.61  Q0 9.28
-
-# bias 220 ?
-run 28712 # eff 99.62  Q0 13.30
-
-# bias 250 ?
-run 28713 # eff 99.62  Q0 13.63
-
-# bias 300
-run 28714 # eff 99.64  Q0 14.08
-
-# bias 350
-run 28715 # eff 99.61  Q0 14.38
-
-# bias 400
-run 28716 # eff 99.60  Q0 14.6
-
-# bias 500
-run 28717 # eff 99.59  Q0 14.94
-
-# bias 600
-run 28718 # 251k  ntr 4.42  eff 99.60  ry 17.94  col 1.885  row 1.190  Lan 15.12  edg 0.06 (low)
-#           600 Hz                                                     don't trust
-# bias 700
-run 28719 # eff 99.53  Q0 15.23
-
-# bias 800
-run 28720 # eff 99.54  Q0 15.33
-
-# bias 450
-run 28721 # eff 99.60  Q0 14.61
-
-# 800 over night
-run 28722 # eff 99.54  Q0 15.35
+# 800 V over night
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sat 18.3.2017
@@ -4045,7 +4051,7 @@ run 28730
 # bias 100
 run 28731
 
-# bias 80  no deep 'island'
+# bias 80
 run 28732
 
 # bias 120
@@ -4786,14 +4792,439 @@ run 29089 #
 
 # flu bias cur led temp vers
 # 2D Q vs D bis 50 ke
-# 
+
 #-------------------------------------------------------------------------------
-# code changes:
-# 8.5.2016
-# scopem: move cmsnrow.Fill out of if(lq){}
-# scopem: cmsnrow all Q: 1.93
-# scopem:  cmsnrowp at Landau peak: 1.88
-# 9.5.2016
-# scopem: y8 for average of upstream and downstream at DUT: sy improves by 1 um
-# 2.5.2017 shallow: plot road per track, not per cluster
+# Thu 24.8.2017
+# MOD 4139
+# REF 502
+# DUT 501
+#
+geo geo_2017_08a.dat
+
+GeV 4
+tilt 20.6
+turn 0
+
+chip 501
+gain /home/pitzl/psi/dtb/tst400/c501-ia24-trim32-tb21-gaincal-2016-04.dat
+
+refchip 502
+refgain /home/pitzl/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
+
+modgain /home/pitzl/psi/dtb/tst400/D4139-trim35-tb21-gaincal.dat
+
+run 30003
+
+GeV 5.2
+
+run 30004
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Thu 24.8.2017 afternoon: install 511i: 5E14 rot90
+chip 511
+gain /home/pitzl/psi/dtb/tst400/c511i-chill-m20-trim35-gaincal.dat
+
+# bias 120
+
+tilt 27.7
+
+run 30022 # eff 99.3, loose sync at 300 s
+
+run 30023 # eff 98.7, drops at low y
+
+run 30025 # eff 97.4%, drops vs y and t
+
+run 30028 # eff 93.8
+
+run 30034 # eff 86%, drops to 60% at low y
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Fri 25.8.2017 afternoon: install 522i: 5E14
+chip 522
+#gain /home/pitzl/psi/dtb/tst400/c522i-chill-m20-trim35-gaincal.dat
+gain /home/pitzl/psi/dtb/tst400/c522i-chill-m20-gaincal-2017-08-30.dat
+
+# upside down! (avoid shorts from condensation water on the cable)
+
+#bias 120
+tilt 17
+
+run 30039
+
+tilt 19
+
+run 30040 # eff 85%
+
+# vb 800, 50 uA
+
+run 30042 # eff 85#
+
+# gate delay 16 -> 20 ns
+
+run 30047 # 99%
+
+# vb 120 overnight
+
+run 30048
+
+run 30108
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Tue 29.8.2017 continue 522i
+# bias 600
+
+run 30351 # ntr 2.82  eff 97.79  ry 11.20  col 1.119  row 1.919  Lan 15.77  edg 1.06
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Wed 30.8.2017 continue 522i
+# gaincal at -20 deg, 600 V
+#
+# bias 120
+# chiller -12 deg
+gain /home/pitzl/psi/dtb/tst400/c522i-chill-m12-gaincal-2017-08-31.dat
+
+run 30394 # ntr 2.63  eff 99.22  ry 15.46  col 1.121  row 1.710  Lan 10.18  edg 1.58
+
+# over night
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Thu 31.8.2017 continue 522i at -12 deg, 120 V
+
+run 30418 # lost sync
+
+run 30420 # ntr 2.99  eff 99.35  ry 17.83  col 1.104  row 1.557  Lan 8.35  edg 1.70
+
+# gaincal at -12 deg, 120 V
+
+# try vertical incidence: failed: bias current unstable, trips: condensation?
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Thu 31.8.2017 continue 522i
+# shallow 98 deg
+# chiller -20
+gain /home/pitzl/psi/dtb/tst400/c522i-chill-m20-gaincal-2017-08-30.dat
+# bias 120 V
+#
+geo geo_2017_08c.dat
+tilt 98
+run 30432
+
+# over night
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Fri 1.9.2017 continue 522i shallow
+# chiller -20
+# bias 120 V
+
+run 30470 # decorrelated
+
+run 30477 # OK
+
+# 1 h HV off
+
+# VB 800  alignDUT
+run 30482 # saturated cmsqyvsd
+# 1 min
+# VB 80
+run 30484 # double junction suppressed: annealed away?
+
+# wait 30 min
+# VB 90
+run 30486 # nice double junction
+
+# wait 30 min
+# VB 80
+run 30487 # nice double junction
+
+# wait 22 min
+# VB 70
+run 30488 # nice double junction, at threshold
+
+# wait 32 min
+# VB 100
+run 30489 # 
+
+# wait 30 min
+# VB 150
+run 30491 # 
+#
+# over night
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sat 2.9.2017 continue 522i shallow
+
+run 30508 # 
+#
+# VB 200
+run 30510
+#
+# VB 400
+run 30512
+#
+# VB 100
+run 30513
+#
+# overnight
+run 30529
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sun 3.9.2017
+chip 524 # unirradiated
+gain /home/pitzl/psi/dtb/tst400/c524-ia24-trim35-gaincal.dat
+# bias 150
+tilt 20 # telescope alignment
+geo geo_2017_08d.dat # 0 151 305 484 635 788
+run 30552
+
+tilt 98
+# shallow angle
+run 30554
+
+# close telescope
+tilt 14
+geo geo_2017_08e.dat # 0 151 305 484 635 788
+# chiller +17 deg
+gain /home/pitzl/psi/dtb/tst400/c524-chill-p17-gaincal.dat
+run 30557 # eff 99.90
+tilt 17
+GeV 5.6 # 200 Hz
+# ex 150-49  4.8 um at 5.6 GeV
+# ex 150-57  5.0 um at 5.6 GeV
+run 30558 # eff 99.93
+tilt 19
+run 30559 # ntr 1.73  eff 99.95  ry 8.35  col 1.156  row 1.964  Lan 21.43  edg 1.83
+# overnight
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Mon 4.9.2017
+# continue chip 524
+# bias 200
+run 30573
+# bias 250
+
+# close downstream tele
+geo geo_2017_08f.dat # 0 151 305 395 546 700
+
+run 30574
+run 30575
+run 30576 # 1530k ntr 1.82  eff 99.96  ry 8.26  col 1.137  row 1.964  Lan 21.46  edg 1.58
+# cmsdy8fcq3nod  6.50
+
 #-------------------------------------------------------------------------------
+# Thu 14.9.2017
+# ROC4Sens
+# r102
+chip 102
+gain /home/pitzl/psi/r4s/tst08/r102_tb21_cal.dat
+# bias 120
+
+tilt 20
+geo geo_2017_09a.dat #  681 \  537  386 / 305  151  0
+GeV 5.6
+run 31044 #   7k  run 179
+run 31045 #  25k  run 180
+run 31047 #  22k  run 182
+run 31049 # 227k  run 184
+# adjust alignment
+run 31051 # 490k  run 186
+
+tilt 0
+run 31057 #    k  run 192
+
+# takedata 1
+# scopes -d 31054
+run 31064 #  10k  run 199  9999 written, TLU 10004  padded manually, eff 92%
+run 31066 #  10k  run 201 10009 written, TLU 10017  padded manually, eff 88%
+
+# Fri 15.9.
+# continue r102 at tilt 0
+# data format change: wev -> iev
+
+run 31067 # 7.6 k  double event entries F and E
+
+# data format change: wev, text for empty events
+
+run 31069 # run 204  6 k  no correlation
+
+# takedata 100
+run 31070 # 20525 TLU,  run 205 written 20599, deleting events extends correlation
+
+# takedata 1
+run 31072 # 44k TLU,  run 207 written 43970
+
+tilt -20
+# takedata: don't write incomplete event
+run 31075 # 10k TLU,  run 213 written 9993
+
+#-------------------------------------------------------------------------------
+# Sep 2017: R4S
+#
+chip 109 # A
+#chip 110 # B
+#chip 114 # C
+geo geo_2017_09c.dat
+GeV 5.6
+gain /home/pitzl/psi/r4s/B/r110-scancal-tb21-0928-hold24.dat
+#gain /home/pitzl/psi/r4s/C/r114-scancal-tb21-0925-hold24.dat
+tilt 0
+turn 0
+run 31094 # 200 k # loose sync
+run 31095 # 980 k # loose sync
+
+modgain /home/pitzl/eudaq/tele-scope/gaincal/D4139-tb21-trim35-gaincal.dat
+
+#-------------------------------------------------------------------------------
+# Mon 2.10.2017
+# shallow angle
+chip 102 = 50x50 P3 bias dot
+GeV 5.6
+geo geo_2017_09d.dat
+gain /home/pitzl/psi/r4s/A/r102-scancal-tb21-1002.dat
+tilt 84
+turn 0
+
+# bias 120
+run 31110
+
+# bias 20
+run 31111
+
+tilt 0
+turn 0
+geo geo_2017_09e.dat
+run 31124 #  160k
+run 31125 # 1420k
+
+#-------------------------------------------------------------------------------
+# Tue 3.10.2017
+# add MOD
+
+geo geo_2017_09f.dat
+
+# ex151 to 30 mm at 5.6 GeV: 4.1 um
+# ex151 to 45 mm at 5.6 GeV: 4.7 um
+
+run 31133 # 100k  MOD double trig
+
+tilt 20
+run 31142 # 160k  MOD OK  ry 6.65  eff 99.7  MOD looses sync at 114k
+
+tilt 22
+run 31143 # 160k  ry 6.95  eff 99.7
+
+tilt 18.5
+run 31146 # 100k  six ry 5.3  eff 99.7
+run 31147 # 656k  dy8cqi 5.2  eff 99.7  MOD looses sync at 121k
+#                          DUT out of sync 6400..8900
+
+#-------------------------------------------------------------------------------
+# Wed 4.10.2017
+chip 111
+gain /home/pitzl/psi/r4s/A/r111-scancal-tb21-1004.dat
+
+tilt 18.5
+run 31148 #  10k
+run 31149 # 160k  dy8cqi 5.9
+
+tilt 20
+run 31150 # 160k  dy8cqi 5.7
+
+tilt  0
+run 31152 #  250k
+run 31153 # 2150k  eff 99.99
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Thu 5.10.2017
+# continue 111
+tilt 22
+run 31157 # 160k  dy8cqi 6.8
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+chip 117 = 50x50 P1 default
+tilt 0
+gain /home/pitzl/psi/r4s/A/r117-scancal-tb21-1005.dat # Q0 11.1
+run 31159 # 250k
+run 31160 # 810k
+run 31161 # 319k
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Fri 6.10.2017
+# continue 117
+
+gain /home/pitzl/psi/r4s/A/r117-scancal-tb21-1006.dat # Q0 12.1
+
+tilt 20
+run 31163 # 160k  ry 7.3, 6.9 with DSP  eff 99.99
+
+tilt 19
+run 31164 # 160k  ry 6.4, 5.8 with DSP  eff 99.989  edge 1.0 ke with dph > 12 ADC
+
+tilt 18
+run 31166 # 160k  ry 6.5, 5.7 with DSP  eff 99.67  edit roi000538.txt
+#                 dy8 4.85 um
+# ex151_35 = 4.3 um and ex151_60 = 5.2 um => six 3.4 um
+
+tilt 0
+run 31167 # 10k
+run 31168 # 2592k  best Landau ever with dph>12  eff 99.99
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sat 7.10.2017
+# continue 117
+
+tilt 17
+run 31170 # 160k  ry 5.9
+
+tilt 16
+run 31171 # 160k  ry 6.0
+
+tilt 15
+run 31172 # 160k  ry 6.3
+
+gain /home/pitzl/psi/r4s/A/r117-scancal-tb21-1008.dat
+tilt 18
+run 31175 # 3078k  dy8cqi 5.1  MOD resync 9.7 h  eff 99.99
+#                cmsdyvsev drops by 15 um over time in steps, linear correction
+
+#-------------------------------------------------------------------------------
+# Sun 8.10.2017
+# install 106 = P6 polySi
+chip 106
+run 31176 #  10k
+run 31177 # 100k
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# empty telescope
+geo geo_2017_09g.dat # 0 153 305 340 491 645
+run 31180
+
+geo geo_2017_09h.dat # 0 20 41 62 214 368
+run 31181 #  250 k  tridxct 4.05 um
+run 31182 # 1200k
+
+#-------------------------------------------------------------------------------
+# Mon 30.10.2017
+# 3D 332
+
+GeV 5.6
+chip 332
+gain /home/pitzl/psi/r4s/B/r332-scancal-tb21-1030.dat
+geo geo_2017_10a.dat # 0 154  306  397  549  703
+tilt 8
+run 31210 # 698  40 k
+run 31212 # 699  126k
+
+tilt 12
+run 31213  # 700   10 k
+run 31214  # 701  400 k
+
+# bias -25 for 3D
+run 31215  # 702  2000k
+
+#-------------------------------------------------------------------------------
+# Tue 31.10.2017
+# continue 3D 332
+
+# iseg bias for MOD
+
+tilt 0
+run 31226  # 705  40k
