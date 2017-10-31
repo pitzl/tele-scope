@@ -13,6 +13,8 @@
 // scopes -l 99999 28027
 // scopes -s 28037
 
+// scopes 31210
+
 #include "eudaq/FileReader.hh"
 #include "eudaq/PluginManager.hh"
 
@@ -603,7 +605,8 @@ int main( int argc, char* argv[] )
   const double log10 = log(10);
   const double wt = atan(1.0) / 45.0; // pi/180 deg
 
-  const double qwid = 1.2; // [ke] for Moyal
+  double qwid = 1.2; // [ke] for Moyal in 150 um
+  if( chip0 >= 300 ) qwid = 1.6; // 230 um 3D
 
   bool rot90 = 0; // straight
   if( chip0 == 106 ) rot90 = 1;
@@ -627,6 +630,7 @@ int main( int argc, char* argv[] )
   if( chip0 == 111 ) fifty = 1;
   if( chip0 == 117 ) fifty = 1;
   if( chip0 == 118 ) fifty = 1;
+  if( chip0 >= 300 ) fifty = 1; // 3D
 
   double upsignx =  1; // w.r.t. telescope
   double upsigny =  1;
@@ -870,9 +874,11 @@ int main( int argc, char* argv[] )
 
   } // gainFile
 
-  double ke = 0.039; // Landau peak at 11 ke  chip 117  1005.dat
-  if( run >= 31163 ) ke = 0.034; // chip 117  1006.dat
+  double ke = 0.036; // Landau peak at 11 ke  chip 102  1002.dat
+  if( run >= 31148 ) ke = 0.039; // chip 111  1004.dat
+  if( run >= 31163 ) ke = 0.035; // chip 117  1006.dat
   if( run >= 31173 ) ke = 0.037; // chip 117  1008.dat
+  if( run >= 31210 ) ke = 0.068; // chip 332  3D 230 um at 17.2
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1710,8 +1716,11 @@ int main( int argc, char* argv[] )
 	      "DUT cluster size vs xmod ymod;x track mod 100 [#mum];y track mod 100 [#mum];<cluster size> [pixels]",
 		40, 0, 100, 40, 0, 100, 0, 20 );
 
+  TH1I cmsq0aHisto( "cmsq0a",
+		    "normal cluster charge;normal cluster charge [ke];linked clusters",
+		    160, 0, 80 );
   TH1I cmsq0Histo( "cmsq0",
-		   "normal cluster charge;normal cluster charge [ke];linked clusters",
+		   "normal cluster charge;normal cluster charge [ke];isolated linked clusters",
 		   160, 0, 80 );
   TH1I cmsq03Histo( "cmsq03",
 		   "normal cluster charge, < 4 px;normal cluster charge [ke];linked clusters, < 4 px",
@@ -1722,30 +1731,35 @@ int main( int argc, char* argv[] )
   TH1I cmsq0nHisto( "cmsq0n",
 		    "cluster charge no dot;cluster charge no dot [ke];linked clusters",
 		    160, 0, 80 );
+
+  double qxmax = 0.15; // with qwid = 1.2: 5 ke cutoff
+  if( chip0 >= 300 ) qxmax = 0.07; // 3D with qwid = 1.6: 8 ke cutoff
+
   TProfile cmsqxvsx( "cmsqxvsx",
 		     "DUT cluster charge vs x;x track [mm];<cluster charge> [ke]",
-		     50, -3.75, 3.75, 0, 0.015 ); // cutoff at 5 ke
+		     50, -3.75, 3.75, 0, qxmax ); // cutoff at 5 ke
   TProfile cmsqxvsy( "cmsqxvsy",
 		     "DUT cluster charge vs y;y track [mm];<cluster charge> [ke]",
-		     76, -3.8, 3.8, 0, 0.015 );
+		     76, -3.8, 3.8, 0, qxmax );
   TProfile2D * cmsqxvsxy = new
 		      TProfile2D( "cmsqxvsxy",
 				  "DUT cluster charge vs xy;x track [mm];y track [mm];<cluster charge> [ke]",
-				  50, -3.75, 3.75, 76, -3.8, 3.8, 0, 0.015 );
+				  50, -3.75, 3.75, 76, -3.8, 3.8, 0, qxmax );
   TProfile cmsqxvsxm( "cmsqxvsxm",
 		      "DUT cluster charge vs xmod;x track mod 100 [#mum];<cluster charge> [ke]",
-		      100, 0, 100, 0, 0.015 );
+		      100, 0, 100, 0, qxmax );
   TProfile cmsqxvsym( "cmsqxvsym",
 		      "DUT cluster charge vs ymod;y track mod 100 [#mum];<cluster charge> [ke]",
-		      100, 0, 100, 0, 0.015 );
+		      100, 0, 100, 0, qxmax );
   TProfile2D * cmsqxvsxmym = new
     TProfile2D( "cmsqxvsxmym",
 	      "DUT cluster charge vs xmod ymod;x track mod 100 [#mum];y track mod 100 [#mum];<cluster charge> [ke]",
-		40, 0, 100, 40, 0, 100, 0, 0.015 );
+		40, 0, 100, 40, 0, 100, 0, qxmax );
 
   TH1I cmspxqHisto( "cmspxq",
 		    "DUT pixel charge linked;pixel charge [ke];linked pixels",
 		    100, 0, 25 );
+  TH1I cmsphHisto( "cmsph", "CMS #SigmaPH;#SigmaPH [ADC];linked clusters", 500, -100, 900 );
 
   TH1I cmsdminHisto( "cmsdmin",
 		     "cluster - Telescope min dxy;cluster - triplet min #Deltaxy [mm];tracks",
@@ -2417,14 +2431,13 @@ int main( int argc, char* argv[] )
 
 	double q = ke*vcal;
 
-	//if( dph > 30 ) { // 
-	//if( dph > 20 ) { // 31166 cmsdycq 6.0, edge 1.5 ke
 	//if( dph > 16 ) { // 31166 cmsdycq 5.8, edge 1.25 ke
 	//if( dph > 12 ) { // 31166 cmsdycq 5.7, edge 1.0 ke
+	if( dph > 10 ) { // 31166 cmsdycq 5.7, edge 1.0 ke
 
 	//if( q > 0.8 ) { // 31166 cmsdycq 5.85
 	//if( q > 0.9 ) { // 31166 cmsdycq 5.74
-	if( q > 1.0 ) { // 31166 cmsdycq 5.72
+	//if( q > 1.0 ) { // 31166 cmsdycq 5.72
 	//if( q > 1.1 ) { // 31166 cmsdycq 5.75
 	//if( q > 1.2 ) { // 31166 cmsdycq 5.81
 	//if( q > 1.5 ) { // 31166 cmsdycq 6.00
@@ -3538,7 +3551,7 @@ int main( int argc, char* argv[] )
 
 	if( ldb ) cout << "    DUT dxy " << dxy << endl << flush;
 
-	// for eff:
+	// for eff: nearest pixel
 
 	for( unsigned ipx = 0; ipx < c->vpix.size(); ++ipx ) {
 
@@ -3657,6 +3670,14 @@ int main( int argc, char* argv[] )
 
 	// xy cuts:
 
+	if( fabs(x4) < 3.9 && fabs(y4) < 3.9 && // fiducial
+	    fabs(cmsdx) < xcut &&
+	    fabs(cmsdy) < ycut ) {
+
+	  cmsq0aHisto.Fill( Q0 ); // Landau
+
+	}
+
 	if( liso && isoc &&
 	    fabs(cmsdx) < xcut &&
 	    fabs(cmsdy) < ycut ) {
@@ -3699,8 +3720,13 @@ int main( int argc, char* argv[] )
 	    cmsqxvsym.Fill( ymod*1E3, Qx ); // Q within pixel
 	    cmsqxvsxmym->Fill( xmod*1E3, ymod*1E3, Qx ); // cluster charge profile
 
-	    for( vector<pixel>::iterator px = c->vpix.begin(); px != c->vpix.end(); ++px )
+	    double sumph = 0;
+	    for( vector<pixel>::iterator px = c->vpix.begin(); px != c->vpix.end(); ++px ) {
 	      cmspxqHisto.Fill( px->q );
+	      sumph += px->adc;
+	    }
+
+	    cmsphHisto.Fill( sumph );
 
 	  } // fiducial
 
