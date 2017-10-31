@@ -1,0 +1,8 @@
+# DUT alignment for run 31215
+iteration 3
+alignx -4.458
+aligny  -1.660
+rot -0.0183
+tilt 0
+turn 0
+dz 44.1

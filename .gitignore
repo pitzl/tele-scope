@@ -1,6 +1,6 @@
 
 *.root
-align*
+#align*
 hot*
 scope
 tele
