@@ -1,0 +1,58 @@
+
+# telescope geometry for Datura in Sep 2017 with Dreimaster
+
+plane 0
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 0
+
+plane 1
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 153
+
+plane 2
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 305
+
+plane 3
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 757
+
+plane 4
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 786
+
+plane 5
+type Mimosa26
+sizex 21.2
+sizey 10.6
+npixelx 1152
+npixely  576
+zpos 820
+
+plane 7  # DUT
+type roc4sens
+sizex 7.8
+sizey 8.0
+npixelx 78  # col
+npixely 320 # row
+zpos 80 # relative to plane 2
