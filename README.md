@@ -51,7 +51,7 @@ test beam pixel telescope analysis based on eudaq only
   mkdir build  
   cd build  
   cmake -DBUILD_pxarui=OFF ..  
-  cmake -DBUILD_pxarui=OFF -DINTERFACE_USB=OFF .. (without usb, without ftdi)  
+  #or cmake -DBUILD_pxarui=OFF -DINTERFACE_USB=OFF .. #(without usb, without ftdi)  
   make VERBOSE=1 -j4 install  
   ```
 * install eudaq as described in  
