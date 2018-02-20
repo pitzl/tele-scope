@@ -10,10 +10,10 @@ weib 3 # gain file format for 2015
 chip 504
 tilt 20
 geo geo_2015_02a.dat
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim30tb-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim30tb-gaincal.dat
 
 refchip 404
-refgain /home/pitzl/psi/dtb/tst215/phroc-c404-trim32.dat
+refgain /home/cmspix/psi/dtb/tst215/phroc-c404-trim32.dat
 
 run 14614
 run 14615
@@ -53,7 +53,7 @@ chip 504
 geo geo_2015_04a.dat
 tilt 20.7
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim32-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim32-gaincal.dat
 
 run 15384  Trim 32 + 100  62  68  eff 99.86  sy 8.54
 run 15385  Trim 32 + 807  62  68  eff 99.82  sy 8.43
@@ -62,23 +62,23 @@ run 15386  Trim 32   132  62  68
 run 15387  Trim 31 + 813  62  63  eff 99.94  sy 8.43
 run 15388  Trim 31   130  62  63  
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim30-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim30-gaincal.dat
 run 15389  Trim 30 + 712  62  69  eff 99.80  sy 8.47
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim29-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim29-gaincal.dat
 run 15390  Trim 29 + 507  62  68  eff 99.81  sy 8.52
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim28-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim28-gaincal.dat
 run 15393  Trim 28 + 504  62  63  eff 99.86  sy 8.54
 run 15394  Trim 27 + 575  62  68  eff 99.725 sy 8.46
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim34-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim34-gaincal.dat
 run 15395  Trim 34 + 502  62  68  eff 99.84  sy 8.42
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim38-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim38-gaincal.dat
 run 15398  Trim 38 + 500  62  68  eff 99.835 sy 8.41
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim36-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim36-gaincal.dat
 
 # over night:
 
@@ -116,12 +116,12 @@ run 15430  Trim 36  719  62  68
 
 # Thu 9.4.2015
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim40-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim40-gaincal.dat
 run 15436  Trim 40 + 502  61  68  eff 99.854 sy 8.41
 
 # trim 36, gate delay scan with stable conditions:
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim36-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim36-gaincal.dat
 
 run 15440  delay  6   51  61  68  eff 99.82
 run 15441  delay  4   52  61  67  eff 99.93
@@ -138,7 +138,7 @@ run 15451  delay 22   51  46  68  eff 74.87
 run 15452  delay 24   58  58  67  eff 95.00
 
 tilt 19.4
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim27-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim27-gaincal.dat
 # trim 27
 # vary ROC WBC and DTB trigger latency
 # so far we had latency 86 BC and WBC 141
@@ -155,7 +155,7 @@ run 15467  779  62  68  eff 99.806  sy 7.12
 # set tilt -21 (forward /), get 18.4
 # chiller -20
 chip 239
-gain /home/pitzl/psi/dtb/tst400/c239-ia27-vd6-cold-trim40-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c239-ia27-vd6-cold-trim40-gaincal.dat
 geo geo_2015_04g.dat
 tilt 18.4
 
@@ -179,7 +179,7 @@ chip 504
 GeV 5.6
 geo geo_2015_04x.dat
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim27-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim27-gaincal.dat
 
 run 19037  delay 20   100  59  66  eff 99.5   sy 7.04  .x fittp0.C("cmsdyfcq4nod",-0.022,0.022
 run 19038             312  59  66  eff 99.4   sy      7.35
@@ -211,7 +211,7 @@ run 19070             13000      RunControl crashed just after midnight
 # trim 31
 # gate delay 18 ns
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim31-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim31-gaincal.dat
 
 run 19075  delay 18  -100  59  67  eff 99.7  loose  sync 85s
 run 19076             771  59  67  eff 99.86  sy 7.17 7.31
@@ -284,7 +284,7 @@ run 19194
 
 #bias -150, ia24 mA, trim 28, WBC 141, no cooling
 chip 504
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim28-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim28-gaincal.dat
 
 #gear  787  635  482  305  153  0
 geo geo_2015_05.dat
@@ -347,7 +347,7 @@ chip 504
 GeV 5.6
 geo geo_2015_05c.dat
 
-gain /home/pitzl/psi/dtb/tst400/c504-vd6-ia24-trim32-chiller15-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-vd6-ia24-trim32-chiller15-gaincal.dat
 
 tilt 18.6
 run 19626  gate delay 16, trig delay 16  18.6   160  63.6  69  eff 99.77, only 25 % links
@@ -436,13 +436,13 @@ run 19694           400  eff 99.92
 # ref 501 trim 30
 
 refchip 501
-refgain /home/pitzl/psi/dtb/tst400/c501-ia24-trim30tb-gaincal.dat
+refgain /home/cmspix/psi/dtb/tst400/c501-ia24-trim30tb-gaincal.dat
 
 chip 504
 GeV 5.2
 geo geo_2015_06c.dat
 
-gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim28-gaincal.dat
+gain /home/cmspix/psi/dtb/tst305/c504-ia24-trim28-gaincal.dat
 tilt 19
 run 20182  19.0  227  61  69  eff 99.83  sy 7.42  row 1.923  col 1.108  Lan 21.67  edg 1.36  ry 7.63
 run 20183  19.0  368  61  69  eff 99.82  sy 7.60  row 1.924  col 1.108  Lan 21.63  edg 1.39
@@ -646,7 +646,7 @@ GeV 5.2
 geo geo_2015_06e.dat
 tilt 19.3
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim36tb-chiller17-gaincal.dat
 
 run 20362         65  62  70  eff 99.71
 run 20363        411  62  69  
@@ -681,51 +681,51 @@ run 20384        29175 61  69  all night
 
 tilt 19.5
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-gaincal.dat
 run 20385  thr 32   54  61  69  DUT, REF, TLU: 45 ev remain, eff 98.98, trend in x
 run 20386  thr 32  326  61  69  eff 98.90  sy 7.07  row 1.949  col 1.105  Lan 21.43  edg 0.89
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim36tb-chiller17-gaincal.dat
 run 20387  thr 36  405  61  69  eff 99.78  sy 7.09  row 1.932  col 1.096  Lan 21.69  edg 1.09
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim40tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim40tb-chiller17-gaincal.dat
 run 20388  thr 40  405  61  69  eff 99.86  sy 7.16  row 1.917  col 1.088  Lan 21.98  edg 1.70
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim44tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim44tb-chiller17-gaincal.dat
 run 20389  thr 44  407  61  69  eff 99.88  sy 7.23  row 1.903  col 1.085  Lan 21.91  edg 1.84
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim48tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim48tb-chiller17-gaincal.dat
 run 20390  thr 48  408  61  69  eff 99.90  sy 7.27  row 1.877  col 1.078  Lan 21.84  edg 2.05
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim52tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim52tb-chiller17-gaincal.dat
 run 20391  thr 52  404  61  69  eff 99.89  sy 7.34  row 1.860  col 1.077  Lan 21.84  edg 2.20
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim56tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim56tb-chiller17-gaincal.dat
 run 20392  thr 56  405  61  69  eff 99.91  sy 7.53  row 1.853  col 1.073  Lan 21.73  edg 2.27
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim60tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim60tb-chiller17-gaincal.dat
 run 20393  thr 60  409  61  69  eff 99.89  sy 7.56  row 1.844  col 1.070  Lan 21.72  edg 2.40
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim64tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim64tb-chiller17-gaincal.dat
 run 20394  thr 64  406  61  69  eff 99.89  sy 7.68  row 1.827  col 1.066  Lan 21.68  edg 2.56
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim68tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim68tb-chiller17-gaincal.dat
 run 20395  thr 68  407  61  69  eff 99.90  sy 7.91  row 1.813  col 1.063  Lan 21.61  edg 2.71
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim72tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim72tb-chiller17-gaincal.dat
 run 20396  thr 72  406  61  69  eff 99.90  sy 7.91  row 1.802  col 1.062  Lan 21.55  edg 2.80
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim76tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim76tb-chiller17-gaincal.dat
 run 20397  thr 76  420  61  69  eff 99.90  sy 8.09  row 1.791  col 1.059  Lan 21.50  edg 2.92
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim80tb-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim80tb-chiller17-gaincal.dat
 run 20398  thr 80  406  61  69  eff 99.89  sy 8.29  row 1.774  col 1.058  Lan 21.38  edg 3.10
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # disconnect chiller, same gear 06e
 # tilt scan at thr 80
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim80tb-nochiller-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim80tb-nochiller-gaincal.dat
 tilt 39.5
 run 20399  39.5  404  50  68  eff 99.88  sy 12.7  row 2.842  col 1.046  Lan 24.51  edg 3.40
 tilt 37.5
@@ -773,7 +773,7 @@ chip 504
 GeV 5.2
 geo geo_2015_07b.dat
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim28tb-nochiller-Jul-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim28tb-nochiller-Jul-gaincal.dat
 
 tilt 26.6
 run 20785  26.6  250  61  71  eff 99.96  sy 8.84  row 2.296  col 1.089  Lan 22.39  edg 1.82  sy0 10.47
@@ -859,7 +859,7 @@ tilt 18.8
 GeV 5.2
 geo geo_2015_07b.dat
 
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36tb-chiller17-Jul-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim36tb-chiller17-Jul-gaincal.dat
 
 run 20823                58  63  72  DUT eff 99.95
 # gate 8 ns    
@@ -956,15 +956,15 @@ chip 504
 refchip 500
 tilt 2
 geo geo_2016_03a.dat
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim30tb-gaincal.dat
-refgain /home/pitzl/psi/dtb/tst400/c500-ia24-trim32-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim30tb-gaincal.dat
+refgain /home/cmspix/psi/dtb/tst400/c500-ia24-trim32-2016-03-gaincal.dat
 
 run 23133
 
 # Mon 14.3.2016
 tilt 16
 # DUT thr 36
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim36-chiller17-2016-03-gaincal.dat
 run 23151
 
 # ex151-48 at 4.8 GeV: 5.05 um
@@ -992,7 +992,7 @@ run 23168
 run 23184
 
 # thr 32
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim32-chiller17-2016-03-gaincal.dat
 run 23192
 # all night
 run 23257
@@ -1000,11 +1000,11 @@ run 23257
 #-------------------------------------------------------------------------------
 # Tue 15.3.2016
 # thr 76
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim76-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim76-chiller17-2016-03-gaincal.dat
 run 23265
 
 # thr 80 gate 3 ns
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim80-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim80-chiller17-2016-03-gaincal.dat
 run 23274
 # delay gate
 # thr 80 gate 10 ns
@@ -1012,55 +1012,55 @@ run 23285
 run 23286
 
 # thr 68
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim68-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim68-chiller17-2016-03-gaincal.dat
 run 23303  eff 99.97  sy 8.40  row 1.776  Lan 22.25  edg 3.09
 
 # thr 64
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim64-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim64-chiller17-2016-03-gaincal.dat
 run 23305  eff 99.97  sy 8.40  row 1.790  Lan 22.24  edg 2.92
 
 # thr 60
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim60-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim60-chiller17-2016-03-gaincal.dat
 run 23307  eff 99.97  sy 8.18  row 1.805  Lan 22.34  edg 2.78
 
 # thr 56
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim56-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim56-chiller17-2016-03-gaincal.dat
 run 23309  eff 99.96  sy 8.15  row 1.821  Lan 22.43  edg 2.61
 
 # thr 32 all night
 # wider gate, delay optimized by online yield
 # VIBias_Bus 60
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim32-chiller17-2016-03-gaincal.dat
 run 23310 # 500k           eff 99.74  sy 7.66  row 1.915  Lan 23.24  edg 1.77
 run 23311 # 34 M  51678 s  eff 99.61  sy 7.82  row 1.920  Lan 22.62  edg 1.62
 
 # Wed 16.3.2016
 # thr 52
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim52-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim52-chiller17-2016-03-gaincal.dat
 run 23312  eff 99.98  sy 7.94  row 1.829  Lan 22.47  edg 2.51
 
 # thr 48
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim48-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim48-chiller17-2016-03-gaincal.dat
 run 23314  eff 99.97  sy 7.83  row 1.847  Lan 22.47  edg 2.31
 
 # thr 44
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim44-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim44-chiller17-2016-03-gaincal.dat
 run 23315  eff 99.97  sy 7.68  row 1.873  Lan 22.53  edg 2.00
 
 # telescope maintenance: new align
 
 # thr 40
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim40-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim40-chiller17-2016-03-gaincal.dat
 run 23321  eff 99.88  sy 8.34  row 1.886  Lan 22.44  edg 1.89
 
 # thr 36
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim36-chiller17-2016-03-gaincal.dat
 run 23324  eff 99.80  sy 8.30  row 1.901  Lan 22.32  edg 1.71
 
 # thr 32
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32-chiller17-2016-03-gaincal.dat
-#gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-gaincal.dat # 2015, worse sy
-#gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-Jul-gaincal.dat # 2015
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim32-chiller17-2016-03-gaincal.dat
+#gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-gaincal.dat # 2015, worse sy
+#gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-Jul-gaincal.dat # 2015
 run 23326  eff 99.42  sy 8.58  row 1.920  Lan 22.57  edg 1.60
 
 # new alignment: telescope opened an closed, same geo
@@ -1071,23 +1071,23 @@ run 23331
 run 23333
 
 # thr 36
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim36-chiller17-2016-03-gaincal.dat
 run 23334
 
 # thr 80
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim80-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim80-chiller17-2016-03-gaincal.dat
 run 23335  eff 99.92  sy 9.59  row 1.725  Lan 21.89  edg 3.53
 
 # thr 76
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim76-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim76-chiller17-2016-03-gaincal.dat
 run 23336  eff 99.95  sy 9.29  row 1.743  Lan 21.99  edg 3.36
 
 # thr 72
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim72-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim72-chiller17-2016-03-gaincal.dat
 run 23337  eff 99.96  sy 9.15  row 1.754  Lan 21.97  edg 3.18
 
 # thr 36 over night
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36-chiller17-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-trim36-chiller17-2016-03-gaincal.dat
 GeV 6.0
 run 23339 # eff 99.09  sy 7.56  row 1.895  Lan 22.92  edg 1.8
 run 23340 # eff 98.92  sy 7.64  row 1.894  Lan 22.88  edg 1.8
@@ -1107,7 +1107,7 @@ run 23349 #
 GeV 4.8
 
 # thr 32
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-retrim32-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-retrim32-2016-03-gaincal.dat
 
 tilt 19
 run 23350 # eff 99.89  sy 8.31  row 1.918  Lan 21.69  edg 1.34
@@ -1472,11 +1472,11 @@ removed
 # Mon  4.4.2016
 # chip 504 bias 200 trim 32
 chip 504
-gain /home/pitzl/psi/dtb/tst400/c504-ia24-retrim32-2016-03-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia24-retrim32-2016-03-gaincal.dat
 
 # ref 500 bias 100 trim 32
 refchip 500
-refgain /home/pitzl/psi/dtb/tst400/c500-ia24-trim32-2016-03-gaincal.dat
+refgain /home/cmspix/psi/dtb/tst400/c500-ia24-trim32-2016-03-gaincal.dat
 
 # mod 4028
 
@@ -1533,7 +1533,7 @@ run 24156 # eff 99.93  sy 9.16  row 1.939  Lan 19.21  edg 1.82
 # PROC600
 chip 603
 # trim 40
-gain /home/pitzl/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig9-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig9-gaincal.dat
 GeV 4.8
 geo geo_2016_04b.dat
 # 6 ns gate, delay 12
@@ -1552,7 +1552,7 @@ run 24252 # good eff in some cols
 GeV 4.8
 # Vdig 9
 # Vthr_Comp 90
-gain /home/pitzl/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig9-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig9-gaincal.dat
 run 24272 # 362k, tele align, 2 eff drops
 
 # Vthr_Comp 70  eff 99.95  sy 10.8  row 1.679  Lan 22.54  edg 6.37
@@ -1574,7 +1574,7 @@ run 24297 # -s 500k, eff 98.7, 2 drops
 run 24298 # -s 500k, eff 61%, flucts
 
 # ia24-trim40 + Vdig 10
-gain /home/pitzl/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig10-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig10-gaincal.dat
 # Vthr_Comp 80, row stripes
 run 24304 # -s
 
@@ -1594,7 +1594,7 @@ run 24307 # 500k, eff 91.5
 GeV 4.8
 tilt 18.9
 # Vdig 8, VthrComp 60 for trim40
-gain /home/pitzl/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig8-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig8-gaincal.dat
 run 24315 # 
 
 # Vdig 8, VthrComp 70 for trim40
@@ -1609,7 +1609,7 @@ run 24320 #
 # magnet test
 
 # Vdig 6, VthrComp 90 for trim40
-gain /home/pitzl/psi/dtb/tst400/c603-vthr90-vdig6-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c603-vthr90-vdig6-gaincal.dat
 run 24321 # eff 99.9% but drops twice
 
 # Vdig 6, VthrComp 80 for trim40
@@ -1633,7 +1633,7 @@ run 24359 # eff 92.94  sy 9.31  row 1.779  Lan 20.30  edg 4.05  2 drops
 #-------------------------------------------------------------------------------
 # Sat 9.4.2016
 # DUT PROC603, bias -150, no chiller
-gain /home/pitzl/psi/dtb/tst400/c603-ia24-vd6-trim60-vdig4-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c603-ia24-vd6-trim60-vdig4-gaincal.dat
 # REF 500, bias -100V
 # MOD D4028, bias -100V
 GeV 4.8
@@ -1657,7 +1657,7 @@ run 24419 # 500k  eff 91.87  sy 9.35  row 1.779  Lan 21.79  edg 4.27  drop in th
 run 24420 # 419k  
 
 # Vdig 2, trim 60 over night
-gain /home/pitzl/psi/dtb/tst400/c603-ia24-vd6-trim60-vd2-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c603-ia24-vd6-trim60-vd2-gaincal.dat
 # eff drops towards row 0 (y below -3 mm)
 run 24421 # 500k  eff 99.08  sy 9.19  row 1.79  Lan 21.37  edg 4.26  one short drop
 run 24422 # 
@@ -1686,7 +1686,7 @@ run 24431 # eff drop towards row 0
 run 24432 # eff drop towards row 0
 
 # Vdig 4, trim 60
-gain /home/pitzl/psi/dtb/tst400/c603-ia24-vd6-trim60-vdig4-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c603-ia24-vd6-trim60-vdig4-gaincal.dat
 run 24434 # eff 99.92  sy 16.9  row 1.601  Lan 12.41  edg -0.0704  reflk 28% tele align
 run 24435 # eff 98.46  sy 9.33  row 1.788  Lan 20.40  edg 3.06  one drop
 run 24436 # eff 99.87  sy 9.52  row 1.780  Lan 21.91  edg 4.52  1 short drop
@@ -1784,10 +1784,10 @@ run 24510 # eff 91.86  sy 8.90  row 1.784  Lan 21.46  edg 4.27  1 drop
 
 # ref 501 bias 100 trim 32
 refchip 501
-refgain /home/pitzl/psi/dtb/tst400/c501-ia24-trim32-tb21-gaincal-2016-04.dat
+refgain /home/cmspix/psi/dtb/tst400/c501-ia24-trim32-tb21-gaincal-2016-04.dat
 
 chip 502
-gain /home/pitzl/psi/dtb/tst400/c502-ia24-trim32-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c502-ia24-trim32-chiller17-gaincal.dat
 
 geo geo_2016_04c.dat # 0 153 305 DUT 393 539 MOD 697 REF
 
@@ -1960,7 +1960,7 @@ run 25116 #
 geo geo_2016_04c.dat
 
 chip 504
-gain /home/pitzl/psi/dtb/tst400/c504-ia27-trim32-chiller17-gaincal-2016-04.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia27-trim32-chiller17-gaincal-2016-04.dat
 tilt 19
 
 GeV 4.8
@@ -1976,15 +1976,15 @@ run 25172 # 107 k  eff 98.74  sy 6.34  row 1.973  Lan 21.81  edg 1.62  ntr 7.56
 run 25173 # 105 k  eff 98.89  sy 6.33  row 1.973  Lan 21.90  edg 1.53  ntr 7.95
 
 # trim 36
-gain /home/pitzl/psi/dtb/tst400/c504-ia27-trim36-chiller17-gaincal-2016-04.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia27-trim36-chiller17-gaincal-2016-04.dat
 run 25174 # 105 k  eff 99.89  sy 6.02  row 1.959  Lan 22.04  edg 1.80  ntr 7.01
 
 # trim 32, VIBias_Bus 90
-gain /home/pitzl/psi/dtb/tst400/c504-ia27-trim32-chiller17-gaincal-2016-04.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia27-trim32-chiller17-gaincal-2016-04.dat
 run 25176 # 106 k  eff 98.93  sy 6.43  row 1.971  Lan 22.08  edg 2.07  ntr 4.59
 
 # trim 36, VIBias_Bus 90
-gain /home/pitzl/psi/dtb/tst400/c504-ia27-trim36-chiller17-gaincal-2016-04.dat
+gain /home/cmspix/psi/dtb/tst400/c504-ia27-trim36-chiller17-gaincal-2016-04.dat
 run 25178 # 267 k  eff 99.77  sy 6.23  row 1.954  Lan 22.14  edg 2.23  ntr 4.83
 
 # raise DUT, for offline threshold scan at 4.8 GeV:
@@ -2276,12 +2276,12 @@ run 25455 # ntr 2.61  dx 4.97  dy 4.90  ex2 7.45  ex3 13.15  7.24  9.40  6.82  6
 geo geo_2016_04g.dat # 0  153  305 DUT 389  534  MOD  693  REF
 
 chip 502
-gain /home/pitzl/psi/dtb/tst400/c502-ia24-trim32-chiller17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c502-ia24-trim32-chiller17-gaincal.dat
 
 tilt 0.5
 
 refchip 501
-refgain /home/pitzl/psi/dtb/tst400/c501-ia24-trim32-tb21-gaincal-2016-04.dat
+refgain /home/cmspix/psi/dtb/tst400/c501-ia24-trim32-tb21-gaincal-2016-04.dat
 
 GeV 5.6
 run 25463 # 253 k  eff 99.87  sy 22.9  row 1.145  Lan 21.17  edg 1.29  effvsxmym->Draw("col")
@@ -2398,7 +2398,7 @@ run 26102 # 2109 k
 geo geo_2016_07d.dat
 
 tilt 19.2
-modgain /home/pitzl/psi/dtb/tst400/D4294-tb24-gaincal.dat
+modgain /home/cmspix/psi/dtb/tst400/D4294-tb24-gaincal.dat
 
 run 26155 # 1192k
 # tele  hits per plane    7.47  8.57  5.46  10.56  7.58  8.91
@@ -2412,7 +2412,7 @@ run 26155 # 1192k
 # Mimosa plane 2 has only 22% eff
 
 # trim35-tb22
-modgain /home/pitzl/psi/dtb/tst400/D4294-trim35-tb22-gaincal.dat
+modgain /home/cmspix/psi/dtb/tst400/D4294-trim35-tb22-gaincal.dat
 
 # MOD on narrow Alu plate in the telescope: 
 
@@ -2581,7 +2581,7 @@ run 26251 #   1568 k  moddyq3t 7.70
 # small pitch chip 508 trim 40
 # bias -100V
 # rot 90
-gain /home/pitzl/psi/dtb/tst400/c508-trim40-gaincal-lab.dat
+gain /home/cmspix/psi/dtb/tst400/c508-trim40-gaincal-lab.dat
 geo geo_2016_07h.dat #  548  434  321  \  227  114  0
 GeV 4.0
 tilt 0
@@ -2648,10 +2648,10 @@ Fri 22.7.2016
 GeV 5.6
 
 refchip 502
-refgain /home/pitzl/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
+refgain /home/cmspix/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
 
 chip 701
-gain /home/pitzl/psi/dtb/tst400/c701-trim40-tb21-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c701-trim40-tb21-gaincal.dat
 
 tilt 0.5
 geo geo_2016_07i.dat # 709 557 405 305 152 0
@@ -2794,13 +2794,13 @@ run 27124 #+
 geo geo_2017_03a.dat
 GeV 4.8
 
-modgain /home/pitzl/psi/dtb/tst400/D4294-trim35-tb22-gaincal.dat
+modgain /home/cmspix/psi/dtb/tst400/D4294-trim35-tb22-gaincal.dat
 
 refchip 502
-refgain /home/pitzl/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
+refgain /home/cmspix/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
 
 chip 523
-gain /home/pitzl/psi/dtb/tst400/c523i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c523i-chill-m20-trim35-gaincal.dat
 
 tilt 19
 turn 0
@@ -3062,7 +3062,7 @@ run 28167
 # install chip528i: 1.5E15 p/cm2
 
 chip 528
-gain /home/pitzl/psi/dtb/tst400/c528i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c528i-chill-m20-trim35-gaincal.dat
 
 tilt 19
 # bias -400
@@ -3281,7 +3281,7 @@ run 28303 # cmsqrowvsd: double peak
 # install chip 529i: 1.9E15 p/cm2
 
 chip 529
-gain /home/pitzl/psi/dtb/tst400/c529i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c529i-chill-m20-trim35-gaincal.dat
 
 tilt 19
 
@@ -3434,7 +3434,7 @@ run 28376 # eff 15.5  Q0 3.76
 # install chip 519i rot 90i
 
 chip 519
-gain /home/pitzl/psi/dtb/tst400/c519i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c519i-chill-m20-trim35-gaincal.dat
 
 tilt 21 # should be 27
 # bias 400
@@ -3561,7 +3561,7 @@ run 28450
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # install 515i: 1.5E15, rot90
 chip 515
-gain /home/pitzl/psi/dtb/tst400/c515i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c515i-chill-m20-trim35-gaincal.dat
 tilt 29
 # bias 275 over night
 run 28456 # 1M
@@ -3726,7 +3726,7 @@ run 28514
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # install 516i, 1.9E15 p/cm2, rot90
 chip 516
-gain /home/pitzl/psi/dtb/tst400/c516i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c516i-chill-m20-trim35-gaincal.dat
 tilt 28
 # bias -350 V over night
 
@@ -3921,7 +3921,7 @@ run 28610
 
 # Fri 17.3.2017
 chip 519
-gain /home/pitzl/psi/dtb/tst400/c519i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c519i-chill-m20-trim35-gaincal.dat
 tilt 28
 
 # bias 800
@@ -3987,7 +3987,7 @@ run 28668 # eff 97.3
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # install 511i: 5E14 rot90
 chip 511
-gain /home/pitzl/psi/dtb/tst400/c511i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c511i-chill-m20-trim35-gaincal.dat
 tilt 28
 
 # bias 500
@@ -4084,7 +4084,7 @@ run 28767 # eff 94
 # install 516i (1.9E15)
 
 chip 516
-gain /home/pitzl/psi/dtb/tst400/c516i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c516i-chill-m20-trim35-gaincal.dat
 
 tilt 82
 
@@ -4112,7 +4112,7 @@ run 28787 # 12M
 #-------------------------------------------------------------------------------
 # Sun 19.3.2017: c522i (0.5E15)
 chip 522
-gain /home/pitzl/psi/dtb/tst400/c522i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c522i-chill-m20-trim35-gaincal.dat
 tilt 20
 # DUT dz 84.6
 # ex 151 at 4.8 GeV: 6.85 um
@@ -4145,24 +4145,24 @@ run 28800 # 309k  ntr 3.88  eff 98.95  ry 12.55  col 1.110  row 1.935  Lan 16.12
 geo geo_2017_03b.dat
 
 chip 524
-gain /home/pitzl/psi/dtb/tst400/c524-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c524-ia24-trim35-gaincal.dat
 # bias 150
 tilt 19
 run 28804 # eff 99.82  Q0 24.29  ry 7.76
 # tele
 
 chip 525
-gain /home/pitzl/psi/dtb/tst400/c525-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c525-ia24-trim35-gaincal.dat
 # bias 150
 run 28805 # eff 99.91  Q0 22.06  ry 7.79
 
 chip 526
-gain /home/pitzl/psi/dtb/tst400/c526-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c526-ia24-trim35-gaincal.dat
 # bias 150
 run 28807 # eff 99.79  Q0 24.46  ry 7.95
 
 chip 527
-gain /home/pitzl/psi/dtb/tst400/c527-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c527-ia24-trim35-gaincal.dat
 # bias 150
 run 28808 # eff 99.95  Q0 20.81  ry 7.88
 
@@ -4178,14 +4178,14 @@ run 28808 # eff 99.95  Q0 20.81  ry 7.88
 geo geo_2017_04a.dat
 GeV 4.8
 
-modgain /home/pitzl/psi/dtb/tst400/D4139-trim35-tb21-gaincal.dat
+modgain /home/cmspix/psi/dtb/tst400/D4139-trim35-tb21-gaincal.dat
 
 refchip 502
-refgain /home/pitzl/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
+refgain /home/cmspix/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
 
 chip 505
-gain /home/pitzl/psi/dtb/tst400/c505-ia24-trim36-gaincal.dat
-gain /home/pitzl/psi/dtb/tst400/c505-tb21-ia24-trim36-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c505-ia24-trim36-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c505-tb21-ia24-trim36-gaincal.dat
 
 tilt 16.6
 turn 0
@@ -4204,8 +4204,8 @@ run 28858 # ntr 4.09  eff 99.55  ry 8.50  col 1.145  row 1.936  Lan 22.62  edg 1
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 518 # rot 90
-gain /home/pitzl/psi/dtb/tst400/c518-ia24-trim35-gaincal.dat
-gain /home/pitzl/psi/dtb/tst400/c518-tb21-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c518-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c518-tb21-ia24-trim35-gaincal.dat
 tilt 26.4
 run 28861 # ntr 4.04  eff 99.68  ry 11.94  col 1.853  row 1.246  Lan 22.44  edg 2.61
 
@@ -4215,25 +4215,25 @@ run 28862 # ntr 3.28  eff 99.71  ry 11.59  col 1.880  row 1.245  Lan 22.74  edg 
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 514 # rot 90, now dead
-gain /home/pitzl/psi/dtb/tst400/c514-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c514-ia24-trim35-gaincal.dat
 run 28864 # ntr 3.46  eff 95.92  ry 10.74  col 1.890  row 1.262  Lan 23.15  edg 2.38
 #                    even-odd col effect: bad timing
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 513 # rot 90, now dead
-gain /home/pitzl/psi/dtb/tst400/c513-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c513-ia24-trim35-gaincal.dat
 run 28865 # ntr 3.57  eff 99.86  ry 10.79  col 1.918  row 1.268  Lan 22.65  edg 2.56
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 510 # rot 90
-gain /home/pitzl/psi/dtb/tst400/c510-ia24-trim35-gaincal.dat
-gain /home/pitzl/psi/dtb/tst400/c510-tb21-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c510-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c510-tb21-ia24-trim35-gaincal.dat
 run 28866 # ntr 2.92  eff 99.20  ry 12.49  col 1.901  row 1.260  Lan 20.90  edg 2.05
 # effvsxm: small even-odd column effect
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 523
-gain /home/pitzl/psi/dtb/tst400/c523i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c523i-chill-m20-trim35-gaincal.dat
 tilt 79
 geo geo_2017_04b.dat
 
@@ -4282,7 +4282,7 @@ geo geo_2017_04b.dat
 # Wed 5.4.2017
 chip 522 (0.5E15)
 # chiller -24 deg
-gain /home/pitzl/psi/dtb/tst400/c522i-chill-m24-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c522i-chill-m24-gaincal.dat
 geo geo_2017_04c.dat
 tilt 81.5
 
@@ -4305,7 +4305,7 @@ run 28904
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 523 (with thinned plastic cover for more LED light)
-gain /home/pitzl/psi/dtb/tst400/c523i-chill-m24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c523i-chill-m24-trim35-gaincal.dat
 tilt 80.8
 geo geo_2017_04c.dat
 # red LED at 12 V
@@ -4444,7 +4444,7 @@ run 28948 #
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # c523i
 # chiller -15 deg
-gain /home/pitzl/psi/dtb/tst400/c523i-chill-m15-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c523i-chill-m15-trim35-gaincal.dat
 
 # bias 160  LED off  IB 40.6
 run 28951 # cp 28941: similar double junction, less charge
@@ -4471,7 +4471,7 @@ run 28958 # repeat
 # Thu 6.4.2017
 chip 522 (0.5E15)
 # chiller -24
-gain /home/pitzl/psi/dtb/tst400/c522i-chill-m24-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c522i-chill-m24-gaincal.dat
 geo geo_2017_04c.dat
 tilt 81.5
 
@@ -4502,7 +4502,7 @@ run 28965 +
 # ~25 uA photocurrent at 3.0V
 # chiller -24 deg
 chip 523 (with thinned plastic cover for more LED light)
-gain /home/pitzl/psi/dtb/tst400/c523i-chill-m24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c523i-chill-m24-trim35-gaincal.dat
 tilt 80.8
 geo geo_2017_04c.dat
 
@@ -4535,7 +4535,7 @@ run 28975 # cp 28915, 28944
 
 
 # chiller -15 deg
-gain /home/pitzl/psi/dtb/tst400/c523i-chill-m15-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c523i-chill-m15-trim35-gaincal.dat
 # strong LED at 4.0 V: ~16 uA photocurrent at 120 V
 
 # bias 120
@@ -4552,7 +4552,7 @@ run 28978 # cp
 # install chip528i: 1.5E15 p/cm2
 
 chip 528
-gain /home/pitzl/psi/dtb/tst400/c528i-chill-m24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c528i-chill-m24-trim35-gaincal.dat
 # chiller -24 deg
 # blue cover thinned
 # strong LED at 2.85 V doubles the sensor current at 800 V
@@ -4806,12 +4806,12 @@ tilt 20.6
 turn 0
 
 chip 501
-gain /home/pitzl/psi/dtb/tst400/c501-ia24-trim32-tb21-gaincal-2016-04.dat
+gain /home/cmspix/psi/dtb/tst400/c501-ia24-trim32-tb21-gaincal-2016-04.dat
 
 refchip 502
-refgain /home/pitzl/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
+refgain /home/cmspix/psi/dtb/tst400/c502-tb21-trim32-gaincal.dat
 
-modgain /home/pitzl/psi/dtb/tst400/D4139-trim35-tb21-gaincal.dat
+modgain /home/cmspix/psi/dtb/tst400/D4139-trim35-tb21-gaincal.dat
 
 run 30003
 
@@ -4822,7 +4822,7 @@ run 30004
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 24.8.2017 afternoon: install 511i: 5E14 rot90
 chip 511
-gain /home/pitzl/psi/dtb/tst400/c511i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c511i-chill-m20-trim35-gaincal.dat
 
 # bias 120
 
@@ -4841,8 +4841,8 @@ run 30034 # eff 86%, drops to 60% at low y
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Fri 25.8.2017 afternoon: install 522i: 5E14
 chip 522
-#gain /home/pitzl/psi/dtb/tst400/c522i-chill-m20-trim35-gaincal.dat
-gain /home/pitzl/psi/dtb/tst400/c522i-chill-m20-gaincal-2017-08-30.dat
+#gain /home/cmspix/psi/dtb/tst400/c522i-chill-m20-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c522i-chill-m20-gaincal-2017-08-30.dat
 
 # upside down! (avoid shorts from condensation water on the cable)
 
@@ -4881,7 +4881,7 @@ run 30351 # ntr 2.82  eff 97.79  ry 11.20  col 1.119  row 1.919  Lan 15.77  edg 
 #
 # bias 120
 # chiller -12 deg
-gain /home/pitzl/psi/dtb/tst400/c522i-chill-m12-gaincal-2017-08-31.dat
+gain /home/cmspix/psi/dtb/tst400/c522i-chill-m12-gaincal-2017-08-31.dat
 
 run 30394 # ntr 2.63  eff 99.22  ry 15.46  col 1.121  row 1.710  Lan 10.18  edg 1.58
 
@@ -4902,7 +4902,7 @@ run 30420 # ntr 2.99  eff 99.35  ry 17.83  col 1.104  row 1.557  Lan 8.35  edg 1
 # Thu 31.8.2017 continue 522i
 # shallow 98 deg
 # chiller -20
-gain /home/pitzl/psi/dtb/tst400/c522i-chill-m20-gaincal-2017-08-30.dat
+gain /home/cmspix/psi/dtb/tst400/c522i-chill-m20-gaincal-2017-08-30.dat
 # bias 120 V
 #
 geo geo_2017_08c.dat
@@ -4969,7 +4969,7 @@ run 30529
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sun 3.9.2017
 chip 524 # unirradiated
-gain /home/pitzl/psi/dtb/tst400/c524-ia24-trim35-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c524-ia24-trim35-gaincal.dat
 # bias 150
 tilt 20 # telescope alignment
 geo geo_2017_08d.dat # 0 151 305 484 635 788
@@ -4983,7 +4983,7 @@ run 30554
 tilt 14
 geo geo_2017_08e.dat # 0 151 305 484 635 788
 # chiller +17 deg
-gain /home/pitzl/psi/dtb/tst400/c524-chill-p17-gaincal.dat
+gain /home/cmspix/psi/dtb/tst400/c524-chill-p17-gaincal.dat
 run 30557 # eff 99.90
 tilt 17
 GeV 5.6 # 200 Hz
@@ -5015,7 +5015,7 @@ run 30576 # 1530k ntr 1.82  eff 99.96  ry 8.26  col 1.137  row 1.964  Lan 21.46 
 # ROC4Sens
 # r102
 chip 102
-gain /home/pitzl/psi/r4s/tst08/r102_tb21_cal.dat
+gain /home/cmspix/psi/r4s/tst08/r102_tb21_cal.dat
 # bias 120
 
 tilt 20
@@ -5064,14 +5064,14 @@ chip 109 # A
 #chip 114 # C
 geo geo_2017_09c.dat
 GeV 5.6
-gain /home/pitzl/psi/r4s/B/r110-scancal-tb21-0928-hold24.dat
-#gain /home/pitzl/psi/r4s/C/r114-scancal-tb21-0925-hold24.dat
+gain /home/cmspix/psi/r4s/B/r110-scancal-tb21-0928-hold24.dat
+#gain /home/cmspix/psi/r4s/C/r114-scancal-tb21-0925-hold24.dat
 tilt 0
 turn 0
 run 31094 # 200 k # loose sync
 run 31095 # 980 k # loose sync
 
-modgain /home/pitzl/eudaq/tele-scope/gaincal/D4139-tb21-trim35-gaincal.dat
+modgain /home/cmspix/eudaq/tele-scope/gaincal/D4139-tb21-trim35-gaincal.dat
 
 #-------------------------------------------------------------------------------
 # Mon 2.10.2017
@@ -5079,7 +5079,7 @@ modgain /home/pitzl/eudaq/tele-scope/gaincal/D4139-tb21-trim35-gaincal.dat
 chip 102 = 50x50 P3 bias dot
 GeV 5.6
 geo geo_2017_09d.dat
-gain /home/pitzl/psi/r4s/A/r102-scancal-tb21-1002.dat
+gain /home/cmspix/psi/r4s/A/r102-scancal-tb21-1002.dat
 tilt 84
 turn 0
 
@@ -5121,7 +5121,7 @@ run 31147 # 518  656k  dy8cqi 5.2  eff 99.7  MOD looses sync at 121k  11.1 ke at
 #-------------------------------------------------------------------------------
 # Wed 4.10.2017
 chip 111 = 50x50 P2 open p-stop
-gain /home/pitzl/psi/r4s/A/r111-scancal-tb21-1004.dat
+gain /home/cmspix/psi/r4s/A/r111-scancal-tb21-1004.dat
 
 tilt 18.5
 run 31148 #  10k
@@ -5143,7 +5143,7 @@ run 31157 # 160k  dy8cqi 6.8  11.2 ke at 0.039
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 117 = 50x50 P1 default
 tilt 0
-gain /home/pitzl/psi/r4s/A/r117-scancal-tb21-1005.dat # Q0 11.1
+gain /home/cmspix/psi/r4s/A/r117-scancal-tb21-1005.dat # Q0 11.1
 run 31159 # 250k
 run 31160 # 810k  11.0 ke at 0.039
 run 31161 # 319k
@@ -5152,7 +5152,7 @@ run 31161 # 319k
 # Fri 6.10.2017
 # continue 117 = 50x50 P1 default
 
-gain /home/pitzl/psi/r4s/A/r117-scancal-tb21-1006.dat # Q0 12.1
+gain /home/cmspix/psi/r4s/A/r117-scancal-tb21-1006.dat # Q0 12.1
 
 tilt 20
 run 31163 # 160k  ry 7.3, 6.9 with DSP  eff 99.99
@@ -5182,7 +5182,7 @@ run 31171 # 160k  ry 6.0
 tilt 15
 run 31172 # 160k  ry 6.3
 
-gain /home/pitzl/psi/r4s/A/r117-scancal-tb21-1008.dat
+gain /home/cmspix/psi/r4s/A/r117-scancal-tb21-1008.dat
 tilt 18
 run 31175 # 3078k  dy8cqi 5.1  MOD resync 9.7 h  eff 99.99  11.1 ke at 0.037
 #                cmsdyvsev drops by 15 um over time in steps, linear correction
@@ -5214,7 +5214,7 @@ GeV 5.6
 # ex151-45 = 4.7 um per arm, 3.3 um for six
 
 chip 332
-gain /home/pitzl/psi/r4s/B/r332-scancal-tb21-1030.dat
+gain /home/cmspix/psi/r4s/B/r332-scancal-tb21-1030.dat
 
 tilt 8
 run 31210 # 698   40k
@@ -5251,13 +5251,13 @@ run 31234 # 712  700k  move telescope stage down by 4 mm to center on beam: at 4
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 335
-gain /home/pitzl/psi/r4s/B/r335-scancal-tb21-1101.dat
+gain /home/cmspix/psi/r4s/B/r335-scancal-tb21-1101.dat
 tilt 12
 run 31236 # 714   50k  eff 98.2  99% noise in lower 3rd
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 352
-gain /home/pitzl/psi/r4s/B/r352-scancal-tb21-1101.dat
+gain /home/cmspix/psi/r4s/B/r352-scancal-tb21-1101.dat
 tilt 12
 run 31237 # 715   50k  cmsdycq 5.9 => 3.6 um  cmsdy8cq 4.9 => 3.6 um
 run 31239 # 717 1404k
@@ -5287,7 +5287,7 @@ geo geo_2017_11c.dat # 0 154  306  385  538  692
 # ex151-36  4.3 um
 
 chip 143
-gain /home/pitzl/psi/r4s/B/r143-scancal-tb21-1104.dat
+gain /home/cmspix/psi/r4s/B/r143-scancal-tb21-1104.dat
 
 tilt 0
 run 31295 # 768  160.1  eff 98.4% bias dot hole  10.88 ke at 0.040
@@ -5309,7 +5309,7 @@ run 31302 # 775  40.1
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 144 = 50x50 p-spray Y3 max implant on rot90
-gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1104.dat
+gain /home/cmspix/psi/r4s/B/r144-scancal-tb21-1104.dat
 
 tilt 17.6
 run 31304 # 777  40.1  dycq 5.7
@@ -5329,7 +5329,7 @@ run 31308 # 781  40.1  dycq 5.8
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 142 = 50x50 p-stop P9 small dot on rot90
 
-gain /home/pitzl/psi/r4s/B/r142-scancal-tb21-1104.dat
+gain /home/cmspix/psi/r4s/B/r142-scancal-tb21-1104.dat
 
 tilt 18
 run 31309 # 782   40.1
@@ -5359,7 +5359,7 @@ run 31315 # 788  913.8  eff 98.4  dead col  low Q  11.0 ke at 0.0274
 geo geo_2017_11d.dat #  0  154  306  /  445  597  751
 
 chip 144 = 50x50 direct bonded p-spray Y3 maximum implant, rot90 PCB
-gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1104.dat
+gain /home/cmspix/psi/r4s/B/r144-scancal-tb21-1104.dat
 
 # scintillator in the telescope? spoils resolution
 
@@ -5404,7 +5404,7 @@ run 31349 # 160k  without R4S: 800 Hz
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 142 = 50x50 p-stop P9 small dot on rot90
-gain /home/pitzl/psi/r4s/B/r142-scancal-tb21-1104.dat
+gain /home/cmspix/psi/r4s/B/r142-scancal-tb21-1104.dat
 
 geo geo_2017_11e.dat #  0 154  306  386  537  691
 
@@ -5416,7 +5416,7 @@ run 31351 # 833  2500k  eff 99.83 dead col  moving in x and y  MOD desync 17'100
 # Fri 10.11.2017
 
 chip 144 = p-spray Y3 max implant
-gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1110.dat
+gain /home/cmspix/psi/r4s/B/r144-scancal-tb21-1110.dat
 
 geo geo_2017_11f.dat #  0 154  306  387  538  692
 
@@ -5492,8 +5492,8 @@ chip 102 = 50x50 P3 bias dot
 
 geo geo_2017_12a.dat #  0 154  305  388  539  693
 
-#gain /home/pitzl/psi/r4s/A/r102-scancal-tb21-1002.dat
-gain /home/pitzl/psi/r4s/B/r102-scancal-tb21-1205.dat
+#gain /home/cmspix/psi/r4s/A/r102-scancal-tb21-1002.dat
+gain /home/cmspix/psi/r4s/B/r102-scancal-tb21-1205.dat
 
 GeV 5.6
 
@@ -5511,10 +5511,10 @@ run 31393 # 898 3426.2k  11.0 ke at 0.031  ph0 235
 # Tue 5.12.2017
 
 chip 144 = p-spray Y3 max implant
-#gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1205.dat
-gain /home/pitzl/psi/r4s/A/c144-scancal-elab-2018-01-03-hold24.dat
-#gain /home/pitzl/psi/r4s/A/c144-scancal-elab-2018-01-03-hold20.dat
-#gain /home/pitzl/psi/r4s/A/c144-scancal-elab-2018-01-03-hold18.dat
+#gain /home/cmspix/psi/r4s/B/r144-scancal-tb21-1205.dat
+gain /home/cmspix/psi/r4s/A/c144-scancal-elab-2018-01-03-hold24.dat
+#gain /home/cmspix/psi/r4s/A/c144-scancal-elab-2018-01-03-hold20.dat
+#gain /home/cmspix/psi/r4s/A/c144-scancal-elab-2018-01-03-hold18.dat
 
 # shallow angle
 
@@ -5571,7 +5571,7 @@ Wed 6.12.2017
 tilt 84
 # scint 2 (edge on) and 3 (vertical) on 4th telescope plane
 
-#gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1104.dat  old, not better
+#gain /home/cmspix/psi/r4s/B/r144-scancal-tb21-1104.dat  old, not better
 
 GeV 4.8
 geo geo_2017_12e.dat # 751 597 446 305 154 0
@@ -5592,9 +5592,9 @@ run 31445 # 957 1160.1k
 
 chip 155 = 50x50 deep diffused open p-stop
 
-#gain /home/pitzl/psi/r4s/B/r155-scancal-tb21-1207.dat
-#gain /home/pitzl/psi/r4s/A/c155-scancal-elab-2018-01-03-hold20.dat
-gain /home/pitzl/psi/r4s/A/c155-scancal-elab-2018-01-03-hold18.dat
+#gain /home/cmspix/psi/r4s/B/r155-scancal-tb21-1207.dat
+#gain /home/cmspix/psi/r4s/A/c155-scancal-elab-2018-01-03-hold20.dat
+gain /home/cmspix/psi/r4s/A/c155-scancal-elab-2018-01-03-hold18.dat
 
 tilt 84
 
@@ -5631,7 +5631,7 @@ run 31471 # 986  160k
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 144 = 50x50 p-spray max implant on rot90 PCB
 
-gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1205.dat
+gain /home/cmspix/psi/r4s/B/r144-scancal-tb21-1205.dat
 
 # for the night: go vertical, close telescope
 
@@ -5656,7 +5656,7 @@ geo geo_2017_12g.dat #  0  154  305  /  384  535  689
 
 chip 160 = 50x50 p-stop bias dot wiggle on straight cut PCB
 
-gain /home/pitzl/psi/r4s/B/r160-scancal-tb21-2017-12-11.dat
+gain /home/cmspix/psi/r4s/B/r160-scancal-tb21-2017-12-11.dat
 
 GeV 5.6
 
@@ -5701,7 +5701,7 @@ run 31509 # 1066  40k
 # chiller -21 deg + Peltier 2V x 4A
 chip 332
 
-gain /home/pitzl/psi/r4s/B/r332-scancal-vb70-tb21-1214.dat
+gain /home/cmspix/psi/r4s/B/r332-scancal-vb70-tb21-1214.dat
 
 # same geo_2017_12h.dat #  0  154  305  /  434  585  739
 
@@ -5720,7 +5720,7 @@ run 31549 # 1104  50k
 # Fri 15.12.2017
 # 3D
 chip 352
-gain /home/pitzl/psi/r4s/B/r352-tb21-cooled-1215-scancal.dat
+gain /home/cmspix/psi/r4s/B/r352-tb21-cooled-1215-scancal.dat
 tilt -12
 
 run 31562 # 1114
@@ -5733,7 +5733,7 @@ run 31565 # 1116  loose sync 23k
 
 chip 152 = 50x50 deep diffused p-stop default = thickness 180
 
-gain /home/pitzl/psi/r4s/B/r152-scancal-tb21-2017-12-16.dat
+gain /home/cmspix/psi/r4s/B/r152-scancal-tb21-2017-12-16.dat
 
 geo geo_2017_11e.dat #  0 154  306  386  537  691
 #            NOV !
@@ -5781,7 +5781,7 @@ run 31608 # 1156  90k  dy8cq 4.97
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 160 = 50x50 p-stop bias dot wiggle on straight cut PCB
-gain /home/pitzl/psi/r4s/B/r160-scancal-tb21-2017-12-11.dat
+gain /home/cmspix/psi/r4s/B/r160-scancal-tb21-2017-12-11.dat
 GeV 5.6
 tilt 0.5
 run 31610 # 1158  3415k  eff 98% bias dot  10.97 ke at 0.0350
@@ -5797,7 +5797,7 @@ run 31611 # 1159  250k  108 Hz
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 152 = 50x50 deep diffused p-stop default = thickness 180
 
-gain /home/pitzl/psi/r4s/B/r152-scancal-tb21-2017-12-16.dat
+gain /home/cmspix/psi/r4s/B/r152-scancal-tb21-2017-12-16.dat
 
 tilt 15
 GeV 5.6
@@ -5849,7 +5849,7 @@ run 32001 # 160k
 chip 102
 tilt 0.5
 turn 0
-gain /home/pitzl/psi/r4s/B/r102-scancal-tb21-1205.dat
+gain /home/cmspix/psi/r4s/B/r102-scancal-tb21-1205.dat
 GeV 5.2
 geo geo_2018_02b.dat #  0 153  304  383  535  688
 run 31632 # 1173
@@ -5866,7 +5866,7 @@ run 31637 # 1180
 #irradiated 122i
 GeV 5.2
 chip 122
-gain /home/pitzl/psi/r4s/B/c122i-scancal2-tb21-icy-2018-02-13.dat
+gain /home/cmspix/psi/r4s/B/c122i-scancal2-tb21-icy-2018-02-13.dat
 geo geo_2018_02c.dat #  0 153  305  435  587  741
 tilt -19
 run 31639 # 1195
@@ -5877,7 +5877,7 @@ run 31647 # 1203  40k
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 chip 133
-gain /home/pitzl/psi/r4s/B/c133i-scancal2-tb21-icy-2018-02-13b.dat
+gain /home/cmspix/psi/r4s/B/c133i-scancal2-tb21-icy-2018-02-13b.dat
 tilt -19
 #bias 50
 run 31648 # 1204  40k
@@ -5926,7 +5926,7 @@ run 31663 # 1219  40k
 #Wed 14.2.2018
 #install 123i
 chip 123
-gain /home/pitzl/psi/r4s/B/c123i-scancal2-tb21-icy-2018-02-14.dat
+gain /home/cmspix/psi/r4s/B/c123i-scancal2-tb21-icy-2018-02-14.dat
 
 # bias 250
 run 31665 # 1222  40k
@@ -5992,9 +5992,9 @@ run 31699 # 1256  40k
 #Fri 16.2.2018
 #install 128i = 25x100
 chip 128
-gain /home/pitzl/psi/r4s/B/c128i-scancal2-tb21-icy-2018-02-16-hold24.dat  31720: cmsq0 3.15  eff 97.5
-#gain /home/pitzl/psi/r4s/B/c128i-scancal2-tb21-icy-2018-02-16-hold28.dat
-#gain /home/pitzl/psi/r4s/B/c128i-scancal2-tb21-icy-2018-02-16-hold32.dat  31720: cmsq0 3.37  eff 97.5
+gain /home/cmspix/psi/r4s/B/c128i-scancal2-tb21-icy-2018-02-16-hold24.dat  31720: cmsq0 3.15  eff 97.5
+#gain /home/cmspix/psi/r4s/B/c128i-scancal2-tb21-icy-2018-02-16-hold28.dat
+#gain /home/cmspix/psi/r4s/B/c128i-scancal2-tb21-icy-2018-02-16-hold32.dat  31720: cmsq0 3.37  eff 97.5
 geo geo_2018_02f.dat #  0 153  304  432  583  737
 
 #bias 400
@@ -6061,7 +6061,7 @@ run 31735 # 1290  40k  eff
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 #Sun 18,2,2018
 chip 133 # with Sylgard coating
-gain /home/pitzl/psi/r4s/B/c133i-scancal2-tb21-icy-2018-02-18.dat
+gain /home/cmspix/psi/r4s/B/c133i-scancal2-tb21-icy-2018-02-18.dat
 geo geo_2018_02f50.dat #  0 153  304  432  583  737 same, but for 50x50
 tilt 0.5
 # online dph > 4 rms
@@ -6144,6 +6144,6 @@ run 31792 # 1347 160k
 # 118 shallow cooled
 # same geo_2018_02d
 chip 118
-gain /home/pitzl/psi/r4s/B/c118-scancal2-tb21-icy-2018-02-20.dat
+gain /home/cmspix/psi/r4s/B/c118-scancal2-tb21-icy-2018-02-20.dat
 tilt -75
 run 31806 # 1363
