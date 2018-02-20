@@ -62,35 +62,22 @@ struct triplet {
   vector <double> vy;
 };
 
-// globals:
-
-pixel pb[999]; // global declaration: array of pixel hits
-int fNHit; // global
-
 //------------------------------------------------------------------------------
-vector < cluster > getClus()
+vector < cluster > getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
 {
   // returns clusters with local coordinates
-  // decodePixels should have been called before to fill pixel buffer pb 
-  // simple clusterization
-  // cluster search radius fCluCut ( allows fCluCut-1 empty pixels)
-
-  const int fCluCut = 1; // clustering: 1 = no gap (15.7.2012)
-  //const int fCluCut = 2;
+  // next-neighbour topological clustering (allows fCluCut-1 empty pixels)
 
   vector < cluster > v;
-  if( fNHit == 0 ) return v;
+  if( pb.size() == 0 ) return v;
 
-  int* gone = new int[fNHit];
+  int * gone = new int[pb.size()]{0};
 
-  for( int i = 0; i < fNHit; ++i )
-    gone[i] = 0;
+  unsigned seed = 0;
 
-  int seed = 0;
+  while( seed < pb.size() ) {
 
-  while( seed < fNHit ) {
-
-    // start a new cluster
+    // start a new cluster:
 
     cluster c;
     c.vpix.push_back( pb[seed] );
@@ -101,7 +88,7 @@ vector < cluster > getClus()
     int growing;
     do {
       growing = 0;
-      for( int i = 0; i < fNHit; ++i ) {
+      for( unsigned i = 0; i < pb.size(); ++i ) {
         if( !gone[i] ){ // unused pixel
           for( unsigned int p = 0; p < c.vpix.size(); ++p ) { // vpix in cluster so far
             int dr = c.vpix.at(p).row - pb[i].row;
@@ -163,9 +150,9 @@ vector < cluster > getClus()
 
     v.push_back(c); // add cluster to vector
 
-    // look for a new seed = used pixel:
+    // look for a new seed = unused pixel:
 
-    while( (++seed < fNHit) && gone[seed] );
+    while( ( ++seed < pb.size() ) && gone[seed] );
 
   } // while over seeds
 
@@ -614,6 +601,9 @@ int main( int argc, char* argv[] )
   if( chip0 == 111 ) fifty = 1;
   if( chip0 == 117 ) fifty = 1;
   if( chip0 == 118 ) fifty = 1;
+  if( chip0 == 122 ) fifty = 1; // irr
+  if( chip0 == 123 ) fifty = 1; // irr
+  if( chip0 == 133 ) fifty = 1; // irr
   if( chip0 == 139 ) fifty = 1;
   if( chip0 == 142 ) fifty = 1;
   if( chip0 == 143 ) fifty = 1;
@@ -1478,7 +1468,7 @@ int main( int argc, char* argv[] )
 
       if( ldb ) cout << " = ipl " << ipl << ", size " << pxl.size() << flush;
 
-      int npx = 0;
+      vector <pixel> pb; // for clustering
 
       for( size_t ipix = 0; ipix < pxl.size(); ++ipix ) {
 
@@ -1507,15 +1497,16 @@ int main( int argc, char* argv[] )
 
 	// fill pixel block for clustering:
 
-	pb[npx].col = ix; // col
-	pb[npx].row = iy; // row
-	pb[npx].adc = adc;
-	pb[npx].q = q;
-	pb[npx].ord = npx; // readout order
-	pb[npx].big = 0;
-	++npx;
+	pixel px;
+	px.col = ix; // col
+	px.row = iy; // row
+	px.adc = adc;
+	px.q = q;
+	px.ord = pb.size(); // readout order
+	px.big = 0;
+	pb.push_back(px);
 
-	if( npx > 990 ) {
+	if( pb.size() > 990 ) {
 	  cout << "pixel buffer overflow in plane " << ipl
 	       << ", event " << iev
 	       << endl;
@@ -1524,15 +1515,13 @@ int main( int argc, char* argv[] )
 
       } // pix
 
-      hnpx[ipl]->Fill(npx);
+      hnpx[ipl]->Fill( pb.size() );
 
       if( ldb ) std::cout << std::endl;
 
       // clustering:
 
-      fNHit = npx; // for cluster search
-
-      cl[ipl] = getClus();
+      cl[ipl] = getClus(pb);
 
       if( ldb ) cout << "clusters " << cl[ipl].size() << endl;
 
@@ -1634,7 +1623,7 @@ int main( int argc, char* argv[] )
 
     } // tludt
 
-    int npx = 0;
+    vector <pixel> pb; // for clustering
 
     if( readnext && filled == F ) {
 
@@ -1710,8 +1699,13 @@ int main( int argc, char* argv[] )
 
 	dutdphHisto.Fill( dph );
 
-	//if( dph > 16 ) { // cmspxq left edge 1.3 ke
-	if( dph > 12 ) { // cmspxq left edge 1.0 ke, some noise
+	double dphcut = 12; // 31619 dy8cq 4.77
+
+	if( chip0 == 122 ) dphcut = 24; // irrad, gain_2
+	if( chip0 == 123 ) dphcut = 24; // irrad, gain_2
+	if( chip0 == 133 ) dphcut = 24; // irrad, gain_2
+
+	if( dph > dphcut ) { // cmspxq left edge 1.0 ke, some noise
 
 	  // r4scal.C
 
@@ -1722,25 +1716,27 @@ int main( int argc, char* argv[] )
 
 	  double vcal = p0[col4][row4] - p1[col4][row4] * log( (1-U)/U ); // inverse Fermi
 
+	  pixel px;
+
 	  if( fifty ) {
-	    pb[npx].col = col4; // 50x50
-	    pb[npx].row = row4;
+	    px.col = col4; // 50x50
+	    px.row = row4;
 	  }
 	  else {
-	    pb[npx].col = (col4+1)/2; // 100 um
+	    px.col = (col4+1)/2; // 100 um
 	    if( col4%2 ) 
-	      pb[npx].row = 2*row4 + 0;
+	      px.row = 2*row4 + 0;
 	    else
-	      pb[npx].row = 2*row4 + 1;
+	      px.row = 2*row4 + 1;
 	  }
-	  pb[npx].adc = dph;
-	  pb[npx].q = ke*vcal; // should become Vcal
-	  pb[npx].ord = npx; // readout order
-	  pb[npx].big = 0;
-	  hmap[iDUT]->Fill( pb[npx].col+0.5, pb[npx].row+0.5 );
-	  ++npx;
+	  px.adc = dph;
+	  px.q = ke*vcal; // should become Vcal
+	  px.ord = pb.size(); // readout order
+	  px.big = 0;
+	  hmap[iDUT]->Fill( px.col+0.5, px.row+0.5 );
+	  pb.push_back(px);
 
-	  if( npx > 990 ) {
+	  if( pb.size() > 990 ) {
 	    cout << "R4S pixel buffer overflow in event " << iev
 		 << endl;
 	    break;
@@ -1750,7 +1746,7 @@ int main( int argc, char* argv[] )
 
       } // ipx
 
-      if( ldb ) cout << " npx " << npx << endl << flush;
+      if( ldb ) cout << " npx " << pb.size() << endl << flush;
 
     } // filled
 
@@ -1764,11 +1760,9 @@ int main( int argc, char* argv[] )
 
     // DUT clustering:
 
-    hnpx[iDUT]->Fill( npx );
+    hnpx[iDUT]->Fill( pb.size() );
 
-    fNHit = npx; // for cluster search
-
-    cl[iDUT] = getClus();
+    cl[iDUT] = getClus(pb);
 
     hncl[iDUT]->Fill( cl[iDUT].size() );
 
@@ -1780,11 +1774,11 @@ int main( int argc, char* argv[] )
 
     } // icl
 
-    dutnpxvst2.Fill( evsec, npx );
+    dutnpxvst2.Fill( evsec, pb.size() );
     dutnclvst2.Fill( evsec, cl[iDUT].size() );
 
     int DUTyld = 0;
-    if( npx ) DUTyld = 1; // no double counting: events with at least one px
+    if( pb.size() ) DUTyld = 1; // no double counting: events with at least one px
     dutyldvst2.Fill( evsec, DUTyld );
     dutyldvst6.Fill( evsec/3600, DUTyld );
 
@@ -2056,6 +2050,11 @@ int main( int argc, char* argv[] )
 
     int rowcut = 30; // run 31110
     if( run >= 31111 ) rowcut = 20;
+    if( chip0 == 123 ) rowcut = 6; // 2018 10 pixel roads
+
+    int lngcut = 11; // 2017: 30 pixel roads
+    if( chip0 == 123 ) lngcut = 6; // 2018 10 pixel roads
+    if( chip0 == 133 ) lngcut = 1; // 2018 search
 
     for( unsigned int iA = 0; iA < triplets.size(); ++iA ) { // iA = upstream
 
@@ -2318,7 +2317,7 @@ int main( int argc, char* argv[] )
 	int nlng = nrow;
 	if( rot90 ) nlng = ncol;
 
-	if( nlng < 11 ) continue; // !!
+	if( nlng < lngcut ) continue; // only long clusters
 
 	if( rot90 )
 	  ccol = 0.5 * ( colmin + colmax ); // mid from head and tail, overwrite!
@@ -2517,7 +2516,7 @@ int main( int argc, char* argv[] )
 
  	  if( rdrowmin > 0 &&
  	      rdrowmax < 159 && // fiducial road in x
- 	      npxrdq > 11 ) {
+ 	      npxrdq > lngcut ) {
 
 	    if( iev < 999 ) {
 	      cout
@@ -2626,7 +2625,7 @@ int main( int argc, char* argv[] )
 
  	  if( rdcolmin > 0 &&
  	      rdcolmax < 154 && // fiducial road in x
- 	      npxrdq > 11 ) {
+ 	      npxrdq > lngcut ) {
 
  	    bool ldbrd = 0;
 
@@ -2849,12 +2848,15 @@ int main( int argc, char* argv[] )
     if( cmsdxvsy.GetEntries() > 999 ) {
       cmsdxvsy.Fit( "pol1", "q", "", -midx[iDUT]+0.2, midx[iDUT]-0.2 );
       TF1 * fdxvsy = cmsdxvsy.GetFunction( "pol1" );
-      cout << endl << cmsdxvsy.GetTitle()
-	   << ": extra rot " << -fdxvsy->GetParameter(1) << endl;
-      if( rot90 )
+      cout << endl << cmsdxvsy.GetTitle();
+      if( rot90 ) {
+	cout << ": extra rot " << -fdxvsy->GetParameter(1) << endl;
 	DUTrot -= upsigny*fdxvsy->GetParameter(1);
-      else
+      }
+      else {
+	cout << ": extra rot " << fdxvsy->GetParameter(1) << endl;
 	DUTrot += upsigny*fdxvsy->GetParameter(1);
+      }
     }
 
     // dxvstx -> dz:
@@ -2862,11 +2864,15 @@ int main( int argc, char* argv[] )
     if( cmsdxvstx.GetEntries() > 999 ) {
       cmsdxvstx.Fit( "pol1", "q", "", -0.002, 0.002 );
       TF1 * fdxvstx = cmsdxvstx.GetFunction( "pol1" );
-      cout << endl << cmsdxvstx.GetTitle()
-	   << ": z shift " << -fdxvstx->GetParameter(1)
-	   << " mm"
-	   << endl;
-      DUTz -= upsigny*fdxvstx->GetParameter(1);
+      cout << endl << cmsdxvstx.GetTitle();
+      if( rot90 ) {
+	cout << ": z shift " << -fdxvstx->GetParameter(1) << " mm" << endl;
+	DUTz -= upsigny*fdxvstx->GetParameter(1);
+      }
+      else {
+	cout << ": z shift " << fdxvstx->GetParameter(1) << " mm" << endl;
+	DUTz += upsigny*fdxvstx->GetParameter(1);
+      }
     }
 
   }
