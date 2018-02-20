@@ -1,3 +1,4 @@
+
 # telescope geometry for Datura with MOD and R4S in Feb 2018
 
 plane 0
@@ -30,7 +31,7 @@ sizex 21.2
 sizey 10.6
 npixelx 1152
 npixely  576
-zpos 432
+zpos 408
 
 plane 4
 type Mimosa26
@@ -38,7 +39,7 @@ sizex 21.2
 sizey 10.6
 npixelx 1152
 npixely  576
-zpos 583
+zpos 559
 
 plane 5
 type Mimosa26
@@ -46,7 +47,7 @@ sizex 21.2
 sizey 10.6
 npixelx 1152
 npixely  576
-zpos 737
+zpos 713
 
 plane 6  # MOD
 type psi46digv2p1respin
@@ -57,9 +58,9 @@ npixely 162
 zpos 70 # relative to plane 4
 
 plane 7  # DUT
-type roc4sens100x25
+type roc4sens50x50
 sizex 7.8
 sizey 8.0
-npixelx  78 # col
-npixely 320 # row
+npixelx 156 # col
+npixely 160 # row
 zpos 50 # relative to plane 2
