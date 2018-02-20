@@ -67,7 +67,7 @@ turn 0
 run 31094 # 200 k # loose sync
 run 31095 # 980 k # loose sync
 
-modgain /home/cmspix/gaincal/D4139-tb21-trim35-gaincal.dat
+modgain /home/cmspix/tele-scope/gaincal/D4139-tb21-trim35-gaincal.dat
 weib 3 # mod gain file format
 
 #-------------------------------------------------------------------------------
