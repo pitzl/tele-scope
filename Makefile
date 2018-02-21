@@ -17,7 +17,7 @@ ROOTGLIBS = $(shell $(ROOTSYS)/bin/root-config --glibs)
 CXXFLAGS = -O2 -Wall -Wextra $(ROOTCFLAGS) -I$(EUDAQ)/main/include
 
 tele: tele.cc
-	g++ $(CXXFLAGS) -o tele tele.cc \
+	g++ tele.cc $(CXXFLAGS) -fopenmp -o tele \
 	$(ROOTLIBS) -L$(EUDAQ)/lib -lEUDAQ
 	@echo 'done: tele'
 
