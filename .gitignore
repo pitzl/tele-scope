@@ -1,8 +1,11 @@
 
+roi*.txt
 *.root
 #align*
 hot*
-scope
+
+scopes
 tele
+scopesh
 
 *.pdf
