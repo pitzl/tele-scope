@@ -5305,9 +5305,9 @@ int main( int argc, char * argv[] )
 
   cout << endl;
 
+  /*
   delete histoFile;
-  for( int ipl = 0; ipl < 9; ++ipl )
-    delete hmap[ipl];
+  for( int ipl = 0; ipl < 9; ++ipl ) delete hmap[ipl];
   delete drixyHisto;
   delete modnpxvsxmym;
   delete modqxvsxmym;
@@ -5342,6 +5342,6 @@ int main( int argc, char * argv[] )
   delete effvsxt;
   delete effvsxmym;
   delete effvsxmym2;
-
+  */
   return 0;
 }
