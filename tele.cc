@@ -1567,7 +1567,7 @@ int main( int argc, char* argv[] )
 	  ie = 4;
 	}
 
-	double zD = zz[ipl];
+	double zD = zz[ipl] + alignz[ipl];
 
 	for( vector<cluster>::iterator cA = cl[ib].begin(); cA != cl[ib].end(); ++cA ) {
 
@@ -1628,7 +1628,7 @@ int main( int argc, char* argv[] )
 	      if( fabs( dx3 ) > triCut ) continue;
 	      if( fabs( dy3 ) > triCut ) continue;
 
-	      // interpolate track to D:
+	      // inter/extrapolate track to D:
 
 	      double da = zD - zavg2;
 	      double xi = xavg2 + slpx * da; // triplet at D
