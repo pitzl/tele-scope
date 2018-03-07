@@ -142,7 +142,7 @@ vector<cluster> getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
     //c.size = c.vpix.size();
     //c.ncol = maxx-minx+1;
     //c.nrow = maxy-miny+1;
-    c.scr = c.vpix.size() + 256*( (maxx-minx+1) + 256*(maxy-miny+1) ); // compressed size, ncol nrow
+    c.scr = c.vpix.size() + 256 * ( (maxx-minx+1) + 256*(maxy-miny+1) ); // compressed size, ncol nrow
     c.mindxy = 999;
 
     c.vpix.clear(); // save space
@@ -517,7 +517,6 @@ int main( int argc, char* argv[] )
 	aligny[ipl] = val;
       else if( tag == shiftz ) {
 	alignz[ipl] = val;
-	zz[ipl] += val;
       }
       else if( tag == rotxvsy )
 	rotx[ipl] = val;
@@ -1580,7 +1579,7 @@ int main( int argc, char* argv[] )
 	  double ymid = yA - midy[ib];
 	  xA = xmid - ymid*rotx[ib];
 	  yA = ymid + xmid*roty[ib];
-	  double zA = zz[ib];
+	  double zA = zz[ib] + alignz[ib];
 
 	  for( vector<cluster>::iterator cC = cl[ie].begin(); cC != cl[ie].end(); ++cC ) {
 
@@ -1592,7 +1591,7 @@ int main( int argc, char* argv[] )
 	    double ymid = yC - midy[ie];
 	    xC = xmid - ymid*rotx[ie];
 	    yC = ymid + xmid*roty[ie];
-	    double zC = zz[ie];
+	    double zC = zz[ie] + alignz[ie];
 
 	    double dx2 = xC - xA;
 	    double dy2 = yC - yA;
@@ -1615,7 +1614,7 @@ int main( int argc, char* argv[] )
 	      double ymid = yB - midy[im];
 	      xB = xmid - ymid*rotx[im];
 	      yB = ymid + xmid*roty[im];
-	      double zB = zz[im];
+	      double zB = zz[im] + alignz[im];
 
 	      // interpolate track to B:
 
@@ -1701,7 +1700,7 @@ int main( int argc, char* argv[] )
 	  double ymid = yA - midy[ib];
 	  xA = xmid - ymid*rotx[ib];
 	  yA = ymid + xmid*roty[ib];
-	  double zA = zz[ib];
+	  double zA = zz[ib] + alignz[ib];
 
 	  for( vector<cluster>::iterator cC = cl[ie].begin(); cC != cl[ie].end(); ++cC ) {
 
@@ -1711,7 +1710,7 @@ int main( int argc, char* argv[] )
 	    double ymid = yC - midy[ie];
 	    xC = xmid - ymid*rotx[ie];
 	    yC = ymid + xmid*roty[ie];
-	    double zC = zz[ie];
+	    double zC = zz[ie] + alignz[ie];
 
 	    double dx2 = xC - xA;
 	    double dy2 = yC - yA;
@@ -1736,7 +1735,7 @@ int main( int argc, char* argv[] )
 	      double ymid = yB - midy[im];
 	      xB = xmid - ymid*rotx[im];
 	      yB = ymid + xmid*roty[im];
-	      double zB = zz[im];
+	      double zB = zz[im] + alignz[im];
 
 	      // interpolate track to B:
 
@@ -1906,7 +1905,7 @@ int main( int argc, char* argv[] )
 
 	  // triplet at plane:
 
-	  double zA = zz[ipl] - avzA; // z from mid of triplet to plane
+	  double zA = zz[ipl] + alignz[ipl] - avzA; // z from mid of triplet to plane
 	  double xA = avxA + slxA * zA; // triplet at mid
 	  double yA = avyA + slyA * zA;
 
@@ -1957,7 +1956,7 @@ int main( int argc, char* argv[] )
 
 	  // driplet at plane:
 
-	  double zB = zz[ipl] - avzB; // z from mid of driplet to plane
+	  double zB = zz[ipl] + alignz[ipl] - avzB; // z from mid of driplet to plane
 	  double xB = avxB + slxB * zB; // driplet at mid
 	  double yB = avyB + slyB * zB;
 
@@ -2229,9 +2228,9 @@ int main( int argc, char* argv[] )
 
     if( aligniteration > 1 ) {
 
-      for( int itd = 0; itd < 2; ++itd ) {
+      for( int itd = 0; itd < 2; ++itd ) { // upstream and downstream
 	cout << endl;
-	int ipl = 2+3*itd;
+	int ipl = 2+3*itd; // 2 or 5
 
 	if( tridxvstx[itd].GetEntries() > 999 ) {
 	  tridxvstx[itd].Fit( "pol1", "q", "", -0.002, 0.002 );
@@ -2239,7 +2238,7 @@ int main( int argc, char* argv[] )
 	  cout << tridxvstx[itd].GetTitle()
 	       << " dz " << f1->GetParameter(1)
 	       << " plane " << ipl
-	       << " new zpos " << zz[2+3*itd] + f1->GetParameter(1)
+	       << " new zpos " << zz[ipl] + alignz[ipl] + f1->GetParameter(1)
 	       << endl;
 	  alignz[ipl] += f1->GetParameter(1);
 	}
