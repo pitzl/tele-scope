@@ -609,9 +609,6 @@ int main( int argc, char* argv[] )
 
   TH1I hdx[6];
   TH1I hdy[6];
-  TH1I hdxc[6];
-  TH1I hdyc[6];
-
   TProfile dxvsy[6];
   TProfile dyvsx[6];
 
@@ -665,12 +662,6 @@ int main( int argc, char* argv[] )
 		     Form( "%i-m dx;%i-m dx [mm];cluster pairs", ipl, ipl ),
 		     100, -f, f );
     hdy[ipl] = TH1I( Form( "dy%im", ipl ),
-		     Form( "%i-m dy;%i-m dy [mm];cluster pairs", ipl, ipl ),
-		     100, -f, f );
-    hdxc[ipl] = TH1I( Form( "dxc%im", ipl ),
-		     Form( "%i-m dx;%i-m dx [mm];cluster pairs", ipl, ipl ),
-		     100, -f, f );
-    hdyc[ipl] = TH1I( Form( "dyc%im", ipl ),
 		     Form( "%i-m dy;%i-m dy [mm];cluster pairs", ipl, ipl ),
 		     100, -f, f );
 
@@ -1321,8 +1312,6 @@ int main( int argc, char* argv[] )
     for( unsigned ipl = 0; ipl < 6; ++ipl ) {
       hdx[ipl].Reset();
       hdy[ipl].Reset();
-      hdxc[ipl].Reset();
-      hdyc[ipl].Reset();
       dxvsy[ipl].Reset();
       dyvsx[ipl].Reset();
       teleffx[ipl].Reset();
@@ -1509,17 +1498,10 @@ int main( int argc, char* argv[] )
 
 	      double dx = xB - xA;
 	      double dy = yB - yA;
-	      double dz = zz[ipl] - zz[im]; // signed
 	      hdx[ipl].Fill( dx );
 	      hdy[ipl].Fill( dy );
-	      if( fabs(dy) < 0.003 * fabs(dz) ) { // beam divergence
-		hdxc[ipl].Fill( dx );
-		dxvsy[ipl].Fill( yB, dx );
-	      }
-	      if( fabs(dy) < 0.003 * fabs(dz) ) { // beam divergence
-		hdyc[ipl].Fill( dy );
-		dyvsx[ipl].Fill( xB, dy );
-	      }
+	      dxvsy[ipl].Fill( yB, dx );
+	      dyvsx[ipl].Fill( xB, dy );
 
 	    } // clusters
 
