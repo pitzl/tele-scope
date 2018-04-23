@@ -6603,6 +6603,245 @@ run 31921 # 1644 7760k  eff 99.975
 # extend swap mem ?
 
 #-------------------------------------------------------------------------------
+Thu 8.3  Edge-on setup measurement of the chip 136i = 25x100 p-spray default DB            
+# scintillator edge-on            
+
+geo geo_2018_03d.dat  0 153 304 550 703 856            
+
+# Bias voltage 400 V (39 muA)            
+
+turn 0
+run 31938* 40.2      1671: 3500 long tracks
+
+turn -3.5
+run 31939* 40.2      1672: measured turn 3.1 edges4 dyc 2.2 um
+
+turn  -4
+run 31940* 40.2      1673: measured turn 3.6 edges4 dyc 2.3 um
+
+turn -3.5
+run 31941  4125.8      1674
+
+turn -3
+run 31942* 90.2      1675
+
+turn -3
+run 31943* 90.2      1676
+
+turn -2.5
+run 31944* 90.2      1677
+
+turn -2
+run 31945* 90.2      1678
+
+turn -4
+run 31946* 90.2      1679
+
+turn -4.5
+run 31947* 90.2      1680
+
+turn -5
+run 31948* 90.2      1681
+
+turn -5.5 
+run 31949* 90.2      1682
+
+turn -6
+run 31950  90.2      1683 
+
+turn -6.5
+run 31951  90.2      1684:
+
+turn -7
+run 31952  90.2      1685;
+
+turn -7.5
+run 31953  90.2      1686
+
+turn -8
+run 31954  90.2      1687:
+
+turn -8.5
+run 31955  90.2      1688
+
+turn -9.5
+run 31956  90.2      1689
+
+turn -10.5
+run 31957  90.2      1690
+
+turn -11.5
+run 31958  90.2      1691
+
+turn -12.5
+run 31959  90.2      1692
+
+turn -13.5
+run 31960  90.2      1693
+
+turn -14.5
+run 31961  90.2      1694
+
+turn -15.5
+run 31962  90.2      1695
+
+turn -16.5
+run 31963  90.2      1696
+
+turn -17.5
+run 31964  90.2      1697
+
+turn -18.5
+run 31965  90.2      1698
+
+#-------------------------------------------------------------------------------
+chip 109 = 25x100 p-stop default on rot90 PCB for edge-on turn scan              
+
+geo geo_2018_03d.dat  0 153 304 550 703 856              
+
+gain /home/pitzl/psi/r4s/B/scm109-scancal2-tb21-pr900-sh670-ia125-2018-03-11-hold24.dat
+
+# bias 200 V
+
+turn -3.5
+run 31968  40.2      1701  
+
+turn -3.5
+run 31969* 520.2      1702  noisy col 3
+
+# Sat 10.3.2018 continue with 109 edge-on              
+
+turn -3
+run 31970* 90.2      1703  
+
+turn -2.5
+run 31971* 90.2      1704
+
+turn -2
+run 31972* 90.2      1705
+              
+turn -4
+run 31973* 90.2      1706
+
+turn -4.5
+run 31974* 90.2      1707
+
+turn -5
+run 31976* 90.2      1709
+
+turn -5.5
+run 31977* 90.2      1710
+
+turn -6
+run 31978* 90.2      1711
+
+turn -6.5
+run 31979* 90.2      1712
+
+turn -7
+run 31980  90.2      1713 eudaq crash at run end
+
+# restart eudaq
+turn -7.5
+run 31981  90.2      1714 no telescope events built
+
+# terminate and another restart -> eudaq events
+turn -8
+run 31983  90.2      1716
+
+turn -8.5
+run 31984  90.2      1717
+
+turn -9
+run 31985  90.2      1718
+
+turn -10
+run 31986  90.2      1719
+
+turn -11
+run 31987  90.2      1720
+
+turn -12
+run 31988  90.2      1721
+
+turn -13
+run 31989  90.2      1722
+
+turn -14
+run 31990  90.2      1723
+
+turn -15
+run 31991  90.2      1724
+
+turn -16
+run 31992  90.2      1725
+
+turn -17
+run 31993  90.2      1726
+
+turn -18
+run 31994  90.2      1727
+
+turn -19
+run 31995  90.2      1728
+
+turn -20
+run 31996  90.2      1729
+
+turn -21
+run 31997  90.2      1730
+
+turn -22
+run 31998  90.2      1731
+
+turn -23
+run 31999  90.2      1732
+
+# move 2mm to the right to recover angle out of beam because of rotation
+turn -23
+run 32000  10.2      1733, short test run to check posistion
+
+turn -24
+run 32001  90.2      1734
+
+turn -25
+run 32002  90.2      1735
+
+turn -26
+run 32004  90.2      1737
+
+# move 2mm to the left to find the optimal position for the night
+turn -3.5
+run 32005  40.2      1738
+
+turn -3.5
+run 32006  2673.6      1739, crash at 1:08, 4.8 GB
+              
+# x from +1 to +3 mm
+turn -27
+run 32007  90.2      1740
+
+#x to +4 mm
+turn -28
+run 32008  90.2      1741
+
+#x to +5 mm
+turn -29
+run 32009  90.2      1742
+
+turn -30  run 32010  90.2      1743
+
+#x to +1 mm
+turn -14.5
+run 32011  90.2      1744
+
+# 200 V, 6 uA
+turn -13.5
+run 32012  90.2      1745
+
+# gain calibration for 109, hold 20, 24, 28, 32, 36 at Vbias 200 V
+
+#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 # Tue 3.4.2018
 chip 123 # FTH 50x50 pstop open ring
@@ -6983,12 +7222,51 @@ turn 0.5
 
 geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
 
-# bias 120
+# bias 120 gain_2: Tsunami in rows, look at cols
 run 32170 # 2042  40k
-# adjust DUT x,y
-run 32171 # 2043 160k  eff 99.98  dph 5.1  31.3 e/mV
 
-# bias scan
+# adjust DUT x,y
+#                                                     fitgp0.C("cmsncolvsym",20,80)
+run 32171 # 2043 160k  eff 99.98  dph 5.1  31.3 e/mV  diffu 6.15 um
+
+# bias 100 V
+run 32172  # 2044  90.2  diffu 6.15
+
+# bias  80 V
+run 32173  # 2045  90.2  diffu 5.97
+
+# bias  60 V
+run 32174  # 2046  90.2  diffu 6.75
+
+# bias  50 V
+run 32175  # 2047  90.2  diffu 7.07
+
+# bias  40 V
+run 32176  # 2048  90.2  diffu 6.92
+
+# bias  30 V
+run 32177  # 2049  90.2  diffu 6.90
+
+# bias  28 V
+run 32178  # 2050  90.2
+
+# bias  26 V
+run 32179  # 2051  90.2
+
+# bias  24 V
+run 32180  # 2052  90.2
+
+# bias  20 V
+run 32181  # 2053  90.2  diffu 6.88
+
+# bias  16 V
+run 32182  # 2054  90.2
+
+# bias  12 V
+run 32183  # 2055  90.2
+
+# bias   8 V
+run 32184  # 2056  90.2  diffu 6.69
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 193 # FTH 25x100 p-stop max implant on rot90
@@ -7130,10 +7408,10 @@ gain /home/pitzl/psi/r4s/B/scm155-scancal2-tb21-pr900-sh670-ia150-vb120-hold24.d
 run 32219 # 2089 160  eff 99.984  eta -0.68
 
 # bias 100, IA 150 mA
-run 32220 # 2090 160  eff 
+run 32220 # 2090  90  eff 99.981
 
 # bias  80, IA 150 mA
-run 32221 # 2091 160  eff 
+run 32221 # 2091  90  eff 99.979
 
 # bias 100, IA 150 mA
 run 32223 # 2093 7856  eff 
@@ -7142,7 +7420,7 @@ run 32223 # 2093 7856  eff
 # Thu 12.4.2018 continue 155 bias scan
 
 # bias  60, IA 150 mA
-run 32228 # 2096 136  eff 
+run 32228 # 2096 136  eff MOD and DUT out of sync
 
 # bias  50, IA 150 mA
 run 32229 # 2097  90  eff 
@@ -7163,7 +7441,7 @@ run 32233 # 2101  90  eff
 run 32234 # 2102  90  eff 
 
 # bias  10, IA 150 mA
-run 32235 # 2103  90  eff 
+run 32235 # 2103  90  eff mod out of sync
 
 # gaincal 150 mA
 
@@ -7203,10 +7481,47 @@ gain /home/pitzl/psi/r4s/B/scm191-scancal2-tb21-pr900-sh670-ia126-vb120-hold24.d
 run 32249 # 2116 160  eff 99.995  eta -0.68
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#shallow angle
+# shallow angle
 chip 118 # FTH 50x50 p-stop default on rot90
-geo_2018_04e: 0  153  305   448  600  753  for 50x50
 gain /home/pitzl/psi/r4s/B/scm118-scancal2-tb21-pr900-sh670-ia125-vb120-hold24.dat
+
+geo_2018_04e: 0  153  305   448  600  753  for 50x50
+
+tilt -84 # upsigny = -1
+
+# bias 120 V, ib 5 uA
+run 32251  160.2  2118  
+
+# bias 60 V, ib 12 uA
+run 32252  2119  160.2
+
+# bias 50 V, ib 12 uA
+run 32253  2120  160.2
+
+# bias 40 V, ib 10 uA
+run 32254  2121  160.2
+
+# bias 35 V, ib 9 uA
+run 32255  2122  160.2
+
+# bias 30 V, ib 3.5 uA
+run 32256  2123  160.2
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Fri 13.4.2018
+# continue 118 FTH 50x50 p-stop default on rot90 shallow
+
+# bias 25 V, ib 7.5 uA
+run 32257  2124  160.2
+
+# bias 20 V, ib 8.0 uA
+run 32258  2125  160.2
+
+# bias 15 V, ib 9.2 uA
+run 32259  2126  160.2
+
+# bias 10 V, ib 4.6 uA
+run 32260  2127  160.2  
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Fri 13.4.2018
@@ -7389,7 +7704,7 @@ gain /home/pitzl/psi/r4s/B/scm144-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.d
 geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
 
 # bias 120 gain_1
-run 32289 # 2156 160  eta -0.05
+run 32289 # 2156 160  eta -0.05  diffu 6.33
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 145 = 25x100 FDB p-spray dot, rot90 cut
@@ -7430,7 +7745,7 @@ gain /home/pitzl/psi/r4s/B/scm150-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.d
 geo geo_2018_04d.dat #  0 153  305  395  547  700  25x100
 
 # bias 120 gain_1
-run 32294 # 2161 160  eta 0.14
+run 32294 # 2161 160  eta 0.14  
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 151 = 50x50 FDB p-stop small dot, rot90 cut
@@ -7454,7 +7769,7 @@ run 32297 # 2164 8640
 
 GeV 4.8
 # bias 120 gain_1
-run 32298 # 2165 160  eta -0.19
+run 32298 # 2165 160  eta -0.19  diffu 7.85
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 166 # FTH 50x50 p-stop max imp straight
@@ -7471,21 +7786,21 @@ chip 172 = 50x50 FTH p-stop max imp, straight
 gain /home/pitzl/psi/r4s/B/scm172-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
-run 32302 # 2169 160  eff 99.999  eta -0.15
+run 32302 # 2169 160  eff 99.999  eta -0.15  diffu 5.67  5.39
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 173 # FTH 50x50 p-stop default straight
 gain /home/pitzl/psi/r4s/B/scm173-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
-run 32303 # 2170 160  eff 99.996  eta -0.16
+run 32303 # 2170 160  eff 99.996  eta -0.16  diffu 6.24
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 175 # FTH 50x50 p-stop max imp straight
 gain /home/pitzl/psi/r4s/B/scm175-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
-run 32304 # 2171 160  eff 99.72  eta -0.17
+run 32304 # 2171 160  eff 99.72  eta -0.17  diffu 6.11
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 176 # FTH 50x50 p-stop max imp straight
@@ -7506,7 +7821,7 @@ chip 158 = 50x50 FDD p-stop small dot, straight cut
 gain /home/pitzl/psi/r4s/B/scm158-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
-run 32307 # 2174 160  eff 99.5  eta -0.21  dead column
+run 32307 # 2174 160  eff 99.5  eta -0.21  dead column  diffu 8.27
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 159 = 50x50 FDB p-stop dot, straight cut
