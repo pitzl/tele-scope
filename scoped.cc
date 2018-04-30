@@ -6,7 +6,9 @@
 // needs runs.dat
 // needs align_31972.dat from tele
 
-// scoped 31972
+// scoped 31942  irrad 136
+// scoped 31972  edge-on turn 2
+// scoped 32251  shallow
 
 #include "eudaq/FileReader.hh"
 #include "eudaq/PluginManager.hh"
@@ -752,7 +754,7 @@ int main( int argc, char* argv[] )
 
   if( run >= 31635 && run <= 32266 ) dphcut = 24; // gain_2 2018
 
-  //if( chip0 == 109 ) dphcut = 50; // like edges2
+  if( chip0 == 136 ) dphcut = 33; // gain_2 irrad
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // (re-)create root file:
@@ -1051,7 +1053,10 @@ int main( int argc, char* argv[] )
   TProfile2D nlnkvsxy( "nlnkvsxy",
 		       "link map;dx track [mm];dy [mm];<links>",
 		       100, -5, 5, 100, -0.5, 0.5, -1, 999 );
-  TProfile2D nlnkvsdy( "nlnkvsdy",
+  TProfile nlnkvsdy( "nlnkvsdy",
+		    "link map;dy [mm];<links>",
+		    100, -0.5, 0.5, -1, 999 );
+  TProfile2D nlnkvsdy09( "nlnkvsdy09",
 		       "link map;dy0 track [mm];dy9 [mm];<links>",
 		       100, -1, 1, 100, -1, 1, -1, 999 );
   TProfile nlnkvsdy0( "nlnkvsdy0",
@@ -1083,7 +1088,7 @@ int main( int argc, char* argv[] )
 		  "first link;zmin [mm];tracks",
 		  80, -4, 4 );
   TH1I zmaxHisto( "zmax",
-		  "first link;zmax [mm];tracks",
+		  "last link;zmax [mm];tracks",
 		  80, -4, 4 );
   TH1I zlngHisto( "zlng",
 		  "length;z length [mm];tracks",
@@ -1132,7 +1137,10 @@ int main( int argc, char* argv[] )
   TProfile colqvsy( "colqvsy",
 		    "column charge vs depth;y [mm];<column charge> [ke]",
 		    40, -0.1, 0.1, -1, 80 );
-  TH1I colqyHisto( "colqy",
+  TProfile colqvsyc( "colqvsyc",
+		    "column charge vs depth;y [mm];<column charge> [ke]",
+		    40, -0.1, 0.1, -1, 80 );
+  TH1I colqycHisto( "colqyc",
 		    "DUT linked column charge;y [mm];sum column charge [ke]",
 		    40, -0.1, 0.1 );
 
@@ -1953,9 +1961,10 @@ int main( int argc, char* argv[] )
       else if( fabs( dxm ) > 3.8 )
 	nlnk2Histo.Fill( nlnk ); // 
       else {
+	nlnkvsdy.Fill( dym, nlnk );
 	nlnkvsdy0.Fill( dy0, nlnk );
 	nlnkvsdy9.Fill( dy9, nlnk );
-	nlnkvsdy.Fill( dy0, dy9, nlnk ); // diag
+	nlnkvsdy09.Fill( dy0, dy9, nlnk ); // diag
 	if( dy0 < -0.1 && dy9 > 0.1 )
 	  nlnk3Histo.Fill( nlnk ); // long, some out-of-time
 	else
@@ -1995,13 +2004,18 @@ int main( int argc, char* argv[] )
 	    colpHisto.Fill( pcol[icol] );
 	    colqHisto.Fill( qcol[icol] );
 
-	  } // filled
+	  } // road
 
-	  if( fabs( dxm ) < 3.8  &&
-	      dy0 < -0.1 && dy9 > 0.1 ) {
+	  if( fabs( dxm ) < 3.8 ) {
+
 	    colqvsy.Fill( ycol[icol], qcol[icol] );
-	    colqyHisto.Fill( ycol[icol], qcol[icol] );
-	  }
+
+	    if( dy0 < -0.1 && dy9 > 0.1 ) { // shallow
+	      colqvsyc.Fill( ycol[icol], qcol[icol] );
+	      colqycHisto.Fill( ycol[icol], qcol[icol] );
+	    }
+
+	  } // fiducial x
 
 	} // cols
 

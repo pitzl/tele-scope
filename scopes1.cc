@@ -646,7 +646,12 @@ int main( int argc, char * argv[] )
   if( chip0 == 116 ) rot90 = 1;
   if( chip0 == 117 ) rot90 = 1;
   if( chip0 == 118 ) rot90 = 1;
-  if( chip0 == 119 ) rot90 = 1;
+  if( chip0 == 120 ) rot90 = 1; /// irrad
+  if( chip0 == 124 ) rot90 = 1; /// irrad
+  if( chip0 == 129 ) rot90 = 1; /// irrad
+  if( chip0 == 130 ) rot90 = 1; /// irrad
+  if( chip0 == 136 ) rot90 = 1; /// irrad
+  if( chip0 == 137 ) rot90 = 1; /// irrad
   if( chip0 == 139 ) rot90 = 1;
   if( chip0 == 142 ) rot90 = 1;
   if( chip0 == 143 ) rot90 = 1;
@@ -661,6 +666,15 @@ int main( int argc, char * argv[] )
   if( chip0 == 111 ) fifty = 1;
   if( chip0 == 117 ) fifty = 1;
   if( chip0 == 118 ) fifty = 1;
+  if( chip0 == 119 ) fifty = 1; // irr
+  if( chip0 == 122 ) fifty = 1; // irr
+  if( chip0 == 123 ) fifty = 1; // irr
+  if( chip0 == 126 ) fifty = 1; // irr
+  if( chip0 == 127 ) fifty = 1; // irr
+  if( chip0 == 132 ) fifty = 1; // irr
+  if( chip0 == 133 ) fifty = 1; // irr
+  if( chip0 == 134 ) fifty = 1; // irr
+  if( chip0 == 135 ) fifty = 1; // irr
   if( chip0 == 139 ) fifty = 1;
   if( chip0 == 142 ) fifty = 1;
   if( chip0 == 143 ) fifty = 1;
@@ -673,6 +687,21 @@ int main( int argc, char * argv[] )
   if( chip0 == 158 ) fifty = 1;
   if( chip0 == 159 ) fifty = 1;
   if( chip0 == 160 ) fifty = 1;
+  if( chip0 == 161 ) fifty = 1; // poly
+  if( chip0 == 166 ) fifty = 1;
+  if( chip0 == 172 ) fifty = 1;
+  if( chip0 == 173 ) fifty = 1;
+  if( chip0 == 175 ) fifty = 1;
+  if( chip0 == 176 ) fifty = 1;
+  if( chip0 == 177 ) fifty = 1;
+  if( chip0 == 181 ) fifty = 1;
+  if( chip0 == 182 ) fifty = 1;
+  if( chip0 == 183 ) fifty = 1;
+  if( chip0 == 184 ) fifty = 1;
+  if( chip0 == 185 ) fifty = 1;
+  if( chip0 == 186 ) fifty = 1;
+  if( chip0 == 187 ) fifty = 1;
+  if( chip0 == 191 ) fifty = 1;
   if( chip0 >= 300 ) fifty = 1; // 3D
 
   double upsignx =  1; // w.r.t. telescope
@@ -1140,13 +1169,13 @@ int main( int argc, char * argv[] )
     if( ipl == iDUT ) { // R4S
       hcol[ipl] = TH1I( Form( "col%i", ipl ),
 			Form( "%i col;col;plane %i pixels", ipl, ipl ), 
-			max( 156, nx[ipl]/4 ), 0, nx[ipl] );
+			nx[ipl], 0, nx[ipl] );
       hrow[ipl] = TH1I( Form( "row%i", ipl ),
 			Form( "%i row;row;plane %i pixels", ipl, ipl ),
-			max( 160, ny[ipl]/2 ), 0, ny[ipl] );
+			ny[ipl], 0, ny[ipl] );
       hmap[ipl] = new TH2I( Form( "map%i", ipl ),
 			    Form( "%i map;col;row;plane %i pixels", ipl, ipl ),
-			    max( 156, nx[ipl]/4 ), 0, nx[ipl], max( 160, ny[ipl]/2 ), 0, ny[ipl] );
+			    nx[ipl], 0, nx[ipl], ny[ipl], 0, ny[ipl] );
     }
     else {
       hcol[ipl] = TH1I( Form( "col%i", ipl ),
@@ -1567,6 +1596,9 @@ int main( int argc, char * argv[] )
     TH2I( "trixyc", "triplets x-y in DUT;x in DUT [mm];y in DUT [mm];triplets",
 	  240, -12, 12, 120, -6, 6 );
 
+  TProfile tridzcvsx( "tridzcvsx",
+		   "z vs x;x track [mm];<z of intersect at DUT> [mm]",
+		   60, -6, 6, -10, 102 );
   TProfile tridzcvsy( "tridzcvsy",
 		   "z vs y;y track [mm];<z of intersect at DUT> [mm]",
 		   60, -6, 6, -10, 102 );
@@ -2895,7 +2927,7 @@ int main( int argc, char * argv[] )
       for( unsigned ipx = 0; ipx < vpx.size(); ++ipx ) {
 	int col = vpx[ipx].col;
 	pixel px { col, vpx[ipx].row, vpx[ipx].ph, vpx[ipx].q, vpx[ipx].ord, 0 };
-	compx[col].insert(px); // sorted along row
+	compx[col].insert(px); // sorted: by row
       }
 
       for( unsigned col = 0; col < 155; ++col ) {
@@ -3096,6 +3128,7 @@ int main( int argc, char * argv[] )
       syncmod = 1; // does not help
 
     if( run == 31315 ) { // cmsdyvsev->Fit("pol3")
+
       double p0 =   0.00136061;
       double p1 =  1.03449e-08;
       double p2 = -7.22758e-14;
@@ -3368,6 +3401,186 @@ int main( int argc, char * argv[] )
 
     }
 
+    if( run == 32034 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =    0.0025121;
+      double p1 = -4.14627e-08;
+      double p2 =  7.96541e-14;
+      double p3 = -7.30498e-20;
+      double p4 =  3.90571e-26;
+      double p5 = -1.33773e-32;
+      double p6 =  3.06674e-39;
+      double p7 = -4.65799e-46;
+      double p8 =  4.26712e-53;
+      double p9 = -1.77121e-60;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 = -0.000754151;
+      p1 =  9.49442e-09;
+      p2 =  1.65655e-15;
+      p3 = -1.44282e-20;
+      p4 =  1.38659e-26;
+      p5 = -6.41819e-33;
+      p6 =  1.67046e-39;
+      p7 = -2.49573e-46;
+      p8 =   2.0023e-53;
+      p9 = -6.71394e-61;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 32049 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =  0.000276777;
+      double p1 = -6.88841e-10;
+      double p2 = -1.71013e-14;
+      double p3 =  4.27413e-20;
+      double p4 = -3.42678e-26;
+      double p5 =  1.34881e-32;
+      double p6 = -2.94559e-39;
+      double p7 =   3.6458e-46;
+      double p8 = -2.39778e-53;
+      double p9 =   6.5173e-61;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =   0.00052529;
+      p1 = -3.21827e-09;
+      p2 =  1.38903e-15;
+      p3 =  9.14888e-21;
+      p4 = -1.15428e-26;
+      p5 =   5.7903e-33;
+      p6 = -1.50124e-39;
+      p7 =  2.12405e-46;
+      p8 = -1.55798e-53;
+      p9 =  4.63978e-61;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 32072 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =   0.00180763;
+      double p1 = -2.25134e-08;
+      double p2 =  6.64862e-14;
+      double p3 = -8.33592e-20;
+      double p4 =   5.7412e-26;
+      double p5 = -2.31564e-32;
+      double p6 =  5.58975e-39;
+      double p7 = -7.92902e-46;
+      double p8 =  6.08345e-53;
+      double p9 = -1.94505e-60;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =   -0.0117097;
+      p1 = -2.12281e-08;
+      p2 =  5.16441e-14;
+      p3 = -5.61065e-20;
+      p4 =  3.23004e-26;
+      p5 = -1.09173e-32;
+      p6 =  2.24616e-39;
+      p7 = -2.77231e-46;
+      p8 =  1.88958e-53;
+      p9 = -5.47398e-61;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 32103 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =  -0.00136629;
+      double p1 =  1.19411e-08;
+      double p2 =  6.29146e-15;
+      double p3 = -2.51003e-20;
+      double p4 =  1.94371e-26;
+      double p5 = -7.44832e-33;
+      double p6 =  1.62292e-39;
+      double p7 = -2.04331e-46;
+      double p8 =  1.38495e-53;
+      double p9 = -3.91064e-61;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =  0.00173809;
+      p1 = -6.45882e-09;
+      p2 = -9.67786e-15;
+      p3 =  1.97719e-20;
+      p4 = -1.36125e-26;
+      p5 =  4.94415e-33;
+      p6 =  -1.0413e-39;
+      p7 =  1.27725e-46;
+      p8 = -8.47016e-54;
+      p9 =  2.34798e-61;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 32129 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 = -0.000234783;
+      double p1 = -3.15986e-09;
+      double p2 =  2.97505e-15;
+      double p3 =  1.06937e-21;
+      double p4 = -1.66697e-27;
+      double p5 =  5.42982e-34;
+      double p6 = -6.68482e-41;
+      double p7 =  1.17267e-48;
+      double p8 =  3.67149e-55;
+      double p9 = -2.06653e-62;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =  5.59224e-05;
+      p1 =   7.7631e-10;
+      p2 = -1.64471e-15;
+      p3 =    4.548e-21;
+      p4 = -4.47389e-27;
+      p5 =  2.03671e-33;
+      p6 = -4.87911e-40;
+      p7 =  6.37061e-47;
+      p8 = -4.29516e-54;
+      p9 =  1.17145e-61;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 32150 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =   0.00295813;
+      double p1 = -1.63924e-08;
+      double p2 =  7.44757e-14;
+      double p3 = -1.12406e-19;
+      double p4 =  8.62997e-26;
+      double p5 =  -3.8291e-32;
+      double p6 =  1.01862e-38;
+      double p7 = -1.59903e-45;
+      double p8 =  1.36319e-52;
+      double p9 =  -4.8609e-60;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =   -0.0010284;
+      p1 =  1.84324e-08;
+      p2 = -6.20632e-14;
+      p3 =  7.86305e-20;
+      p4 = -5.39012e-26;
+      p5 =  2.19327e-32;
+      p6 = -5.39067e-39;
+      p7 =  7.81103e-46;
+      p8 = -6.12344e-53;
+      p9 =  1.99914e-60;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
     if( run == 32168 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
 
       double p0 =  -0.00120256;
@@ -3393,6 +3606,31 @@ int main( int argc, char * argv[] )
       p7 = -1.63616e-46;
       p8 =  9.54093e-54;
       p9 = -2.32727e-61;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 32223 ) { // cmsdxvsev->Fit("pol4")
+
+      double p0 =  -0.00155577;
+      double p1 = -7.94145e-09;
+      double p2 =  1.74192e-15;
+      double p3 = -2.98033e-22;
+      double p4 =  2.12496e-29;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + p4 * iev ) * iev ) * iev ) * iev;
+
+      p0 =  0.000463355;
+      p1 =  3.58166e-09;
+      p2 = -3.28843e-15;
+      p3 =  5.75435e-21;
+      p4 = -4.74024e-27;
+      double p5 =  2.02231e-33;
+      double p6 = -4.86158e-40;
+      double p7 =  6.66882e-47;
+      double p8 = -4.87922e-54;
+      double p9 =  1.47873e-61;
 
       DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
 
@@ -4041,6 +4279,7 @@ int main( int argc, char * argv[] )
 
       double dzc = zc + zmA - DUTz; // from DUT z0 [-8,8] mm
 
+      tridzcvsx.Fill( xmA, dzc );
       tridzcvsy.Fill( ymA, dzc );
 
       // transform into DUT system: (passive).
@@ -5714,7 +5953,7 @@ int main( int argc, char * argv[] )
 
     // dyvsy -> tilt:
 
-    if( fabs(DUTtilt0) > 0.4 && cmsdyvsy.GetEntries() > 999 ) {
+    if( fabs(DUTtilt) > 0.4 && cmsdyvsy.GetEntries() > 999 ) {
       cmsdyvsy.Fit( "pol1", "q", "", -midy[iDUT]+0.2, midy[iDUT]-0.2 );
       TF1 * fdyvsy = cmsdyvsy.GetFunction( "pol1" );
       cout << endl << cmsdyvsy.GetTitle()
@@ -5741,24 +5980,12 @@ int main( int argc, char * argv[] )
 
   } // iter
 
-  // write new DUT alignment:
+  cout << endl
+       << "DUT efficiency " << 100*effvst6t.GetMean(2) << "%"
+       << " from " << effvst6t.GetEntries() << " events"
+       << endl;
 
-  ofstream DUTalignFile( DUTalignFileName.str() );
-
-  DUTalignFile << "# DUT alignment for run " << run << endl;
-  ++DUTaligniteration;
-  DUTalignFile << "iteration " << DUTaligniteration << endl;
-  DUTalignFile << "alignx " << newDUTalignx << endl;
-  DUTalignFile << "aligny " << newDUTaligny << endl;
-  DUTalignFile << "rot " << DUTrot << endl;
-  DUTalignFile << "tilt " << DUTtilt << endl;
-  DUTalignFile << "turn " << DUTturn << endl;
-  DUTalignFile << "dz " << DUTz - zz[2] << endl;
-
-  DUTalignFile.close();
-
-  cout << endl << "wrote DUT alignment iteration " << DUTaligniteration
-       << " to " << DUTalignFileName.str() << endl
+  cout << endl << "DUT alignment iteration " << DUTaligniteration << endl
        << "  alignx " << newDUTalignx << endl
        << "  aligny " << newDUTaligny << endl
        << "  rot    " << DUTrot << endl
@@ -5767,10 +5994,28 @@ int main( int argc, char * argv[] )
        << "  dz     " << DUTz - zz[2] << endl
     ;
 
-  cout << endl
-       << "DUT efficiency " << 100*effvst6t.GetMean(2) << "%"
-       << " from " << effvst6t.GetEntries() << " events"
-       << endl;
+  // write new DUT alignment:
+
+  cout << "update DUT alignment file? (y/n)" << endl;
+  string ans; cin >> ans; string YES{"y"};
+  if( ans == YES ) {
+
+    ofstream DUTalignFile( DUTalignFileName.str() );
+
+    DUTalignFile << "# DUT alignment for run " << run << endl;
+    ++DUTaligniteration;
+    DUTalignFile << "iteration " << DUTaligniteration << endl;
+    DUTalignFile << "alignx " << newDUTalignx << endl;
+    DUTalignFile << "aligny " << newDUTaligny << endl;
+    DUTalignFile << "rot " << DUTrot << endl;
+    DUTalignFile << "tilt " << DUTtilt << endl;
+    DUTalignFile << "turn " << DUTturn << endl;
+    DUTalignFile << "dz " << DUTz - zz[2] << endl;
+
+    DUTalignFile.close();
+
+    cout << " to " << DUTalignFileName.str() << endl;
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // done
