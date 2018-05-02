@@ -713,6 +713,8 @@ int main( int argc, char* argv[] )
 
   iDUTalignFile.close();
 
+  double cf = cos( DUTrot ); // rad
+  double sf = sin( DUTrot );
   double co = cos( DUTturn ); // rad
   double so = sin( DUTturn );
 
@@ -1838,22 +1840,22 @@ int main( int argc, char* argv[] )
       double syA = triplets[iA].sy;
       //double txy = sqrt( sxA*sxA + syA*syA ); // angle
 
-      double zA = DUTz - zmA; // z DUT from mid of triplet
-      double xA = xmA + sxA * zA; // triplet impact point on DUT
-      double yA = ymA + syA * zA;
+      double dzA = DUTz - zmA; // z from mid of triplet to mid DUT
+      double xAc = xmA + sxA * dzA; // track at z_mid(DUT)
+      double yAc = ymA + syA * dzA;
 
       if( ldb ) cout << "  triplet " << iA << endl << flush;
 
-      trixcHisto.Fill( xA );
-      triycHisto.Fill( yA );
-      if(      pb.size() == 0 ) triyc0Histo.Fill( yA );
-      else if( pb.size() == 1 ) triyc2Histo.Fill( yA );
-      else if( pb.size() == 2 ) triyc2Histo.Fill( yA );
-      else if( pb.size() == 3 ) triyc3Histo.Fill( yA );
-      else if( pb.size() <= 5 ) triyc4Histo.Fill( yA );
-      else if( pb.size() <= 7 ) triyc6Histo.Fill( yA );
-      else if( pb.size() <= 9 ) triyc8Histo.Fill( yA );
-      else                      triycnHisto.Fill( yA );
+      trixcHisto.Fill( xAc );
+      triycHisto.Fill( yAc );
+      if(      pb.size() == 0 ) triyc0Histo.Fill( yAc );
+      else if( pb.size() == 1 ) triyc2Histo.Fill( yAc );
+      else if( pb.size() == 2 ) triyc2Histo.Fill( yAc );
+      else if( pb.size() == 3 ) triyc3Histo.Fill( yAc );
+      else if( pb.size() <= 5 ) triyc4Histo.Fill( yAc );
+      else if( pb.size() <= 7 ) triyc6Histo.Fill( yAc );
+      else if( pb.size() <= 9 ) triyc8Histo.Fill( yAc );
+      else                      triycnHisto.Fill( yAc );
 
       // DUT pixels:
 
@@ -1868,20 +1870,62 @@ int main( int argc, char* argv[] )
       int col9 =   0;
 
       double qcol[nx[iDUT]];
-      for( int icol = 0; icol < nx[iDUT]; ++icol ) qcol[icol] = 0;
-
       double pcol[nx[iDUT]];
-      for( int icol = 0; icol < nx[iDUT]; ++icol ) pcol[icol] = 0;
-
       double ycol[nx[iDUT]];
+      int ncol[nx[iDUT]];
       for( int icol = 0; icol < nx[iDUT]; ++icol ) {
-	double zpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // pixel center
-	zpix *= -1; // rot90: invert
-	double zA = zpix+DUTz - zmA; // z DUT from mid of triplet
-	double yA = ymA + syA * zA;
-	double dy = yA - DUTaligny - zpix*tan( DUTtilt ); // w.r.t. mid sensor
-	ycol[icol] = dy;
+	qcol[icol] = 0;
+	pcol[icol] = 0;
+	ycol[icol] = 0;
+	ncol[icol] = 0;
       }
+
+      // y from track in each pixel: slow
+
+      for( int irow = 0; irow < ny[iDUT]; ++irow ) {
+
+	double xpix = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // pixel center
+	double dxm = xpix - DUTalignx + xAc; // at z_mid(DUT)
+
+	if( fabs( dxm ) > 0.30 ) continue; // speedup (allow +-0.2/4 rot)
+
+	for( int icol = 0; icol < nx[iDUT]; ++icol ) {
+
+	  double zpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // pixel center
+	  zpix *= -1; // rot90: invert
+
+	  double xx = co*xpix - so*zpix; // trn in DUT plane around center
+	  double zz = so*xpix + co*zpix;
+
+	  double zA = zz+DUTz - zmA; // z DUT from mid of triplet
+	  double xA = xmA + sxA * zA; // triplet impact point on DUT
+	  double yA = ymA + syA * zA;
+
+	  double dy = yA - DUTaligny - zpix*tan( DUTtilt ); // rad
+
+	  xx = cf*xx - sf*dy;
+	  dy = sf*xx + cf*dy; // rot
+
+	  double dx = xx - DUTalignx + xA;
+
+	  // for depth profile:
+
+	  //if( fabs( dx ) < 0.100 && // wide
+	  if( fabs( dx ) < 0.050 && // tight
+	      fabs( dy ) < 0.150 ) { // generous
+
+	    ycol[icol] += dy;
+	    ++ncol[icol];
+
+	  } // px match
+
+	} // cols
+
+      } // rows
+
+      for( int icol = 0; icol < nx[iDUT]; ++icol )
+	if( ncol[icol] > 1 )
+	  ycol[icol] /= ncol[icol];
 
       double sump = 0;
       double sumq = 0;
@@ -1903,6 +1947,11 @@ int main( int argc, char* argv[] )
 	double xA = xmA + sxA * zA; // triplet impact point on DUT
 	double yA = ymA + syA * zA;
 
+	double dy = yA - DUTaligny - zpix*tan( DUTtilt ); // rad
+
+	xx = cf*xx - sf*dy;
+	dy = sf*xx + cf*dy; // rot
+
 	cmsdxaHisto.Fill( xx - xA );
 	cmssxaHisto.Fill( xx + xA );
 
@@ -1912,8 +1961,6 @@ int main( int argc, char* argv[] )
 	cmsdxvsx.Fill( xA, dx );
 	cmsdxvstx.Fill( sxA*1E3, dx*1E3 ); // slope = -dz
 	cmsdxvsz.Fill( zz, dx ); // tan(trn) = slope
-
-	double dy = yA - DUTaligny - zpix*tan( DUTtilt ); // rad
 
 	if( fabs( dy ) < 0.100 )
 	  cmsdxcHisto.Fill( dx );
@@ -1967,8 +2014,8 @@ int main( int argc, char* argv[] )
       nlnkHisto.Fill( nlnk );
 
       if( nlnk > 9 ) {
-	trixclkHisto.Fill( xA );
-	triyclkHisto.Fill( yA );
+	trixclkHisto.Fill( xAc );
+	triyclkHisto.Fill( yAc );
       }
 
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1977,7 +2024,7 @@ int main( int argc, char* argv[] )
       int icol = 0;
       double zpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
       zpix *= -1; // invert
-      double dy0 = yA - DUTaligny - zpix*tan( DUTtilt ); // w.r.t. mid sensor
+      double dy0 = yAc - DUTaligny - zpix*tan( DUTtilt ); // w.r.t. mid sensor
       if( dy0 > 0.1 ) nlnk0Histo.Fill( nlnk ); // empty
 
       // mid z:
@@ -1985,21 +2032,21 @@ int main( int argc, char* argv[] )
       icol = nx[iDUT]/2;
       zpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
       zpix *= -1; // invert
-      double dym = yA - DUTaligny - zpix*tan( DUTtilt ); // w.r.t. mid sensor
+      double dym = yAc - DUTaligny - zpix*tan( DUTtilt ); // w.r.t. mid sensor
 
       // last z:
 
       icol = nx[iDUT] - 1;
       zpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
       zpix *= -1; // invert
-      double dy9 = yA - DUTaligny - zpix*tan( DUTtilt ); // w.r.t. mid sensor
+      double dy9 = yAc - DUTaligny - zpix*tan( DUTtilt ); // w.r.t. mid sensor
       if( dy9 < -0.1 ) nlnk9Histo.Fill( nlnk ); // empty
 
       // mid x:
 
       int irow = ny[iDUT]/2; // rot90, middle x
       double xpix = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT];
-      double dxm = xpix - DUTalignx + xA; // track from middle pixel
+      double dxm = xpix - DUTalignx + xAc; // track from middle pixel
 
       nlnkvsxy.Fill( dxm, dym, nlnk );
 
@@ -2021,10 +2068,10 @@ int main( int argc, char* argv[] )
 
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-      double zlng = ptchx[iDUT] + zmax - zmin; // [mm]
-      double dens = nlnk/zlng; // hit density [1/mm]
-
       if( nlnk > 1 ) { // in-time track
+
+	double zlng = ptchx[iDUT] + zmax - zmin; // [mm]
+	double dens = nlnk/zlng; // hit density [1/mm]
 
 	zminHisto.Fill( zmin );
 	zmaxHisto.Fill( zmax );
@@ -2044,7 +2091,7 @@ int main( int argc, char* argv[] )
 
 	if( zmin < -3.7 ) { // edge-on
 	  zlngcHisto.Fill( zlng ); // same shape
-	  zlngvsy.Fill( yA - DUTaligny + 4*tan( DUTtilt ), zlng ); // y at zz = -4 mm
+	  zlngvsy.Fill( yAc - DUTaligny + 4*tan( DUTtilt ), zlng ); // y at zz = -4 mm
 	}
 
 	ymaxvsz.Fill( zmax, ymax );
