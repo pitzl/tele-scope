@@ -1149,8 +1149,11 @@ int main( int argc, char* argv[] )
   TH1I pxdyHisto( "pxdy",
 		  "track depth;track depth [mm];linked pixels",
 		  60, -0.15, 0.15 );
+  TH1I colHisto( "col",
+		 "DUT linked columns;column;linked columns",
+		    nx[iDUT], -0.5, nx[iDUT]-0.5 );
   TH1I colpHisto( "colp",
-		    "DUT linked column PH;coumn PH [ADC];linked columns",
+		    "DUT linked column PH;column PH [ADC];linked columns",
 		    500, 0, 1000 );
   TH1I colqHisto( "colq",
 		    "DUT linked column charge;column charge [ke / 100 #mum];linked columns",
@@ -1887,7 +1890,7 @@ int main( int argc, char* argv[] )
 	double xpix = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // pixel center
 	double dxm = xpix - DUTalignx + xAc; // at z_mid(DUT)
 
-	if( fabs( dxm ) > 0.30 ) continue; // speedup (allow +-0.2/4 rot)
+	if( DUTaligniteration > 1 && fabs( dxm ) > 0.20 ) continue; // speedup (allow +-0.2/4 turn)
 
 	for( int icol = 0; icol < nx[iDUT]; ++icol ) {
 
@@ -1910,14 +1913,12 @@ int main( int argc, char* argv[] )
 
 	  // for depth profile:
 
-	  //if( fabs( dx ) < 0.100 && // wide
-	  if( fabs( dx ) < 0.050 && // tight
-	      fabs( dy ) < 0.150 ) { // generous
+	  //if( fabs( dx ) < 0.100 ) { // wide
 
-	    ycol[icol] += dy;
-	    ++ncol[icol];
+	  ycol[icol] += dy;
+	  ++ncol[icol];
 
-	  } // px match
+	  //} // px match
 
 	} // cols
 
@@ -1939,6 +1940,9 @@ int main( int argc, char* argv[] )
 	double xpix = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // pixel center
 	double zpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // pixel center
 	zpix *= -1; // rot90: invert
+
+	double dxm = xpix - DUTalignx + xAc; // at z_mid(DUT)
+	if( DUTaligniteration > 1 && fabs( dxm ) > 0.20 ) continue; // speedup (allow +-0.2/4 turn)
 
 	double xx = co*xpix - so*zpix; // trn in DUT plane around center
 	double zz = so*xpix + co*zpix;
@@ -2100,10 +2104,12 @@ int main( int argc, char* argv[] )
 	dminvsz.Fill( zmin, dmin );
 	zlngvsz.Fill( zmin, zlng );
 
-	for( int icol = 0; icol < nx[iDUT]; ++icol ) {
+	for( int icol = 0; icol < nx[iDUT]; ++icol ) { // rot90: along the track
 
 	  double zpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // pixel center
 	  zpix *= -1; // rot90: invert
+
+	  colHisto( icol );
 
 	  if( icol > col0 && icol < col9 ) {
 
