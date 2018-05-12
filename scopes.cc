@@ -21,7 +21,6 @@
 
 #include <TFile.h>
 #include <TH1.h> // counting
-//#include <TH1D.h> // weighted counts
 #include <TH2.h>
 #include <TProfile.h>
 #include <TProfile2D.h>
@@ -44,7 +43,7 @@ struct evInfo {
 };
 
 class pixel {
- public:
+public:
   int col;
   int row;
   double ph;
@@ -637,8 +636,9 @@ int main( int argc, char * argv[] )
   const double wt = atan(1.0) / 45.0; // pi/180 deg
 
   double qwid = 1.1; // [ke] for Moyal in 150 um
+  if( chip0 >= 119 && chip0 < 138 ) qwid = 0.5; // irrad
   if( chip0 >= 300 ) qwid = 1.6; // 230 um 3D
-  if( run >= 31632 ) qwid = 0.5; // irrad
+  if( chip0 >= 300 && run >= 31498 ) qwid = 1.2; // 230 um 3D irrad
 
   bool rot90 = 0; // straight
   if( chip0 == 106 ) rot90 = 1;
@@ -786,8 +786,8 @@ int main( int argc, char * argv[] )
   double DUTalignx = 0.0;
   double DUTaligny = 0.0;
   double DUTrot = 0.0;
-  double DUTturn = DUTturn0; // [deg]
   double DUTtilt = DUTtilt0; // [deg]
+  double DUTturn = DUTturn0; // [deg]
   double DUTz = 0.5*( zz[2] + zz[3] );
 
   ostringstream DUTalignFileName; // output string stream
@@ -921,7 +921,7 @@ int main( int argc, char * argv[] )
   if( run >= 31592 ) ke = 0.031; // chip 152  deep diff 180 um at 11 ke
   if( run >= 31610 ) ke = 0.035; // chip 160  at 11 ke
   if( run >= 31614 ) ke = 0.030; // chip 152  deep diff 180 um at 11 ke
-  if( run >= 31632 ) ke = 0.035; // irrad default
+  if( run >= 31632 ) ke = 0.0367; // irrad default
 
   if( run >= 32170 ) ke = 0.0313; // 118
   if( run >= 32186 ) ke = 0.0388; // 193
@@ -982,6 +982,8 @@ int main( int argc, char * argv[] )
   if( run >= 32312 ) ke = 0.0344; // 157 gain_1 FDD 13.2
   if( run >= 32313 ) ke = 0.0366; // 164 gain_1
   if( run >= 32315 ) ke = 0.0375; // 160 gain_1
+  if( run >= 32463 ) ke = 0.068; // chip 332  3D 230 um at 17.2
+  if( run >= 32498 ) ke = 0.0367; // irrad default
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // MOD:
@@ -1157,13 +1159,13 @@ int main( int argc, char * argv[] )
     if( ipl == iDUT ) { // R4S
       hcol[ipl] = TH1I( Form( "col%i", ipl ),
 			Form( "%i col;col;plane %i pixels", ipl, ipl ), 
-			max( 156, nx[ipl]/4 ), 0, nx[ipl] );
+			nx[ipl], 0, nx[ipl] );
       hrow[ipl] = TH1I( Form( "row%i", ipl ),
 			Form( "%i row;row;plane %i pixels", ipl, ipl ),
-			max( 160, ny[ipl]/2 ), 0, ny[ipl] );
+			ny[ipl], 0, ny[ipl] );
       hmap[ipl] = new TH2I( Form( "map%i", ipl ),
 			    Form( "%i map;col;row;plane %i pixels", ipl, ipl ),
-			    max( 156, nx[ipl]/4 ), 0, nx[ipl], max( 160, ny[ipl]/2 ), 0, ny[ipl] );
+			    nx[ipl], 0, nx[ipl], ny[ipl], 0, ny[ipl] );
     }
     else {
       hcol[ipl] = TH1I( Form( "col%i", ipl ),
@@ -1402,11 +1404,13 @@ int main( int argc, char * argv[] )
 
   for( int col = 0; col < 155; ++col )
     for( int row = 0; row < 160; ++row ) {
-      double t = ( 300 - p0[col][row] ) / p1[col][row]; // from Vcal
+      double t = ( 200 - p0[col][row] ) / p1[col][row]; // from Vcal
       double a = p3[col][row] + p2[col][row] / ( 1 + exp(-t) ); // [ADC]
       dutaHisto.Fill( a );
     }
 
+  TProfile dutphvsprev( "dutphvsprev", "Tsunami;previous PH [ADC];<PH> [ADC]", 90, -100, 800, -999, 1999 );
+  TProfile dutdphvsprev( "dutdphvsprev", "Tsunami;previous #DeltaPH [ADC];<#DeltaPH> [ADC]", 90, -100, 300, -999, 1999 );
   TH1I dutphHisto( "dutph", "DUT PH;ADC-PED [ADC];pixels", 500, -100, 900 );
   TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
   TProfile dutqvsdph( "dutqvsdph", "gain;#DeltaPH [ADC];q [ke]", 500, -100, 900, -11, 99 );
@@ -1424,7 +1428,7 @@ int main( int argc, char * argv[] )
 
   TH1I dutq0Histo( "dutq0",
 		   "normal cluster charge;normal cluster charge [ke];clusters",
-		   160, 0, 80 );
+		   320, 0, 80 );
 
   TH1I dutnpxHisto( "dutnpx",
 		     "DUT cluster size;cluster size [pixels];clusters",
@@ -1841,11 +1845,11 @@ int main( int argc, char * argv[] )
 			     160, -4, 4, 160, -4, 4 );
 
   TH1I cmsdxHisto( "cmsdx",
-			   "DUT - Telescope x;cluster - triplet #Deltax [mm];clusters",
-			   200, -0.5, 0.5 );
+		   "DUT - Telescope x;cluster - triplet #Deltax [mm];clusters",
+		   200, -0.5, 0.5 );
   TH1I cmsdyHisto( "cmsdy",
-			   "DUT - Telescope y;cluster - triplet #Deltay [mm];clusters",
-			   200, -0.25, 0.25 );
+		   "DUT - Telescope y;cluster - triplet #Deltay [mm];clusters",
+		   200, -0.25, 0.25 );
 
   TProfile cmsdxvsev =
     TProfile( "cmsdxvsev",
@@ -2143,6 +2147,10 @@ int main( int argc, char * argv[] )
     TProfile2D( "cmsnpxvsxmym2",
 		"DUT cluster size vs xmod ymod;x track mod 200 [#mum];y track mod 200 [#mum];<cluster size> [pixels]",
 		100, 0, 200, 100, 0, 200, 0, 20 );
+  TProfile2D * cmsnpxvsxmym5 = new
+    TProfile2D( "cmsnpxvsxmym5",
+		"DUT cluster size vs xmod ymod;x track mod 50 [#mum];y track mod 50 [#mum];<cluster size> [pixels]",
+		50, 0, 50, 50, 0, 50, 0, 20 );
 
   TH1I cmsph0Histo( "cmsph0",
 		   "normal cluster PH;normal cluster pulse height [ADC];isolated linked clusters",
@@ -2168,7 +2176,8 @@ int main( int argc, char * argv[] )
 
   double qxmax = 0.001; // with qwid = 1.1: 7.5 ke cutoff
   if( chip0 >= 300 ) qxmax = 0.007; // 3D with qwid = 1.6: 8 ke cutoff
-  if( run >= 31632 && run <= 32168 ) qxmax = 0.10; // irrad = 1.15 ke cutoff
+  if( chip0 >= 300 && run >= 31498 ) qxmax = 0.015; // 3D with qwid = 1.2: 5 ke cutoff
+  if( chip0 >= 119 && chip0 <= 138 ) qxmax = 0.10; // irrad = 1.15 ke cutoff
 
   TProfile cmsqxvsx( "cmsqxvsx",
 		     "DUT cluster charge vs x;x track [mm];<cluster charge> [ke]",
@@ -2197,6 +2206,10 @@ int main( int argc, char * argv[] )
     TProfile2D( "cmsqxvsxmym2",
 	      "DUT cluster charge vs xmod ymod;x track mod 200 [#mum];y track mod 200 [#mum];<cluster charge> [ke]",
 		100, 0, 200, 100, 0, 200, 0, qxmax );
+  TProfile2D * cmsqxvsxmym5 = new
+    TProfile2D( "cmsqxvsxmym5",
+	      "DUT cluster charge vs xmod ymod;x track mod 50 [#mum];y track mod 50 [#mum];<cluster charge> [ke]",
+		50, 0, 50, 50, 0, 50, 0, qxmax );
 
   TH1I cmspxphHisto( "cmspxph",
 		    "DUT pixel PH linked;pixel PH [ADC];linked pixels",
@@ -2423,7 +2436,11 @@ int main( int argc, char * argv[] )
   TProfile2D * effvsxmym2 = new
     TProfile2D( "effvsxmym2",
 		"DUT efficiency vs xmod ymod;x track mod 200 [#mum];y track mod 200 [#mum];efficiency",
-		510, 0, 200, 100, 0, 200, -1, 2 );
+		100, 0, 200, 100, 0, 200, -1, 2 );
+  TProfile2D * effvsxmym5 = new
+    TProfile2D( "effvsxmym5",
+		"DUT efficiency vs xmod ymod;x track mod 50 [#mum];y track mod 50 [#mum];efficiency",
+		50, 0, 50, 50, 0, 50, -1, 2 );
 
   TProfile effvstx =
     TProfile( "effvstx",
@@ -2595,8 +2612,10 @@ int main( int argc, char * argv[] )
 
       int ipl = plane.ID();
 
-      if( run > 28000 && ipl > 0 && ipl < 7 ) // 2017, eudaq 1.6: Mimosa 1..6, DUT 7, REF 8, QAD 9
+      if( run > 28000 && run <= 32516 && // 2017, eudaq 1.6: Mimosa 1..6, DUT 7, REF 8, QAD 9
+	  ipl > 0 && ipl < 7 )
 	ipl -= 1; // 0..5
+
       if( ipl > 8 ) ipl = 6; // QUAD = MOD
 
       if( ldb ) cout << " = ipl " << ipl << ", size " << pxl.size() << flush;
@@ -2906,7 +2925,6 @@ int main( int argc, char * argv[] )
 	   << " - " << dtbdt*1e3 << " DTB"
 	   << endl; // [ms]
 
-
     // large time gap = DTB readout of one data block
 
     while( iev > 88 && tludt > 0.5 && dtbdt < 0.2*tludt && run != 31166 ) {
@@ -3019,7 +3037,8 @@ int main( int argc, char * argv[] )
 
       //cout << "  roi px " << vpx.size() << endl << flush;
 
-      if( vpx.size() > 999 ) {
+      unsigned sizecut = 999;
+      if( vpx.size() > sizecut ) {
 	cout << endl << "R4S vpx " << vpx.size() << " cleared in event " << iev;
 	vpx.clear();
 	filled = A;
@@ -3051,7 +3070,10 @@ int main( int argc, char * argv[] )
 	double ph1 = px1->ph;
 	double ph7 = px7->ph;
 
-	auto px4 = px1; ++px4;
+	auto px4 = px1;
+	double phprev = px4->ph;
+	double dphprev = 0;
+	++px4;
 
 	for( ; px4 != px7; ++px4 ) { // between 1 and 7, exclusively
 
@@ -3059,13 +3081,19 @@ int main( int argc, char * argv[] )
 	  int row4 = px4->row;
 	  double ph4 = px4->ph;
 
+	  dutphHisto.Fill( ph4 );
+	  dutphvsprev.Fill( phprev, ph4 );
+	  phprev = ph4;
+
 	  double dph;
 	  if( row4 - row1 < row7 - row4 )
 	    dph = ph4 - ph1;
 	  else
 	    dph = ph4 - ph7;
 
-	  dutphHisto.Fill( ph4 );
+	  dutdphvsprev.Fill( dphprev, dph );
+	  dphprev = dph;
+
 	  dutdphHisto.Fill( dph ); // sig 2.7
 
 	  // r4scal.C
@@ -3098,7 +3126,6 @@ int main( int argc, char * argv[] )
 	  }
 	  px.ph = dph;
 	  px.q = q;
-	  //if( chip0 == 122 ) px.q = dph; // irrad, no gaincal
 	  px.big = 0;
 
 	  //cout << "    ph col4 " << col4 << " = " << px.col << endl << flush;
@@ -3119,17 +3146,21 @@ int main( int argc, char * argv[] )
 	  if( run == 32301 ) dphcut = 24; // gain_2 20 MHz
 
 	  if( chip0 > 300 ) dphcut = 20; // irradiated 3D is noisy gain_1
-	  if( chip0 == 118 && run <= 32266 ) dphcut = 20; // gain_2
+	  if( chip0 == 118 && run <= 32262 ) dphcut = 50; // gain_2
+	  if( chip0 == 118 && run >= 32263 ) dphcut = 24; // gain_1 noisy
 	  if( chip0 == 120 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 122 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 123 ) dphcut = 33; // irrad, gain_2
+	  if( chip0 == 124 ) dphcut = 20; // irrad, gain_1
 	  if( chip0 == 126 ) dphcut = 24; // irrad, gain_2, noise
 	  if( chip0 == 128 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 130 ) dphcut = 33; // irrad, gain_2
 	  //if( chip0 == 133 ) dphcut = 55; // irrad, gain_2, online 4 sigma
 	  if( chip0 == 133 ) dphcut = 33; // irrad, gain_2
+	  if( chip0 == 133 && run >= 32498 ) dphcut = 28; // irrad, gain_1
 	  //if( chip0 == 133 ) dphcut = 22; // irrad, gain_1 March
 	  if( chip0 == 134 ) dphcut = 40; // irrad, gain_2 rms 13
+	  if( chip0 == 134 && run >= 32537 ) dphcut = 30; // irrad, gain_1 rms 9.6
 	  if( chip0 == 137 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 156 ) dphcut = 16; // gain_1 
 
@@ -3150,6 +3181,7 @@ int main( int argc, char * argv[] )
 	    //if( q > 5.0 ) { // 31166 cmsdycq 10.44  eff 98.0
 	    //if( q > 5.5 ) { // 31166 cmsdycq 11.3  eff 96.3
 	    //if( q > 6.0 ) { // 31166 cmsdycq 12.05  eff 93.5
+
 	    hmap[iDUT]->Fill( px.col+0.5, px.row+0.5 );
 	    pb.push_back(px);
 
@@ -4572,7 +4604,7 @@ int main( int argc, char * argv[] )
       // triplets at the DUT:
 
       double xcut = ptchx[iDUT];
-      double ycut = ptchx[iDUT];
+      double ycut = ptchy[iDUT];
       if( rot90 ) {
 	xcut = ptchy[iDUT];
 	ycut = ptchx[iDUT];
@@ -5024,9 +5056,12 @@ int main( int argc, char * argv[] )
 	      }
 
 	      // linear gain from Vcal:
-	      double v = 300; // fresh
-	      if( chip0 >= 119 && chip0 <= 138 )
-		v = 200; // irrad
+	      double v = 300; // fresh gain_2
+	      if( run > 32263 ) v = 200; // gain_1
+	      if( chip0 >= 119 && chip0 <= 138 ) {
+		v = 200; // irrad gain_2
+		if( run > 32498 ) v = 150; // gain_1
+	      }
 	      double t = ( v - p0[px->col][px->row] ) / p1[px->col][px->row]; // from Vcal
 	      double a = p3[px->col][px->row] + p2[px->col][px->row] / ( 1 + exp(-t) ); // [ADC]
 	      double g = v / a; // mv/ADC
@@ -5121,7 +5156,7 @@ int main( int argc, char * argv[] )
 	  if( xmod5 < 0.025 )  {
 	    sumpc += ph1;
 	    sumqc += q1;
-	    roiq2vsq0.Fill( q0+q3+q4, q2+q6+q8 ); // Tsunami?
+	    roiq2vsq0.Fill( q0+q3+q4, q2+q6+q8 ); // Tsunami right
 	    if( ymod5 > 0.025 ) {
 	      sumpc += ph5;
 	      sumqc += q5;
@@ -5134,7 +5169,7 @@ int main( int argc, char * argv[] )
 	  if( xmod5 > 0.025 )  {
 	    sumpc += ph2;
 	    sumqc += q2;
-	    roiq1vsq0.Fill( q0+q3+q4, q1+q5+q7 ); // Tsunami?
+	    roiq1vsq0.Fill( q0+q3+q4, q1+q5+q7 ); // Tsunami left
 	    if( ymod5 > 0.025 ) {
 	      sumpc += ph6;
 	      sumqc += q6;
@@ -5144,15 +5179,15 @@ int main( int argc, char * argv[] )
 	      sumqc += q8;
 	    }
 	  }
-	  if( ymod5 > 0.025 ) {
-	    sumpc += ph3;
-	    sumqc += q3;
-	    roiq4vsq0.Fill( q0+q1+q2, q4+q7+q8 ); // Tsunami?
-	  }
 	  if( ymod5 < 0.025 ) {
 	    sumpc += ph4;
 	    sumqc += q4;
-	    roiq3vsq0.Fill( q0+q1+q2, q3+q5+q6 ); // Tsunami?
+	    roiq3vsq0.Fill( q0+q1+q2, q3+q5+q6 ); // Tsunami up
+	  }
+	  if( ymod5 > 0.025 ) {
+	    sumpc += ph3;
+	    sumqc += q3;
+	    roiq4vsq0.Fill( q0+q1+q2, q4+q7+q8 ); // Tsunami down
 	  }
 
 	  roiphHisto.Fill( ( sump0+sumpA+sumpB) * norm );
@@ -5213,8 +5248,6 @@ int main( int argc, char * argv[] )
 	      isoc = 0;
 	  }
 
-	  if( chip0 > 300 ) // noisy 3D
-	    isoc = 1;
 	  if( chip0 == 120 ) // noisy irrad
 	    isoc = 1;
 	  if( chip0 == 122 ) // noisy irrad
@@ -5232,6 +5265,8 @@ int main( int argc, char * argv[] )
 	  if( chip0 == 134 ) // noisy irrad
 	    isoc = 1;
 	  if( chip0 == 137 ) // noisy irrad
+	    isoc = 1;
+	  if( chip0 > 300 ) // noisy 3D
 	    isoc = 1;
 
 	  double Q0 = c->charge * norm; // cluster charge normalized to vertical incidence
@@ -5407,14 +5442,14 @@ int main( int argc, char * argv[] )
 	  bool lq = 1; // Landau peak at 11
 	  if( ( Q0 < 8 || Q0 > 16 ) ) lq = 0; // r102 50x50
 
-	  if( chip0 >= 300 ) { // 3D
-	    lq = 1;
-	    if( ( Q0 < 11 || Q0 > 22 ) ) lq = 0; // 3D
-	  }
-
 	  if( run >= 31632 && chip0 >= 119 && chip0 <= 138 ) { // Feb-Mar 2018 irrad gain_2
 	    lq = 1;
 	    if( ( Q0 < 3 || Q0 > 12 ) ) lq = 0;
+	  }
+
+	  if( chip0 >= 300 ) { // 3D
+	    lq = 1;
+	    if( ( Q0 < 11 || Q0 > 22 ) ) lq = 0; // 3D
 	  }
 
 	  // DUT - triplet:
@@ -5689,6 +5724,7 @@ int main( int argc, char * argv[] )
 
 	      cmsnpxvsxmym->Fill( xmod*1E3, ymod*1E3, c->vpix.size() ); // cluster size map
 	      cmsnpxvsxmym2->Fill( xmod2*1E3, ymod2*1E3, c->vpix.size() ); // cluster size map
+	      cmsnpxvsxmym5->Fill( xmod5*1E3, ymod5*1E3, c->vpix.size() ); // cluster size map
 
 	      cmsph0Histo.Fill( sumph*norm ); // Landau
 	      cmsv0Histo.Fill( Q0/ke ); // Landau [mV]
@@ -5720,6 +5756,7 @@ int main( int argc, char * argv[] )
 	      cmsqxvsym.Fill( ymod*1E3, Qx ); // Q within pixel
 	      cmsqxvsxmym->Fill( xmod*1E3, ymod*1E3, Qx ); // cluster charge profile
 	      cmsqxvsxmym2->Fill( xmod2*1E3, ymod2*1E3, Qx ); // cluster charge profile
+	      cmsqxvsxmym5->Fill( xmod5*1E3, ymod5*1E3, Qx ); // cluster charge profile
 
 	      for( vector<pixel>::iterator px = c->vpix.begin(); px != c->vpix.end(); ++px ) {
 		cmspxphHisto.Fill( px->ph );
@@ -5868,6 +5905,7 @@ int main( int argc, char * argv[] )
 		effvsndri.Fill( driplets.size(), nm[49] ); // flat
 		effvsxmym->Fill( xmod*1E3, ymod*1E3, nm[49] );
 		effvsxmym2->Fill( xmod2*1E3, ymod2*1E3, nm[49] );
+		effvsxmym5->Fill( xmod5*1E3, ymod5*1E3, nm[49] );
 		effvsxm.Fill( xmod, nm[49] ); // bias dot
 		effvsym.Fill( ymod, nm[49] ); // bias dot
 		effvstx.Fill( sxA, nm[49] );
@@ -6213,7 +6251,7 @@ int main( int argc, char * argv[] )
 
       // dxvsx -> turn:
 
-      if( fabs(DUTturn) > 0.4 && cmsdxvsx.GetEntries() > 999 ) {
+      if( fabs(DUTturn) > 0.2 && cmsdxvsx.GetEntries() > 999 ) {
 
 	cmsdxvsx.Fit( "pol1", "q", "", -midx[iDUT]+0.2, midx[iDUT]-0.2 );
 	TF1 * fdxvsx = cmsdxvsx.GetFunction( "pol1" );
@@ -6270,7 +6308,7 @@ int main( int argc, char * argv[] )
 
       // dyvsy -> tilt:
 
-      if( fabs(DUTtilt) > 0.8 && cmsdyvsy.GetEntries() > 999 ) {
+      if( fabs(DUTtilt) > 0.2 && cmsdyvsy.GetEntries() > 999 ) {
 	cmsdyvsy.Fit( "pol1", "q", "", -midy[iDUT]+0.2, midy[iDUT]-0.2 );
 	TF1 * fdyvsy = cmsdyvsy.GetFunction( "pol1" );
 	cout << endl << cmsdyvsy.GetTitle()
@@ -6340,6 +6378,15 @@ int main( int argc, char * argv[] )
        << " from " << effvst6.GetEntries() << " events"
        << endl;
 
+  cout << endl << "DUT alignment iteration " << DUTaligniteration << endl
+       << "  alignx " << DUTalignx << endl
+       << "  aligny " << DUTaligny << endl
+       << "  rot    " << DUTrot << endl
+       << "  tilt   " << DUTtilt << endl
+       << "  turn   " << DUTturn << endl
+       << "  dz     " << DUTz - zz[2] << endl
+    ;
+
   // write new DUT alignment:
 
   cout << "update DUT alignment file? (y/n)" << endl;
@@ -6360,15 +6407,7 @@ int main( int argc, char * argv[] )
 
     DUTalignFile.close();
 
-    cout << endl << "wrote DUT alignment iteration " << DUTaligniteration
-	 << " to " << DUTalignFileName.str() << endl
-	 << "  alignx " << DUTalignx << endl
-	 << "  aligny " << DUTaligny << endl
-	 << "  rot    " << DUTrot << endl
-	 << "  tilt   " << DUTtilt << endl
-	 << "  turn   " << DUTturn << endl
-	 << "  dz     " << DUTz - zz[2] << endl
-      ;
+    cout << " to " << DUTalignFileName.str() << endl;
   }
 
   clock_gettime( CLOCK_REALTIME, &ts );

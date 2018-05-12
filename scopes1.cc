@@ -2615,8 +2615,10 @@ int main( int argc, char * argv[] )
 
       int ipl = plane.ID();
 
-      if( run > 28000 && ipl > 0 && ipl < 7 ) // 2017, eudaq 1.6: Mimosa 1..6, DUT 7, REF 8, QAD 9
+      if( run > 28000 && run <= 32516 && // 2017, eudaq 1.7: Mimosa 1..6, DUT 7, REF 8, QAD 9
+	  ipl > 0 && ipl < 7 )
 	ipl -= 1; // 0..5
+
       if( ipl > 8 ) ipl = 6; // QUAD
 
       if( ldb ) cout << " = ipl " << ipl << ", size " << pxl.size() << flush;
@@ -3020,6 +3022,7 @@ int main( int argc, char * argv[] )
 	  //if( chip0 == 133 ) dphcut = 55; // irrad, gain_2, online 4 sigma
 	  if( chip0 == 133 ) dphcut = 33; // irrad, gain_2
 	  //if( chip0 == 133 ) dphcut = 22; // irrad, gain_1 March
+	  if( chip0 == 133 && run >= 32498 ) dphcut = 28; // irrad, gain_1
 	  if( chip0 == 134 ) dphcut = 40; // irrad, gain_2 rms 13
 	  if( chip0 == 137 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 156 ) dphcut = 16; // gain_1 
