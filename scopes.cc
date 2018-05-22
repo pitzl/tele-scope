@@ -86,6 +86,17 @@ struct triplet {
   double ttdmin; // distance top next track [mm]
 };
 
+struct cpixel // for hot pixel counting
+{
+  int col;
+  int row;
+  int cnt;
+  bool operator < (const cpixel & pxObj ) const
+  {
+    return cnt > pxObj.cnt;
+  }
+};
+
 //------------------------------------------------------------------------------
 vector < cluster > getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
 {
@@ -567,7 +578,7 @@ int main( int argc, char * argv[] )
   ialignFile.close();
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // hot pixels:
+  // telescope hot pixels:
 
   ostringstream hotFileName; // output string stream
 
@@ -636,7 +647,7 @@ int main( int argc, char * argv[] )
   const double wt = atan(1.0) / 45.0; // pi/180 deg
 
   double qwid = 1.1; // [ke] for Moyal in 150 um
-  if( chip0 >= 119 && chip0 < 138 ) qwid = 0.5; // irrad
+  if( chip0 >= 119 && chip0 < 138 ) qwid = 0.8; // irrad
   if( chip0 >= 300 ) qwid = 1.6; // 230 um 3D
   if( chip0 >= 300 && run >= 31498 ) qwid = 1.2; // 230 um 3D irrad
 
@@ -986,6 +997,57 @@ int main( int argc, char * argv[] )
   if( run >= 32498 ) ke = 0.0367; // irrad default
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // DUT hot pixels:
+
+  cout << endl;
+
+  ostringstream DUThotFileName; // output string stream
+
+  DUThotFileName << "hotDUT_" << run << ".dat";
+
+  ifstream iDUThotFile( DUThotFileName.str() );
+
+  if( iDUThotFile.bad() || ! iDUThotFile.is_open() ) {
+    cout << "no " << DUThotFileName.str() << endl;
+  }
+  else {
+
+    cout << "read DUT hot pixel list from " << DUThotFileName.str() << endl;
+
+    string hash( "#" );
+    string pix( "pix" );
+
+    while( ! iDUThotFile.eof() ) {
+
+      string line;
+      getline( iDUThotFile, line );
+      //cout << line << endl;
+
+      if( line.empty() ) continue;
+
+      stringstream tokenizer( line );
+      string tag;
+      tokenizer >> tag; // leading white space is suppressed
+      if( tag.substr(0,1) == hash ) // comments start with #
+	continue;
+
+      if( tag == pix ) {
+	int ix, iy;
+	tokenizer >> ix;
+	tokenizer >> iy;
+	int ipx = ix*ny[iDUT]+iy;
+	hotset[iDUT].insert(ipx);
+      }
+
+    } // while getline
+
+  } // hotFile
+
+  iDUThotFile.close();
+
+  cout << "DUT hot " << hotset[iDUT].size() << endl;
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // MOD:
 
   int iMOD = 6;
@@ -1198,6 +1260,10 @@ int main( int argc, char * argv[] )
   } // planes
 
   TH1I roicolsHisto( "roicols", "ROI columns;ROC columns;events", 156, -0.5, 155.5 );
+
+  TH2I * hDUTmap = new TH2I( "DUTmap",
+			     "cool DUT map;col;row;cool DUT pixels",
+			     nx[iDUT], 0, nx[iDUT], ny[iDUT], 0, ny[iDUT] );
 
   TProfile dutnpxvst2( "dutnpxvst2",
 	      "DUT pixels vs time;time [s];DUT pixels per event",
@@ -1740,16 +1806,16 @@ int main( int argc, char * argv[] )
 
   TProfile sixdtvsxm =
     TProfile( "sixdtvsxm",
-	      "driplet - triplet kink_{xy} vs xmod;track x mod 0.3 [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
-	      60, 0, 0.3, 0, 0.1 );
+	      "driplet - triplet kink_{xy} vs xmod;track x mod 0.1 [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+	      50, 0, 0.1, 0, 0.1 );
   TProfile sixdtvsym =
     TProfile( "sixdtvsym",
-	      "driplet - triplet kink_{xy} vs ymod;track y mod 0.2 [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
-	      40, 0, 0.2, 0, 0.1 );
+	      "driplet - triplet kink_{xy} vs ymod;track y mod 0.1 [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+	      50, 0, 0.1, 0, 0.1 );
   TProfile2D * sixdtvsxmym = new
     TProfile2D( "sixdtvsxmym",
-	      "driplet - triplet kink_{xy} vs xmod ymod;track x mod 300 [#mum];track y mod 200 [#mum];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
-	      120, 0, 300, 80, 0, 200, 0, 0.1 );
+	      "driplet - triplet kink_{xy} vs xmod ymod;track x mod 100 [#mum];track y mod 100 [#mum];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+	      50, 0, 100, 50, 0, 100, 0, 0.1 );
 
   TH2I * sixxyHisto = new
     TH2I( "sixxy", "sixplets at z DUT;x [mm];y [mm];sixplets",
@@ -3015,7 +3081,7 @@ int main( int argc, char * argv[] )
 	string s2( roi.substr( start, gap - start ) );
 	//cout << " " << s2 << "(" << gap << ")";
 	//int row = stoi(s2);
-	int row = atoi( s2.c_str() );
+	int row = atoi( s2.c_str() ); // ROC px
 	//int row = fast_atoi( s2.c_str() );
 	start = gap + BLANK.size();
 
@@ -3029,7 +3095,7 @@ int main( int argc, char * argv[] )
 	hcol[iDUT].Fill( col+0.5 );
 	hrow[iDUT].Fill( row+0.5 );
 
-	pixel px { col, row, ph, ph, 0 };
+	pixel px { col, row, ph, ph, 0 }; // ROC px
 	vpx.push_back(px);
 	++ipx;
 
@@ -3046,13 +3112,13 @@ int main( int argc, char * argv[] )
 
       evinfo->filled = filled;
 
-      // columns-wise common mode correction:
+      // column-wise common mode correction:
 
       set <pixel,rowsrt> compx[156]; // per column, sorted along row
 
       for( unsigned ipx = 0; ipx < vpx.size(); ++ipx ) {
 	int col = vpx[ipx].col;
-	pixel px { col, vpx[ipx].row, vpx[ipx].ph, vpx[ipx].q, 0 };
+	pixel px { col, vpx[ipx].row, vpx[ipx].ph, vpx[ipx].q, 0 }; // ROC px
 	compx[col].insert(px); // sorted along row
       }
 
@@ -3060,7 +3126,7 @@ int main( int argc, char * argv[] )
 
 	if( compx[col].size() < 2 ) continue;
 
-	set <pixel,rowsrt> colpx; // per col, sorted along row
+	set <pixel,rowsrt> colpx; // ROC px per col, sorted along row
 
 	auto px1 = compx[col].begin();
 	auto px7 = compx[col].end(); --px7; // last row
@@ -3081,37 +3147,13 @@ int main( int argc, char * argv[] )
 	  int row4 = px4->row;
 	  double ph4 = px4->ph;
 
-	  dutphHisto.Fill( ph4 );
-	  dutphvsprev.Fill( phprev, ph4 );
-	  phprev = ph4;
-
 	  double dph;
 	  if( row4 - row1 < row7 - row4 )
 	    dph = ph4 - ph1;
 	  else
 	    dph = ph4 - ph7;
 
-	  dutdphvsprev.Fill( dphprev, dph );
-	  dphprev = dph;
-
-	  dutdphHisto.Fill( dph ); // sig 2.7
-
-	  // r4scal.C
-
-	  double U = ( dph - p3[col4][row4] ) / p2[col4][row4];
-
-	  if( U >= 1 )
-	    U = 0.9999999; // avoid overflow
-
-	  double vcal = p0[col4][row4] - p1[col4][row4] * log( (1-U)/U ); // inverse Fermi
-
-	  dutqvsdph.Fill( dph, ke*vcal );
-
-	  double q = ke*vcal;
-
-	  dutpxqHisto.Fill( q );
-
-	  pixel px;
+	  pixel px; // sensor px
 	  
 	  if( fifty ) {
 	    px.col = col4; // 50x50
@@ -3124,6 +3166,41 @@ int main( int argc, char * argv[] )
 	    else
 	      px.row = 2*row4 + 1;
 	  }
+
+	  bool cool = 1;
+	  int hpx = px.col*ny[iDUT] + px.row;
+	  if( hotset[iDUT].count(hpx) ) {
+	    if( ldb ) cout << " hot" << flush;
+	    cool = 0;
+	  }
+
+	  if( cool ) {
+	    dutphHisto.Fill( ph4 );
+	    dutphvsprev.Fill( phprev, ph4 );
+	    dutdphvsprev.Fill( dphprev, dph );
+	    dutdphHisto.Fill( dph ); // sig 2.7
+	  }
+
+	  phprev = ph4;
+	  dphprev = dph;
+
+	  // r4scal.C
+
+	  double U = ( dph - p3[col4][row4] ) / p2[col4][row4];
+
+	  if( U >= 1 )
+	    U = 0.9999999; // avoid overflow
+
+	  double vcal = p0[col4][row4] - p1[col4][row4] * log( (1-U)/U ); // inverse Fermi
+
+	  double q = ke*vcal;
+
+	  if( col4 > 19 && cool )
+	    dutqvsdph.Fill( dph, ke*vcal );
+
+	  if( cool )
+	    dutpxqHisto.Fill( q );
+
 	  px.ph = dph;
 	  px.q = q;
 	  px.big = 0;
@@ -3132,25 +3209,27 @@ int main( int argc, char * argv[] )
 
 	  colpx.insert(px); // sorted along col
 
-	  //double dphcut = 10; // dy8cq 4.80
-	  double dphcut = 12; // 31619 dy8cq 4.77
-	  //double dphcut = 15; // dy8cq 4.78
+	  double dphcut = 12; // gain_1 2017
 
 	  if( run >= 31635 ) dphcut = 24; // gain_2 2018
 	  if( run == 32263 ) dphcut = 12; // gain_1 test
 	  if( run == 32264 ) dphcut = 12; // gain_1 test
 	  if( run >= 32267 && run <= 32273 ) dphcut = 12; // gain_1 
-	  if( run >= 32277 ) dphcut = 12; // gain_1 
-	  if( run >= 32277 && chip0 == 109 ) dphcut = 20; // gain_1, noisy
-	  if( run >= 32285 && chip0 == 139 ) dphcut = 16; // gain_1, noisy
+
+	  if( run >= 32277 ) dphcut = 12; // gain_1 2018
+
 	  if( run == 32301 ) dphcut = 24; // gain_2 20 MHz
 
-	  if( chip0 > 300 ) dphcut = 20; // irradiated 3D is noisy gain_1
 	  if( chip0 == 118 && run <= 32262 ) dphcut = 50; // gain_2
 	  if( chip0 == 118 && run >= 32263 ) dphcut = 24; // gain_1 noisy
+	  if( chip0 == 109 && run >= 32277 ) dphcut = 20; // gain_1, noisy
+	  if( chip0 == 139 && run >= 32285 ) dphcut = 16; // gain_1, noisy
+
 	  if( chip0 == 120 ) dphcut = 33; // irrad, gain_2
+	  if( chip0 == 120 && run >= 32582 ) dphcut = 24; // irrad, gain_1
 	  if( chip0 == 122 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 123 ) dphcut = 33; // irrad, gain_2
+	  if( chip0 == 123 && run >= 32564 ) dphcut = 28; // irrad, gain_1
 	  if( chip0 == 124 ) dphcut = 20; // irrad, gain_1
 	  if( chip0 == 126 ) dphcut = 24; // irrad, gain_2, noise
 	  if( chip0 == 128 ) dphcut = 33; // irrad, gain_2
@@ -3163,6 +3242,7 @@ int main( int argc, char * argv[] )
 	  if( chip0 == 134 && run >= 32537 ) dphcut = 30; // irrad, gain_1 rms 9.6
 	  if( chip0 == 137 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 156 ) dphcut = 16; // gain_1 
+	  if( chip0 > 300 ) dphcut = 20; // irradiated 3D is noisy gain_1
 
 	  if( dph > dphcut ) {
 
@@ -3183,7 +3263,13 @@ int main( int argc, char * argv[] )
 	    //if( q > 6.0 ) { // 31166 cmsdycq 12.05  eff 93.5
 
 	    hmap[iDUT]->Fill( px.col+0.5, px.row+0.5 );
-	    pb.push_back(px);
+
+	    // skip hot pixels:
+
+	    if( cool ) {
+	      pb.push_back(px);
+	      hDUTmap->Fill( px.col+0.5, px.row+0.5 );
+	    }
 
 	    if( pb.size() > 990 ) {
 	      cout << "R4S pixel buffer overflow in event " << iev
@@ -3217,8 +3303,8 @@ int main( int argc, char * argv[] )
 
     hnpx[iDUT].Fill( pb.size() );
 
-    vector < cluster > vcl;
-    vcl = getClus(pb);
+    vector < cluster > vcl = getClus(pb);
+
     clist[iDUT].push_back(vcl);
 
     roicolsHisto.Fill( colpxmap.size() ); // peak at 5
@@ -5929,9 +6015,60 @@ int main( int argc, char * argv[] )
 
     cout << endl;
 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // hot pixels:
+
+    cout << endl << "DUT hot pixel list for run " << run << endl;
+
+    int hotcut = iev / 1024;
+
+    ofstream oDUThotFile( DUThotFileName.str() );
+
+    oDUThotFile << "# DUT hot pixel list for run " << run
+		<< " with " << iev << " events"
+		<< ", hot cut " << hotcut
+		<< endl;
+
+    multiset <cpixel> pxset;
+
+    cout << hmap[iDUT]->GetTitle() << endl;
+    cout << hmap[iDUT]->GetEntries() << endl;
+    cout << hmap[iDUT]->GetNbinsX() << endl;
+    cout << hmap[iDUT]->GetNbinsY() << endl;
+
+    for( int ii = 1; ii <= hmap[iDUT]->GetNbinsX(); ++ii )
+
+      for( int jj = 1; jj <= hmap[iDUT]->GetNbinsY(); ++jj ) {
+
+	int n = hmap[iDUT]->GetBinContent(ii,jj);
+
+	if( n > hotcut ) {
+	  cpixel px{ ii-1, jj-1, n };
+	  pxset.insert(px); // sorted by descending cnt
+	}
+      }
+
+    cout << "hot " << pxset.size() << endl;
+
+    for( auto px = pxset.begin(); px != pxset.end(); ++px ) {
+      cout << setw(3) << px->col << ", "
+	   << setw(3) << px->row << ":  "
+	   << px->cnt << endl;
+      oDUThotFile << "pix "
+		 << setw(4) << px->col
+		 << setw(5) << px->row
+		 << "  " << px->cnt
+		 << endl;
+    }
+    cout << "DUT hot pixel list written to " << DUThotFileName.str() << endl;
+
+    oDUThotFile.close();
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     if( aligniteration+1 == maxiter ) {
-        histoFile->Write();
-	histoFile->Close();
+      histoFile->Write();
+      histoFile->Close(); // deletes all new TH*
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -6437,44 +6574,6 @@ int main( int argc, char * argv[] )
   cout << endl << histoFile->GetName() << endl;
 
   cout << endl;
-  /*
-  delete histoFile;
-  for( int ipl = 0; ipl < 9; ++ipl )
-    delete hmap[ipl];
-  delete drixyHisto;
-  delete modnpxvsxmym;
-  delete modqxvsxmym;
-  delete trixy0Histo;
-  delete trixyAHisto;
-  delete trixycHisto;
-  delete sixdxyvsxy;
-  delete sixdtvsxyA;
-  delete sixdtvsxy;
-  delete sixdtvsxmym;
-  delete sixxyHisto;
-  delete cmsxvsx;
-  delete cmsyvsy;
-  delete cmsdxvsev1;
-  delete cmsdxvsev2;
-  delete cmsmadyvsxmym;
-  delete trixyAlkHisto;
-  delete trixyclkHisto;
-  delete cmsnpxvsxmym;
-  delete cmsnpxvsxmym2;
-  delete cmsxmymq0;
-  delete cmsxyq0;
-  delete cmsxmymq1;
-  delete cmsqxvsxy;
-  delete cmsqxvsxmym;
-  delete cmsqxvsxmym2;
-  delete sixxylkHisto;
-  delete sixxyeffHisto;
-  delete effnpxvsxmym;
-  delete effq0vsxmym;
-  delete effvsxy;
-  delete effvsxt;
-  delete effvsxmym;
-  delete effvsxmym2;
-  */
+
   return 0;
 }

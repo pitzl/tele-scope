@@ -629,7 +629,7 @@ int main( int argc, char * argv[] )
   const double wt = atan(1.0) / 45.0; // pi/180 deg
 
   double qwid = 1.1; // [ke] for Moyal in 150 um
-  if( chip0 >= 119 && chip0 < 138 ) qwid = 0.5; // irrad
+  if( chip0 >= 119 && chip0 < 138 ) qwid = 0.8; // irrad gain_1
   if( chip0 >= 300 ) qwid = 1.6; // 230 um 3D
 
   bool rot90 = 0; // straight
@@ -1733,40 +1733,40 @@ int main( int argc, char * argv[] )
 	  "driplet triplet #Delta#theta_{y} Cu;driplet - triplet #Delta#theta_{y} [rad];driplet-triplet pairs in Cu",
 	  100, -0.010*f, 0.010*f );
 
-  TProfile sixdtvsxA =
-    TProfile( "sixdtvsxA",
-	      "driplet - triplet kink_{xy} vs x;x_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+  TProfile sixdtvsxav =
+    TProfile( "sixdtvsxav",
+	      "driplet - triplet kink_{xy} vs x;x_{avg} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
 	      240, -12, 12, 0, 0.1 );
-  TProfile sixdtvsyA =
-    TProfile( "sixdtvsyA",
-	      "driplet - triplet kink_{xy} vs y;y_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+  TProfile sixdtvsyav =
+    TProfile( "sixdtvsyav",
+	      "driplet - triplet kink_{xy} vs y;y_{avg} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
 	      120, -6, 6, 0, 0.1 );
-  TProfile2D * sixdtvsxyA = new
-    TProfile2D( "sixdtvsxyA",
-		"driplet - triplet kink_{xy} vs x-y;x_{mid} [mm];y_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+  TProfile2D * sixdtvsxyav = new
+    TProfile2D( "sixdtvsxyav",
+		"driplet - triplet kink_{xy} vs x-y;x_{avg} [mm];y_{avg} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
 		120, -12, 12, 60, -6, 6, 0, 0.1 );
 
   TProfile sixdtvsx =
     TProfile( "sixdtvsx",
-	      "driplet - triplet kink_{xy} vs x;x_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+	      "driplet - triplet kink_{xy} vs x;x_{DUT} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
 	      110, -11, 11, 0, 0.1 );
   TProfile2D * sixdtvsxy = new
     TProfile2D( "sixdtvsxy",
-		"driplet - triplet kink_{xy} vs x-y;x_{mid} [mm];y_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+		"driplet - triplet kink_{xy} vs x-y;x_{DUT} [mm];y_{DUT} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
 		110, -11, 11, 55, -5.5, 5.5, 0, 0.1 );
 
   TProfile sixdtvsxm =
     TProfile( "sixdtvsxm",
-	      "driplet - triplet kink_{xy} vs xmod;track x mod 0.3 [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
-	      60, 0, 0.3, 0, 0.1 );
+	      "driplet - triplet kink_{xy} vs xmod;track x mod 0.1 [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+	      50, 0, 0.1, 0, 0.1 );
   TProfile sixdtvsym =
     TProfile( "sixdtvsym",
-	      "driplet - triplet kink_{xy} vs ymod;track y mod 0.2 [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
-	      40, 0, 0.2, 0, 0.1 );
+	      "driplet - triplet kink_{xy} vs ymod;track y mod 0.1 [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+	      50, 0, 0.1, 0, 0.1 );
   TProfile2D * sixdtvsxmym = new
     TProfile2D( "sixdtvsxmym",
-	      "driplet - triplet kink_{xy} vs xmod ymod;track x mod 300 [#mum];track y mod 200 [#mum];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
-	      120, 0, 300, 80, 0, 200, 0, 0.1 );
+	      "driplet - triplet kink_{xy} vs xmod ymod;track x mod 100 [#mum];track y mod 100 [#mum];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [rad]",
+		50, 0, 100, 50, 0, 100, 0, 0.1 );
 
   TH2I * sixxyHisto = new
     TH2I( "sixxy", "sixplets at z DUT;x [mm];y [mm];sixplets",
@@ -2998,24 +2998,26 @@ int main( int argc, char * argv[] )
 
 	  colpx.insert(px); // sorted along col
 
-	  //double dphcut = 10; // dy8cq 4.80
-	  double dphcut = 12; // 31619 dy8cq 4.77
-	  //double dphcut = 15; // dy8cq 4.78
+	  double dphcut = 12; // gain_1 2017
 
 	  if( run >= 31635 ) dphcut = 24; // gain_2 2018
 	  if( run == 32263 ) dphcut = 12; // gain_1 test
 	  if( run == 32264 ) dphcut = 12; // gain_1 test
 	  if( run >= 32267 && run <= 32273 ) dphcut = 12; // gain_1 
-	  if( run >= 32277 ) dphcut = 12; // gain_1 
-	  if( run >= 32277 && chip0 == 109 ) dphcut = 20; // gain_1, noisy
-	  if( run >= 32285 && chip0 == 139 ) dphcut = 16; // gain_1, noisy
+
+	  if( run >= 32277 ) dphcut = 12; // gain_1 2018
+
 	  if( run == 32301 ) dphcut = 24; // gain_2 20 MHz
 
-	  if( chip0 > 300 ) dphcut = 20; // irradiated 3D is noisy
 	  if( chip0 == 118 && run <= 32266 ) dphcut = 20; // gain_2
+	  if( chip0 == 109 && run >= 32277 ) dphcut = 20; // gain_1, noisy
+	  if( chip0 == 139 && run >= 32285 ) dphcut = 16; // gain_1, noisy
+
 	  if( chip0 == 120 ) dphcut = 33; // irrad, gain_2
+	  if( chip0 == 120 && run >= 32582 ) dphcut = 24; // irrad, gain_1
 	  if( chip0 == 122 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 123 ) dphcut = 33; // irrad, gain_2
+	  if( chip0 == 123 && run >= 32564 ) dphcut = 28; // irrad, gain_1
 	  if( chip0 == 126 ) dphcut = 24; // irrad, gain_2, noise
 	  if( chip0 == 128 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 130 ) dphcut = 33; // irrad, gain_2
@@ -3026,6 +3028,7 @@ int main( int argc, char * argv[] )
 	  if( chip0 == 134 ) dphcut = 40; // irrad, gain_2 rms 13
 	  if( chip0 == 137 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 156 ) dphcut = 16; // gain_1 
+	  if( chip0 > 300 ) dphcut = 20; // irradiated 3D is noisy
 
 	  if( dph > dphcut ) {
 
@@ -3634,6 +3637,66 @@ int main( int argc, char * argv[] )
       double p7 =  6.66882e-47;
       double p8 = -4.87922e-54;
       double p9 =  1.47873e-61;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 32297 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =  0.000162387;
+      double p1 = -8.31891e-10;
+      double p2 =  1.81908e-16;
+      double p3 = -4.25569e-21;
+      double p4 =  4.77306e-27;
+      double p5 = -2.08523e-33;
+      double p6 =  4.67757e-40;
+      double p7 = -5.75311e-47;
+      double p8 =  3.70216e-54;
+      double p9 = -9.77735e-62;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =  -0.00145444;
+      p1 =  8.51732e-09;
+      p2 = -5.97128e-15;
+      p3 =  1.31924e-21;
+      p4 =  1.34517e-28;
+      p5 = -1.26877e-34;
+      p6 =  2.97432e-41;
+      p7 = -3.80568e-48;
+      p8 =  2.70491e-55;
+      p9 = -8.22942e-63;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 32612 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =    0.0031857;
+      double p1 =  -1.7914e-08;
+      double p2 =  3.72688e-14;
+      double p3 = -3.66591e-20;
+      double p4 =  1.81645e-26;
+      double p5 = -5.09473e-33;
+      double p6 =  8.48244e-40;
+      double p7 =  -8.3187e-47;
+      double p8 =  4.44082e-54;
+      double p9 =  -9.9516e-62;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =  -0.00114272;
+      p1 =  3.55205e-09;
+      p2 = -8.67303e-15;
+      p3 =  8.25231e-21;
+      p4 = -3.76042e-27;
+      p5 =  9.07473e-34;
+      p6 = -1.10166e-40;
+      p7 =  4.60531e-48;
+      p8 =  2.24626e-55;
+      p9 = -1.91474e-62;
 
       DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
 
@@ -4408,7 +4471,12 @@ int main( int argc, char * argv[] )
 
 	if( fabs(dx) < sixcut && fabs(dy) < sixcut ) {
 
-	  sixxyHisto->Fill( xA, yA );
+	  // average driplet and triplet at DUT:
+
+	  double xa = 0.5 * ( xB + xc );
+	  double ya = 0.5 * ( yB + yc );
+
+	  sixxyHisto->Fill( xa, ya );
 
 	  if( driplets[jB].lk ) { // driplet linked to MOD
 	    lsixlk = 1;
@@ -4418,7 +4486,7 @@ int main( int argc, char * argv[] )
 
 	  // compare slopes:
 
-	  sixdxyvsxy->Fill( x4, y4, dxy );
+	  sixdxyvsxy->Fill( xa, ya, dxy );
 
 	  hsixdtx.Fill( dtx );
 	  if( x4 > xminCu && x4 < xmaxCu ) { // no Cu
@@ -4430,21 +4498,16 @@ int main( int argc, char * argv[] )
 	    hsixdtycu.Fill( dty );
 	  }
 	  hsixdty.Fill( dty ); // width: 0.3 mrad
-	  sixdtvsxA.Fill( xA, dtxy );
-	  sixdtvsyA.Fill( yA, dtxy );
-	  sixdtvsxyA->Fill( xA, yA, dtxy );
+	  sixdtvsxav.Fill( xa, dtxy );
+	  sixdtvsyav.Fill( ya, dtxy );
+	  sixdtvsxyav->Fill( xa, ya, dtxy );
 	  sixdtvsx.Fill( x4, dtxy );
 	  sixdtvsxy->Fill( x4, y4, dtxy );
 	  if( fiducial ) {
 	    sixdtvsxm.Fill( xmod, dtxy );
 	    sixdtvsym.Fill( ymod, dtxy );
-	    sixdtvsxmym->Fill( xmod*1E3, ymod*1E3, dtxy );
+	    sixdtvsxmym->Fill( xmod*1E3, ymod*1E3, dtxy ); // gStyle->SetPalette(55) 105 107
 	  }
-
-	  // average driplet and triplet at DUT:
-
-	  double xa = 0.5 * ( xB + xc );
-	  double ya = 0.5 * ( yB + yc );
 
 	  // transform into DUT system: (passive).
 
