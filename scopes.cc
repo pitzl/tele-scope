@@ -1035,7 +1035,7 @@ int main( int argc, char * argv[] )
 	int ix, iy;
 	tokenizer >> ix;
 	tokenizer >> iy;
-	int ipx = ix*ny[iDUT]+iy;
+	int ipx = ix * 160 + iy;
 	hotset[iDUT].insert(ipx);
       }
 
@@ -1221,13 +1221,13 @@ int main( int argc, char * argv[] )
     if( ipl == iDUT ) { // R4S
       hcol[ipl] = TH1I( Form( "col%i", ipl ),
 			Form( "%i col;col;plane %i pixels", ipl, ipl ), 
-			nx[ipl], 0, nx[ipl] );
+			155, 0, 155 );
       hrow[ipl] = TH1I( Form( "row%i", ipl ),
 			Form( "%i row;row;plane %i pixels", ipl, ipl ),
-			ny[ipl], 0, ny[ipl] );
+			160, 0, 160 );
       hmap[ipl] = new TH2I( Form( "map%i", ipl ),
 			    Form( "%i map;col;row;plane %i pixels", ipl, ipl ),
-			    nx[ipl], 0, nx[ipl], ny[ipl], 0, ny[ipl] );
+			    155, 0, 155, 160, 0, 160 );
     }
     else {
       hcol[ipl] = TH1I( Form( "col%i", ipl ),
@@ -1261,9 +1261,9 @@ int main( int argc, char * argv[] )
 
   TH1I roicolsHisto( "roicols", "ROI columns;ROC columns;events", 156, -0.5, 155.5 );
 
-  TH2I * hDUTmap = new TH2I( "DUTmap",
+  TH2I * hDUTmap = new TH2I( "dutmap",
 			     "cool DUT map;col;row;cool DUT pixels",
-			     nx[iDUT], 0, nx[iDUT], ny[iDUT], 0, ny[iDUT] );
+			     155, 0, 155, 160, 0, 160 );
 
   TProfile dutnpxvst2( "dutnpxvst2",
 	      "DUT pixels vs time;time [s];DUT pixels per event",
@@ -1850,7 +1850,7 @@ int main( int argc, char * argv[] )
   TH1I roipBHisto( "roipB",
 		   "2nd ring charge;2nd ring charge [ADC];fiducial ROI", 100, -200, 800 );
 
-  TH1I roiqHisto( "roiq", "ROI charge;ROI charge [ke];fiducial ROI", 180, -5, 40 );
+  TH1I roiqHisto( "roiq", "ROI charge;ROI charge [ke];fiducial ROI", 340, -5, 80 );
   TH1I roiq0Histo( "roiq0",
 		   "central pixel charge;central pixel charge [ke];fiducial ROI", 180, -5, 40 );
   TH1I roiqqHisto( "roiqq",
@@ -2348,49 +2348,49 @@ int main( int argc, char * argv[] )
 	  "min DUT - triplet distance y;min DUT - triplet #Delta_{y} [mm];inefficient triplets",
 	  180, -9, 9 );
 
-  TH1I effclq0Histo =
-    TH1I( "effclq0",
+  TH1I effq0Histo =
+    TH1I( "effq0",
 	  "nearest cluster charge;DUT cluster charge [ke];nearest clusters",
-	  160, 0, 80 );
-  TH1I effclq1Histo =
-    TH1I( "effclq1",
+	  320, 0, 160 );
+  TH1I effq1Histo =
+    TH1I( "effq1",
 	  "nearest cluster charge dxy > 0.1;DUT cluster charge [ke];dxy > 0.1 nearest cluster",
 	  160, 0, 80 );
-  TH1I effclq2Histo =
-    TH1I( "effclq2",
+  TH1I effq2Histo =
+    TH1I( "effq2",
 	  "nearest cluster charge dxy > 0.2;DUT cluster charge [ke];dxy > 0.2 nearest cluster",
 	  160, 0, 80 );
-  TH1I effclq3Histo =
-    TH1I( "effclq3",
+  TH1I effq3Histo =
+    TH1I( "effq3",
 	  "nearest cluster charge dxy > 0.3;DUT cluster charge [ke];dxy > 0.3 nearest cluster",
 	  160, 0, 80 );
-  TH1I effclq4Histo =
-    TH1I( "effclq4",
+  TH1I effq4Histo =
+    TH1I( "effq4",
 	  "nearest cluster charge dxy > 0.4;DUT cluster charge [ke];dxy > 0.4 nearest cluster",
 	  160, 0, 80 );
-  TH1I effclq5Histo =
-    TH1I( "effclq5",
+  TH1I effq5Histo =
+    TH1I( "effq5",
 	  "nearest cluster charge dxy > 0.5;DUT cluster charge [ke];dxy > 0.5 nearest cluster",
 	  160, 0, 80 );
-  TH1I effclq6Histo =
-    TH1I( "effclq6",
+  TH1I effq6Histo =
+    TH1I( "effq6",
 	  "nearest cluster charge dxy > 0.6;DUT cluster charge [ke];dxy > 0.6 nearest cluster",
 	  160, 0, 80 );
-  TH1I effclq7Histo =
-    TH1I( "effclq7",
+  TH1I effq7Histo =
+    TH1I( "effq7",
 	  "nearest cluster charge dxy > 0.7;DUT cluster charge [ke];dxy > 0.7 mm nearest cluster",
 	  160, 0, 80 );
-  TH1I effclq8Histo =
-    TH1I( "effclq8",
+  TH1I effq8Histo =
+    TH1I( "effq8",
 	  "nearest cluster charge dxy > 0.8;DUT cluster charge [ke];dxy > 0.8 mm nearest cluster",
 	  160, 0, 80 );
-  TH1I effclq9Histo =
-    TH1I( "effclq9",
+  TH1I effq9Histo =
+    TH1I( "effq9",
 	  "nearest cluster charge dxy > 0.9;DUT cluster charge [ke];dxy > 0.9 mm nearest cluster",
 	  160, 0, 80 );
 
-  TH1I effclqrHisto =
-    TH1I( "effclqr",
+  TH1I effqrHisto =
+    TH1I( "effqr",
 	  "nearest cluster charge, 1 driplet-MOD;DUT cluster charge [ke];mono nearest clusters",
 	  160, 0, 80 );
 
@@ -3168,7 +3168,7 @@ int main( int argc, char * argv[] )
 	  }
 
 	  bool cool = 1;
-	  int hpx = px.col*ny[iDUT] + px.row;
+	  int hpx = col4 * 160 + row4;
 	  if( hotset[iDUT].count(hpx) ) {
 	    if( ldb ) cout << " hot" << flush;
 	    cool = 0;
@@ -3215,9 +3215,8 @@ int main( int argc, char * argv[] )
 	  if( run == 32263 ) dphcut = 12; // gain_1 test
 	  if( run == 32264 ) dphcut = 12; // gain_1 test
 	  if( run >= 32267 && run <= 32273 ) dphcut = 12; // gain_1 
-
 	  if( run >= 32277 ) dphcut = 12; // gain_1 2018
-
+	  if( run >= 32294 ) dphcut =  8; // gain_1 2018 effq0 test
 	  if( run == 32301 ) dphcut = 24; // gain_2 20 MHz
 
 	  if( chip0 == 118 && run <= 32262 ) dphcut = 50; // gain_2
@@ -3262,13 +3261,13 @@ int main( int argc, char * argv[] )
 	    //if( q > 5.5 ) { // 31166 cmsdycq 11.3  eff 96.3
 	    //if( q > 6.0 ) { // 31166 cmsdycq 12.05  eff 93.5
 
-	    hmap[iDUT]->Fill( px.col+0.5, px.row+0.5 );
+	    hmap[iDUT]->Fill( col4+0.5, row4+0.5 );
 
 	    // skip hot pixels:
 
 	    if( cool ) {
 	      pb.push_back(px);
-	      hDUTmap->Fill( px.col+0.5, px.row+0.5 );
+	      hDUTmap->Fill( col4+0.5, row4+0.5 );
 	    }
 
 	    if( pb.size() > 990 ) {
@@ -3842,17 +3841,17 @@ int main( int argc, char * argv[] )
     effdxmin0Histo.Reset();
     effdymin0Histo.Reset();
 
-    effclq0Histo.Reset();
-    effclqrHisto.Reset();
-    effclq1Histo.Reset();
-    effclq2Histo.Reset();
-    effclq3Histo.Reset();
-    effclq4Histo.Reset();
-    effclq5Histo.Reset();
-    effclq6Histo.Reset();
-    effclq7Histo.Reset();
-    effclq8Histo.Reset();
-    effclq9Histo.Reset();
+    effq0Histo.Reset();
+    effqrHisto.Reset();
+    effq1Histo.Reset();
+    effq2Histo.Reset();
+    effq3Histo.Reset();
+    effq4Histo.Reset();
+    effq5Histo.Reset();
+    effq6Histo.Reset();
+    effq7Histo.Reset();
+    effq8Histo.Reset();
+    effq9Histo.Reset();
 
     effnpxvsxmym->Reset();
     effq0vsxmym->Reset();
@@ -5967,17 +5966,17 @@ int main( int argc, char * argv[] )
 		  effdymin0Histo.Fill( dymin );
 		}
 
-		effclq0Histo.Fill( clQ0 );
-		if( ndrilk == 1 ) effclqrHisto.Fill( clQ0 );
-		if( dmin > 0.1 ) effclq1Histo.Fill( clQ0 );
-		if( dmin > 0.2 ) effclq2Histo.Fill( clQ0 ); // Landau tail
-		if( dmin > 0.3 ) effclq3Histo.Fill( clQ0 );
-		if( dmin > 0.4 ) effclq4Histo.Fill( clQ0 );
-		if( dmin > 0.5 ) effclq5Histo.Fill( clQ0 );
-		if( dmin > 0.6 ) effclq6Histo.Fill( clQ0 );
-		if( dmin > 0.7 ) effclq7Histo.Fill( clQ0 );
-		if( dmin > 0.8 ) effclq8Histo.Fill( clQ0 );
-		if( dmin > 0.9 ) effclq9Histo.Fill( clQ0 );
+		effq0Histo.Fill( clQ0 );
+		if( ndrilk == 1 ) effqrHisto.Fill( clQ0 );
+		if( dmin > 0.1 ) effq1Histo.Fill( clQ0 );
+		if( dmin > 0.2 ) effq2Histo.Fill( clQ0 ); // Landau tail
+		if( dmin > 0.3 ) effq3Histo.Fill( clQ0 );
+		if( dmin > 0.4 ) effq4Histo.Fill( clQ0 );
+		if( dmin > 0.5 ) effq5Histo.Fill( clQ0 );
+		if( dmin > 0.6 ) effq6Histo.Fill( clQ0 );
+		if( dmin > 0.7 ) effq7Histo.Fill( clQ0 );
+		if( dmin > 0.8 ) effq8Histo.Fill( clQ0 );
+		if( dmin > 0.9 ) effq9Histo.Fill( clQ0 );
 
 		effnpxvsxmym->Fill( xmod*1E3, ymod*1E3, clsz0 ); // cluster size map
 		effq0vsxmym->Fill( xmod*1E3, ymod*1E3, clQ0 ); // cluster charge profile
@@ -6055,7 +6054,7 @@ int main( int argc, char * argv[] )
 	   << setw(3) << px->row << ":  "
 	   << px->cnt << endl;
       oDUThotFile << "pix "
-		 << setw(4) << px->col
+		 << setw(3) << px->col
 		 << setw(5) << px->row
 		 << "  " << px->cnt
 		 << endl;

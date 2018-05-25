@@ -1169,13 +1169,13 @@ int main( int argc, char * argv[] )
     if( ipl == iDUT ) { // R4S
       hcol[ipl] = TH1I( Form( "col%i", ipl ),
 			Form( "%i col;col;plane %i pixels", ipl, ipl ), 
-			nx[ipl], 0, nx[ipl] );
+			155, 0, 155 );
       hrow[ipl] = TH1I( Form( "row%i", ipl ),
 			Form( "%i row;row;plane %i pixels", ipl, ipl ),
-			ny[ipl], 0, ny[ipl] );
+			160, 0, 160 );
       hmap[ipl] = new TH2I( Form( "map%i", ipl ),
 			    Form( "%i map;col;row;plane %i pixels", ipl, ipl ),
-			    nx[ipl], 0, nx[ipl], ny[ipl], 0, ny[ipl] );
+			    155, 0, 155, 160, 0, 160 );
     }
     else {
       hcol[ipl] = TH1I( Form( "col%i", ipl ),
