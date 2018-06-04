@@ -36,29 +36,17 @@
 using namespace std;
 using namespace eudaq;
 
-class pixel {
-public:
+struct pixel {
   int col;
   int row;
+  double adc;
   double ph;
   double q;
   int ord;
   bool big;
-};
-
-class rowsrt {
-public:
-  bool operator() ( const pixel p1,  const pixel p2 )
+  bool operator < (const pixel & pxObj ) const
   {
-    return p1.row < p2.row;
-  }
-};
-
-class colsrt {
-public:
-  bool operator() ( const pixel p1,  const pixel p2 )
-  {
-    return p1.col < p2.col;
+    return row < pxObj.row;
   }
 };
 
@@ -903,11 +891,14 @@ int main( int argc, char * argv[] )
   if( run >= 31295 ) ke = 0.040; // chip 143  at 11 ke
   if( run >= 31304 ) ke = 0.0385; // chip 144  at 11 ke
   if( run >= 31309 ) ke = 0.0274; // chip 142  at 11 ke
-  if( run >= 31351 ) ke = 0.025; // chip 142  at 11 ke
-  if( run >= 31355 ) ke = 0.039; // chip 144  at 11 ke
+  //if( run >= 31351 ) ke = 0.025; // chip 142  at 11 ke
+  if( run >= 31351 ) ke = 0.0282; // chip 142  at 11 ke -V0
+  //if( run >= 31355 ) ke = 0.039; // chip 144  at 11 ke
+  if( run >= 31355 ) ke = 0.0442; // chip 144  at 11 ke -V0
   if( run >= 31390 ) ke = 0.031; // chip 102  at 11 ke
   if( run >= 31425 ) ke = 0.036; // chip 144  at 11 ke
-  if( run >= 31473 ) ke = 0.0296; // chip 144  at 11 ke
+  //if( run >= 31473 ) ke = 0.0296; // chip 144  at 11 ke
+  if( run >= 31473 ) ke = 0.0319; // chip 144  at 11 ke -V0
   if( run >= 31488 ) ke = 0.035; // chip 160  at 11 ke
   if( run >= 31512 ) ke = 0.068; // chip 332  3D 230 um
   if( run >= 31562 ) ke = 0.050; // chip 352  3D 230 um
@@ -2165,9 +2156,12 @@ int main( int argc, char * argv[] )
 		"DUT cluster size vs xmod ymod;x track mod 200 [#mum];y track mod 200 [#mum];<cluster size> [pixels]",
 		100, 0, 200, 100, 0, 200, 0, 20 );
 
+  TH1I cmsad0Histo( "cmsad0",
+		    "normal cluster ADC;normal cluster pulse height [ADC];isolated linked clusters",
+		    320, 0, 1600 );
   TH1I cmsph0Histo( "cmsph0",
-		   "normal cluster PH;normal cluster pulse height [ADC];isolated linked clusters",
-		   320, 0, 1600 );
+		    "normal cluster PH;normal cluster pulse height [ADC];isolated linked clusters",
+		    320, 0, 1600 );
   TH1I cmsv0Histo( "cmsv0",
 		   "normal cluster Vcal;normal cluster pulse height [mV];isolated linked clusters",
 		   320, 0, 2400 );
@@ -2177,6 +2171,12 @@ int main( int argc, char * argv[] )
   TH1I cmsq00Histo( "cmsq00",
 		   "normal cluster charge;normal cluster charge [ke];isolated linked clusters",
 		   160, 0, 40 );
+  TH1I cmsq0dtHisto( "cmsq0dt",
+		     "normal cluster charge;normal cluster charge [ke];isolated linked in-time clusters",
+		     320, 0, 80 );
+  TH1I cmsq0sixHisto( "cmsq0six",
+		      "normal cluster charge;normal cluster charge [ke];isolated six-linked clusters",
+		      320, 0, 80 );
   TH1I cmsq03Histo( "cmsq03",
 		   "normal cluster charge, < 4 px;normal cluster charge [ke];linked clusters, < 4 px",
 		    320, 0, 80 );
@@ -2186,6 +2186,34 @@ int main( int argc, char * argv[] )
   TH1I cmsq0nHisto( "cmsq0n",
 		    "cluster charge no dot;cluster charge no dot [ke];linked clusters",
 		    320, 0, 80 );
+
+  TH2I * cmslqxyHisto = new
+    TH2I( "cmslqxy",
+	  "DUT low Q map;track x [mm];track y [mm];low Q clusters",
+	  160, -4, 4, 160, -4, 4 );
+  TH2I * cmslqxmymHisto = new
+    TH2I( "cmslqxmym",
+	  "DUT low Q map;track x mod 100 [#mum];track y mod 100 [#mum];low Q clusters",
+	  50, 0, 100, 50, 0, 100 );
+
+  TH1I cmslqdxHisto( "cmslqdx",
+		   "DUT - Telescope x;cluster - triplet #Deltax [mm];low Q clusters",
+		   100, -0.1, 0.1 );
+  TH1I cmslqdyHisto( "cmslqdy",
+		   "DUT - Telescope y;cluster - triplet #Deltay [mm];low Q clusters",
+		   100, -0.1, 0.1 );
+  TH1I cmslqt4Histo( "cmslqt4", "event time;event time [s];low Q events / 10 s",
+		     600, 0, 6000 );
+  TH1I cmslqt5Histo( "cmslqt5", "event time;event time [s];low Q events / 100 s",
+		     600, 0, 60000 );
+  TH1I cmslqnpxHisto( "cmslqnpx", "DUT pixels;DUT event size [pixels];low Q events",
+		     101, -0.5, 100.5 );
+  TH1I cmslqnclHisto( "cmslqncl", "DUT clusters;DUT event size [clusters];low Q events",
+		     21, -0.5, 20.5 );
+  TH1I cmslqntriHisto( "cmslqntri", "triplet tracks;triplet tracks;low Q events",
+		     21, -0.5, 20.5 );
+  TH1I cmslqndriHisto( "cmslqndri", "driplet tracks;driplet tracks;low Q events",
+		     21, -0.5, 20.5 );
 
   double qxmax = 0.001; // with qwid = 1.1: 7.5 ke cutoff
   if( chip0 >= 300 ) qxmax = 0.007; // 3D with qwid = 1.6: 8 ke cutoff
@@ -2890,7 +2918,7 @@ int main( int argc, char * argv[] )
 
     vector <pixel> pb; // for clustering
 
-    map < int, set <pixel,rowsrt> > colpxmap; // per col, sorted along row
+    map < int, set <pixel> > colpxmap; // per col, sorted along row
 
     if( readnext && filled == F ) {
 
@@ -2916,19 +2944,19 @@ int main( int argc, char * argv[] )
 	hcol[iDUT].Fill( col+0.5 );
 	hrow[iDUT].Fill( row+0.5 );
 
-	pixel px { col, row, ph, ph, ipx, 0 };
+	pixel px { col, row, ph, ph, ph, ipx, 0 };
 	vpx.push_back(px);
 	++ipx;
 
       } // roi px
 
-      // columns-wise common mode correction:
+      // column-wise common mode correction:
 
-      set <pixel,rowsrt> compx[156]; // per column, sorted along row
+      set <pixel> compx[156]; // per column, sorted along row
 
       for( unsigned ipx = 0; ipx < vpx.size(); ++ipx ) {
 	int col = vpx[ipx].col;
-	pixel px { col, vpx[ipx].row, vpx[ipx].ph, vpx[ipx].q, vpx[ipx].ord, 0 };
+	pixel px { col, vpx[ipx].row, vpx[ipx].adc, vpx[ipx].ph, vpx[ipx].q, vpx[ipx].ord, 0 };
 	compx[col].insert(px); // sorted: by row
       }
 
@@ -2936,7 +2964,7 @@ int main( int argc, char * argv[] )
 
 	if( compx[col].size() < 2 ) continue;
 
-	set <pixel,rowsrt> colpx; // per col, sorted along row
+	set <pixel> colpx; // per col, sorted along row
 
 	auto px1 = compx[col].begin();
 	auto px7 = compx[col].end(); --px7; // last row
@@ -2972,14 +3000,20 @@ int main( int argc, char * argv[] )
 
 	  double vcal = p0[col4][row4] - p1[col4][row4] * log( (1-U)/U ); // inverse Fermi
 
-	  dutqvsdph.Fill( dph, ke*vcal );
+	  // subtract Vcal offset:
 
-	  double q = ke*vcal;
+	  double U0 = -p3[col4][row4] / p2[col4][row4]; // dph = 0
+	  double v0 = p0[col4][row4] - p1[col4][row4] * log( (1-U0)/U0 ); // inverse Fermi
 
-	  dutpxqHisto.Fill( q );
+	  double q = ke * ( vcal - v0 );
+
+	  if( col4 > 19 ) {
+	    dutqvsdph.Fill( dph, q );
+	    dutpxqHisto.Fill( q );
+	  }
 
 	  pixel px;
-	  
+
 	  if( fifty ) {
 	    px.col = col4; // 50x50
 	    px.row = row4;
@@ -2991,6 +3025,7 @@ int main( int argc, char * argv[] )
 	    else
 	      px.row = 2*row4 + 1;
 	  }
+	  px.adc = ph4;
 	  px.ph = dph;
 	  px.q = q;
 	  px.ord = pb.size(); // readout order, starts at zero
@@ -4713,6 +4748,8 @@ int main( int argc, char * argv[] )
 	    if( rot90 ) {
 	      xpix = ( px->row + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // -4..4 mm
 	      ypix = ( px->col + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // -3.9..3.9 mm
+	      dx = xpix - x4;
+	      dy = ypix - y4;
 	      ring = 9;
 	      if(      fabs( dx ) < 0.5 * ptchy[iDUT] &&
 		       fabs( dy ) < 0.5 * ptchx[iDUT] )
@@ -4726,6 +4763,7 @@ int main( int argc, char * argv[] )
 	    }
 
 	    // linear gain from Vcal:
+	    /*
 	    double v = 300; // fresh
 	    if( chip0 >= 119 && chip0 <= 138 )
 	      v = 200; // irrad
@@ -4733,9 +4771,11 @@ int main( int argc, char * argv[] )
 	    double a = p3[px->col][px->row] + p2[px->col][px->row] / ( 1 + exp(-t) ); // [ADC]
 	    double g = v / a; // mv/ADC
 	    dutgHisto.Fill( g );
+	    */
 
 	    double ph = px->ph;
-	    double q = ke * ph * g;
+	    //double q = ke * ph * g;
+	    double q = px->q;
 
 	    if( ring < 3 ) {
 	      qset.insert( -q); // negative, sort increasing
@@ -4813,14 +4853,14 @@ int main( int argc, char * argv[] )
 
 	} // cols
 
-	  // 5 3 6
-	  // 1 0 2
-	  // 7 4 8
+	// 5 3 6
+	// 1 0 2
+	// 7 4 8
 
 	double sumpc = ph0; // 2x2 mask
 	double sumqc = q0;
 
-	if( xmod5 < 0.025 )  {
+	if( xmod5 < 0.025 )  { // 50x50
 	  sumpc += ph1;
 	  sumqc += q1;
 	  roiq2vsq0.Fill( q0+q3+q4, q2+q6+q8 ); // Tsunami right
@@ -4958,6 +4998,7 @@ int main( int argc, char * argv[] )
 	double qrow[ny[iDUT]];
 	for( int irow = 0; irow < ny[iDUT]; ++irow ) qrow[irow] = 0;
 
+	double sumad = 0;
 	double sumph = 0;
 	double qseed = 0;
 	double pseed = 0;
@@ -4985,6 +5026,7 @@ int main( int argc, char * argv[] )
 	  qcol[icol] += q; // project cluster onto cols
 	  qrow[irow] += q; // project cluster onto rows
 
+	  sumad += px->adc;
 	  sumph += px->ph;
 
 	  if( q > qseed ) {
@@ -5391,10 +5433,13 @@ int main( int argc, char * argv[] )
 	    cmsnpxvsxmym->Fill( xmod*1E3, ymod*1E3, c->size ); // cluster size map
 	    cmsnpxvsxmym2->Fill( xmod2*1E3, ymod2*1E3, c->size ); // cluster size map
 
-	    cmsph0Histo.Fill( sumph*norm ); // Landau
+	    cmsad0Histo.Fill( sumad*norm ); // adc with common mode
+	    cmsph0Histo.Fill( sumph*norm ); // dph common mode subtracted
 	    cmsv0Histo.Fill( Q0/ke ); // Landau [mV]
 	    cmsq0Histo.Fill( Q0 ); // Landau
 	    cmsq00Histo.Fill( Q0 ); // Landau
+	    if( lddt ) cmsq0dtHisto.Fill( Q0 ); // low Q
+	    if( lsixlk ) cmsq0sixHisto.Fill( Q0 ); // clean
 
 	    if( ncol < 3 && nrow < 3 )
 	      cmsq03Histo.Fill( Q0 ); // Landau
@@ -5404,6 +5449,21 @@ int main( int argc, char * argv[] )
 
 	    if( sqrt( pow( xmod-0.050, 2 ) + pow( ymod-0.050, 2 ) ) > 0.020 ) // no dot
 	      cmsq0nHisto.Fill( Q0 );
+
+	    // SCM144 in 31425, 31473: low Q peak: out-of-time crap
+
+	    if( Q0 < 7 ) {
+	      cmslqxyHisto->Fill( x4, y4 ); // everywhere
+	      cmslqxmymHisto->Fill( xmod*1E3, ymod*1E3 ); // everywhere
+	      cmslqdxHisto.Fill( cmsdx ); // symmetric, centered
+	      cmslqdyHisto.Fill( cmsdy ); // symmetric, centered
+	      cmslqt4Histo.Fill( evsec ); // anytime
+	      cmslqt5Histo.Fill( evsec ); // 
+	      cmslqnpxHisto.Fill( pb.size() );
+	      cmslqnclHisto.Fill( cl[iDUT].size() ); // 1.55
+	      cmslqntriHisto.Fill( triplets.size() ); // 2.8
+	      cmslqndriHisto.Fill( driplets.size() );
+	    }
 
 	    // cluster charge profiles, exponential weighting Qx:
 

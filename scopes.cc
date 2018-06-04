@@ -42,28 +42,15 @@ struct evInfo {
   string filled;
 };
 
-class pixel {
-public:
+struct pixel {
   int col;
   int row;
   double ph;
   double q;
   bool big;
-};
-
-class rowsrt {
-public:
-  bool operator() ( const pixel p1,  const pixel p2 )
+  bool operator < (const pixel & pxObj ) const
   {
-    return p1.row < p2.row;
-  }
-};
-
-class colsrt {
-public:
-  bool operator() ( const pixel p1,  const pixel p2 )
-  {
-    return p1.col < p2.col;
+    return row < pxObj.row;
   }
 };
 
@@ -921,11 +908,14 @@ int main( int argc, char * argv[] )
   if( run >= 31295 ) ke = 0.040; // chip 143  at 11 ke
   if( run >= 31304 ) ke = 0.0385; // chip 144  at 11 ke
   if( run >= 31309 ) ke = 0.0274; // chip 142  at 11 ke
-  if( run >= 31351 ) ke = 0.025; // chip 142  at 11 ke
-  if( run >= 31355 ) ke = 0.039; // chip 144  at 11 ke
+  //if( run >= 31351 ) ke = 0.025; // chip 142  at 11 ke
+  if( run >= 31351 ) ke = 0.0282; // chip 142  at 11 ke -V0
+  //if( run >= 31355 ) ke = 0.039; // chip 144  at 11 ke
+  if( run >= 31355 ) ke = 0.0442; // chip 144  at 11 ke -V0
   if( run >= 31390 ) ke = 0.031; // chip 102  at 11 ke
   if( run >= 31425 ) ke = 0.036; // chip 144  at 11 ke
-  if( run >= 31473 ) ke = 0.0296; // chip 144  at 11 ke
+  //if( run >= 31473 ) ke = 0.0296; // chip 144  at 11 ke
+  if( run >= 31473 ) ke = 0.0319; // chip 144  at 11 ke -V0
   if( run >= 31488 ) ke = 0.035; // chip 160  at 11 ke
   if( run >= 31512 ) ke = 0.068; // chip 332  3D 230 um
   if( run >= 31562 ) ke = 0.050; // chip 352  3D 230 um
@@ -984,7 +974,8 @@ int main( int argc, char * argv[] )
   if( run >= 32302 ) ke = 0.0371; // 172 gain_1
   if( run >= 32303 ) ke = 0.0361; // 173 gain_1
   if( run >= 32304 ) ke = 0.0373; // 175 gain_1
-  if( run >= 32305 ) ke = 0.0366; // 176 gain_1
+  //if( run >= 32305 ) ke = 0.0366; // 176 gain_1
+  if( run >= 32305 ) ke = 0.0390; // 176 gain_1 v0
   if( run >= 32306 ) ke = 0.0359; // 192 gain_1
   if( run >= 32307 ) ke = 0.0348; // 158 gain_1 FDD 13.2
   if( run >= 32308 ) ke = 0.0373; // 159 gain_1
@@ -1460,11 +1451,6 @@ int main( int argc, char * argv[] )
 			    11, -0.5, 10.5 );
 
   // DUT:
-  /*
-  TH1I dutphHisto( "dutph",
-		   "DUT pixel PH;pixel pulse height [ADC];DUT pixels",
-		   200, -100, 900 );
-  */
 
   TH1I dutaHisto( "duta", "DUT ADC gain;pulse height [ADC];pixels", 300, 0, 600 );
 
@@ -1478,7 +1464,8 @@ int main( int argc, char * argv[] )
   TProfile dutphvsprev( "dutphvsprev", "Tsunami;previous PH [ADC];<PH> [ADC]", 90, -100, 800, -999, 1999 );
   TProfile dutdphvsprev( "dutdphvsprev", "Tsunami;previous #DeltaPH [ADC];<#DeltaPH> [ADC]", 90, -100, 300, -999, 1999 );
   TH1I dutphHisto( "dutph", "DUT PH;ADC-PED [ADC];pixels", 500, -100, 900 );
-  TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
+  TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 1000, -100, 900 );
+  TH1I dutdpiHisto( "dutdpi", "DUT -#DeltaPH;-#DeltaPH [ADC];pixels", 1000, -100, 900 );
   TProfile dutqvsdph( "dutqvsdph", "gain;#DeltaPH [ADC];q [ke]", 500, -100, 900, -11, 99 );
   TH1I dutpxqHisto( "dutpxq", "DUT pixel charge;pixel charge [ke];all pixels", 100, -2, 8 );
 
@@ -2282,7 +2269,7 @@ int main( int argc, char * argv[] )
 		    500, 0, 1000 );
   TH1I cmspxqHisto( "cmspxq",
 		    "DUT pixel charge linked;pixel charge [ke];linked pixels",
-		    100, 0, 20 );
+		    200, 0, 20 );
 
   TH1I cmssdpHisto( "cmssdp",
 		    "DUT seed pixel PH linked;seed pixel PH [ADC];linked clusters",
@@ -2579,7 +2566,7 @@ int main( int argc, char * argv[] )
   // event loop:
 
   list < vector <cluster> > clist[9];
-  list < map < int, set <pixel,rowsrt> > > pxlist;
+  list < map < int, set <pixel> > > pxlist;
   list < evInfo > infoList;
   int iev = 0;
 
@@ -3032,7 +3019,7 @@ int main( int argc, char * argv[] )
 
     vector <pixel> pb; // for clustering
 
-    map < int, set <pixel,rowsrt> > colpxmap; // per col, sorted along row
+    map < int, set <pixel> > colpxmap; // per col, sorted along row
 
     if( readnext && filled == F ) {
 
@@ -3114,7 +3101,7 @@ int main( int argc, char * argv[] )
 
       // column-wise common mode correction:
 
-      set <pixel,rowsrt> compx[156]; // per column, sorted along row
+      set <pixel> compx[156]; // per column, sorted along row
 
       for( unsigned ipx = 0; ipx < vpx.size(); ++ipx ) {
 	int col = vpx[ipx].col;
@@ -3126,7 +3113,7 @@ int main( int argc, char * argv[] )
 
 	if( compx[col].size() < 2 ) continue;
 
-	set <pixel,rowsrt> colpx; // ROC px per col, sorted along row
+	set <pixel> colpx; // ROC px per col, sorted along row
 
 	auto px1 = compx[col].begin();
 	auto px7 = compx[col].end(); --px7; // last row
@@ -3178,7 +3165,8 @@ int main( int argc, char * argv[] )
 	    dutphHisto.Fill( ph4 );
 	    dutphvsprev.Fill( phprev, ph4 );
 	    dutdphvsprev.Fill( dphprev, dph );
-	    dutdphHisto.Fill( dph ); // sig 2.7
+	    dutdphHisto.Fill( dph );
+	    dutdpiHisto.Fill( -dph );
 	  }
 
 	  phprev = ph4;
@@ -3193,10 +3181,15 @@ int main( int argc, char * argv[] )
 
 	  double vcal = p0[col4][row4] - p1[col4][row4] * log( (1-U)/U ); // inverse Fermi
 
-	  double q = ke*vcal;
+	  // subtract Vcal offset:
+
+	  double U0 = -p3[col4][row4] / p2[col4][row4]; // dph = 0
+	  double v0 = p0[col4][row4] - p1[col4][row4] * log( (1-U0)/U0 ); // inverse Fermi
+
+	  double q = ke * ( vcal - v0 );
 
 	  if( col4 > 19 && cool )
-	    dutqvsdph.Fill( dph, ke*vcal );
+	    dutqvsdph.Fill( dph, q );
 
 	  if( cool )
 	    dutpxqHisto.Fill( q );
@@ -3214,9 +3207,9 @@ int main( int argc, char * argv[] )
 	  if( run >= 31635 ) dphcut = 24; // gain_2 2018
 	  if( run == 32263 ) dphcut = 12; // gain_1 test
 	  if( run == 32264 ) dphcut = 12; // gain_1 test
-	  if( run >= 32267 && run <= 32273 ) dphcut = 12; // gain_1 
-	  if( run >= 32277 ) dphcut = 12; // gain_1 2018
-	  if( run >= 32294 ) dphcut =  8; // gain_1 2018 effq0 test
+	  if( run >= 32267 ) dphcut = 12; // gain_1 2018
+	  if( run == 32275 ) dphcut = 24; // gain_2 test
+	  //if( run >= 32294 ) dphcut =  8; // gain_1 2018 effq0 test
 	  if( run == 32301 ) dphcut = 24; // gain_2 20 MHz
 
 	  if( chip0 == 118 && run <= 32262 ) dphcut = 50; // gain_2
@@ -5128,6 +5121,8 @@ int main( int argc, char * argv[] )
 	      if( rot90 ) {
 		xpix = ( px->row + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // -4..4 mm
 		ypix = ( px->col + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // -3.9..3.9 mm
+		dx = xpix - x4;
+		dy = ypix - y4;
 		ring = 9;
 		if(      fabs( dx ) < 0.5 * ptchy[iDUT] &&
 			 fabs( dy ) < 0.5 * ptchx[iDUT] )
@@ -5141,6 +5136,7 @@ int main( int argc, char * argv[] )
 	      }
 
 	      // linear gain from Vcal:
+	      /*
 	      double v = 300; // fresh gain_2
 	      if( run > 32263 ) v = 200; // gain_1
 	      if( chip0 >= 119 && chip0 <= 138 ) {
@@ -5151,11 +5147,13 @@ int main( int argc, char * argv[] )
 	      double a = p3[px->col][px->row] + p2[px->col][px->row] / ( 1 + exp(-t) ); // [ADC]
 	      double g = v / a; // mv/ADC
 	      dutgHisto.Fill( g );
+	      */
 
 	      double ph = px->ph;
-	      double q = ke * ph * g;
+	      //double q = ke * ph * g; // redefine
+	      double q = px->q;
 
-	      if( ring < 3 ) {
+		if( ring < 3 ) {
 		qset.insert( -q); // negative, sort increasing
 		roiqvsdph.Fill( ph, q );
 	      }

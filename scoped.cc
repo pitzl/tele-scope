@@ -28,29 +28,16 @@
 using namespace std;
 using namespace eudaq;
 
-class pixel {
- public:
+struct pixel {
   int col;
   int row;
   double ph;
   double q;
   int ord;
   bool big;
-};
-
-class rowsrt {
-public:
-  bool operator() ( const pixel p1,  const pixel p2 )
+  bool operator < (const pixel & pxObj ) const
   {
-    return p1.row < p2.row;
-  }
-};
-
-class colsrt {
-public:
-  bool operator() ( const pixel p1,  const pixel p2 )
-  {
-    return p1.col < p2.col;
+    return row < pxObj.row;
   }
 };
 
@@ -1815,7 +1802,7 @@ int main( int argc, char* argv[] )
 
       // columns-wise common mode correction:
 
-      set <pixel,rowsrt> compx[155]; // per column, sorted along row
+      set <pixel> compx[155]; // per column, sorted along row
 
       for( unsigned ipx = 0; ipx < vpx.size(); ++ipx ) {
 	int col = vpx[ipx].col;
@@ -1873,6 +1860,13 @@ int main( int argc, char* argv[] )
 
 	  double vcal = p0[col4][row4] - p1[col4][row4] * log( (1-U)/U ); // inverse Fermi
 
+	  // subtract Vcal offset:
+
+	  double U0 = -p3[col4][row4] / p2[col4][row4]; // dph = 0
+	  double v0 = p0[col4][row4] - p1[col4][row4] * log( (1-U0)/U0 ); // inverse Fermi
+
+	  double q = ke * ( vcal - v0 );
+
 	  // linear gain from Vcal at Landau peak:
 
 	  double v = 160; // fresh gain_1
@@ -1910,7 +1904,7 @@ int main( int argc, char* argv[] )
 	      px.row = 2*row4 + 1;
 	  }
 	  px.ph = dph;
-	  px.q = ke*vcal; // calibrated
+	  px.q = q; // calibrated
 	  px.ord = pb.size(); // readout order
 	  px.big = 0;
 
