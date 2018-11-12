@@ -380,6 +380,24 @@ int main( int argc, char * argv[] )
     ybeam = 0.5;
     rbeam = 3.2;
   }
+  /*
+    effvsxy->Draw("colz")
+    TArc c( -2.0, 1.5, 2.5 ); // circle
+    c.SetFillStyle(0);
+    c.SetLineWidth(3);
+    c.Draw("same");
+    c.SetX1(-2.0);
+    c.SetR1(2.5);
+    c.SetR2(2.5);
+    TArc m( -2.0, 1.5, 0.1 ); // mid
+    m.SetFillStyle(1000);
+    m.Draw("same");
+  */
+  if( chip0 == 174 ) { // 33834 174i 50 mA 200V
+    xbeam =-2.0;
+    ybeam = 1.5;
+    rbeam = 2.5;
+  }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // geometry:
@@ -2357,12 +2375,18 @@ int main( int argc, char * argv[] )
   TH1I cmsq0nHisto( "cmsq0n",
 		    "cluster charge no dot;cluster charge no dot [ke];linked clusters",
 		    480, 0, 120 );
+  TH1I cmsph0bHisto( "cmsph0b",
+		   "normal cluster PH beam spot;normal cluster pulse height [ADC];beam spot linked clusters",
+		   320, 0, 1600 );
   TH1I cmsq0bHisto( "cmsq0b",
 		   "normal cluster charge beam spot;normal cluster charge [ke];beam spot linked clusters",
 		   480, 0, 120 );
+  TH1I cmsph0hHisto( "cmsph0h",
+		     "normal cluster PH beam halo;normal cluster pulse height [ADC];beam halo linked clusters",
+		     320, 0, 1600 );
   TH1I cmsq0hHisto( "cmsq0h",
-		   "normal cluster charge beam halo;normal cluster charge [ke];beam halo linked clusters",
-		   480, 0, 120 );
+		    "normal cluster charge beam halo;normal cluster charge [ke];beam halo linked clusters",
+		    480, 0, 120 );
 
   TProfile cmsqxvsx( "cmsqxvsx",
 		     "DUT cluster charge vs x;x track [mm];<cluster charge> [ke]",
@@ -2594,6 +2618,11 @@ int main( int argc, char * argv[] )
     TProfile( "effvst6",
 	      "DUT efficiency vs time;time [h];efficiency",
 	      1000, 0, 50, -1, 2 );
+
+  TProfile effvsdr =
+    TProfile( "effvsdr",
+	      "DUT efficiency vs beam spot;beam spot distance [mm];efficiency",
+	      120, 0, 12, -1, 2 );
 
   TProfile effvst1t =
     TProfile( "effvst1t",
@@ -3365,7 +3394,7 @@ int main( int argc, char * argv[] )
 
 	  //cout << "    ph col4 " << col4 << " = " << px.col << endl << flush;
 
-	  colpx.insert(px); // sorted along col
+	  colpx.insert(px); // sorted along row
 
 	  double dphcut = 12; // gain_1 2017
 
@@ -3510,10 +3539,12 @@ int main( int argc, char * argv[] )
       int rowmax = -1;
 
       vector <double> qcol( nx[iDUT] );
-      for( int icol = 0; icol < nx[iDUT]; ++icol ) qcol[icol] = 0;
+      for( int icol = 0; icol < nx[iDUT]; ++icol )
+	qcol[icol] = 0;
 
       vector <double> qrow( ny[iDUT] );
-      for( int irow = 0; irow < ny[iDUT]; ++irow ) qrow[irow] = 0;
+      for( int irow = 0; irow < ny[iDUT]; ++irow )
+	qrow[irow] = 0;
 
       //cout << "     px col";
 
@@ -5334,14 +5365,14 @@ int main( int argc, char * argv[] )
 	  fidy = 3.7;
 	}
 
-	if( iev > 400 &&
-	    iev < rev &&
-	    filled != A &&
-	    lddt &&
-	    lsixlk &&
-	    liso &&
-	    fabs(x4) < fidx &&
-	    fabs(y4) < fidy ) { // fiducial x and y
+	if( iev > 400 &&       // pedestal and noise
+	    iev < rev &&       // ROI event limit
+	    filled != A &&     // not added
+	    lddt &&            // in-sync
+	    lsixlk &&          // in-time track with module
+	    liso &&            // against track pile-up
+	    fabs(x4) < fidx && // fiducial x and y
+	    fabs(y4) < fidy ) {
 
 	  double sump0 = 0;
 	  double sumpA = 0;
@@ -5432,7 +5463,7 @@ int main( int argc, char * argv[] )
 	      //double q = ke * ph * g; // redefine
 	      double q = px->q;
 
-		if( ring < 3 ) {
+	      if( ring < 3 ) {
 		qset.insert( -q); // negative, sort increasing
 		roiqvsdph.Fill( ph, q );
 	      }
@@ -5508,9 +5539,12 @@ int main( int argc, char * argv[] )
 
 	  } // cols
 
-	  // for 25x10 on rot90:
-
-	  if( ymod > 0.010 && ymod < 0.090 ) { // central row
+	  if( fifty && ymod > 0.010 && ymod < 0.040 ) { // central row
+	    roiq0vsxm.Fill( xmod5*1E3, q0 );
+	    roiq1vsxm.Fill( xmod5*1E3, q1 );
+	    roiq2vsxm.Fill( xmod5*1E3, q2 );
+	  }
+	  else if( !fifty && ymod > 0.010 && ymod < 0.090 ) { // central row
 	    roiq0vsxm.Fill( xmod5*1E3, q0 );
 	    roiq1vsxm.Fill( xmod5*1E3, q1 );
 	    roiq2vsxm.Fill( xmod5*1E3, q2 );
@@ -5660,16 +5694,17 @@ int main( int argc, char * argv[] )
 	  int rowmax = -1;
 
 	  vector <double> pcol( nx[iDUT] );
-	  for( int icol = 0; icol < nx[iDUT]; ++icol ) pcol[icol] = 0;
-
-	  vector <double> prow( ny[iDUT] );
-	  for( int irow = 0; irow < ny[iDUT]; ++irow ) prow[irow] = 0;
-
 	  vector <double> qcol( nx[iDUT] );
-	  for( int icol = 0; icol < nx[iDUT]; ++icol ) qcol[icol] = 0;
-
+	  for( int icol = 0; icol < nx[iDUT]; ++icol ) {
+	    pcol[icol] = 0;
+	    qcol[icol] = 0;
+	  }
+	  vector <double> prow( ny[iDUT] );
 	  vector <double> qrow( ny[iDUT] );
-	  for( int irow = 0; irow < ny[iDUT]; ++irow ) qrow[irow] = 0;
+	  for( int irow = 0; irow < ny[iDUT]; ++irow ) {
+	    prow[irow] = 0;
+	    qrow[irow] = 0;
+	  }
 
 	  double sumph = 0;
 	  double qseed = 0;
@@ -5710,6 +5745,7 @@ int main( int argc, char * argv[] )
 	  int ncol = colmax - colmin + 1;
 	  int nrow = rowmax - rowmin + 1;
 
+	  double PH0 = sumph*norm;
 	  double Px = exp( -sumph / pwid );
 
 	  // eta-algo in rows:
@@ -6130,18 +6166,22 @@ int main( int argc, char * argv[] )
 		cmsnpxvsxmym2->Fill( xmod2*1E3, ymod*1E3, c->vpix.size() ); // cluster size map
 	      cmsnpxvsxmym5->Fill( xmod5*1E3, ymod5*1E3, c->vpix.size() ); // cluster size map
 
-	      cmsph0Histo.Fill( sumph*norm ); // Landau
+	      cmsph0Histo.Fill( PH0 ); // Landau
 	      cmsv0Histo.Fill( Q0/ke ); // Landau [mV]
 	      cmsq0Histo.Fill( Q0 ); // Landau [ke]
 
 	      if( ncol < 3 && nrow < 3 )
 		cmsq03Histo.Fill( Q0 ); // Landau
 
-	      if( drbeam < rbeam )
-		cmsq0bHisto.Fill( Q0 ); // beam spot
-	      else
+	      if( drbeam < rbeam ) { // beam spot
+		cmsph0bHisto.Fill( PH0 );
+		cmsq0bHisto.Fill( Q0 );
+	      }
+	      else {
+		cmsph0hHisto.Fill( PH0 );
 		cmsq0hHisto.Fill( Q0 ); // beam halo
- 
+	      }
+
 	      if( sqrt( pow( xmod-0.050, 2 ) + pow( ymod-0.050, 2 ) ) < 0.010 ) // 50x50 bias dot
 		cmsq0dHisto.Fill( Q0 );
 
@@ -6277,6 +6317,8 @@ int main( int argc, char * argv[] )
 		effvst3t.Fill( evsec, nm[49] );
 		effvst4t.Fill( evsec, nm[49] );
 		effvst6t.Fill( evsec/3600, nm[49] );
+
+		effvsdr.Fill( drbeam, nm[49] );
 
 		cmsdminHisto.Fill( dmin );
 		cmsdxminHisto.Fill( dxmin );

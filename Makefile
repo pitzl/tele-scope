@@ -27,6 +27,11 @@ scoped: scoped.cc
 	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
 	@echo 'done: scoped'
 
+scopedm: scopedm.cc
+	g++ $(CXXFLAGS) scopedm.cc -o scopedm \
+	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
+	@echo 'done: scopedm'
+
 scopesh: scopesh.cc
 	g++ $(CXXFLAGS) scopesh.cc -o scopesh \
 	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ

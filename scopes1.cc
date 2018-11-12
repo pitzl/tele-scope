@@ -2735,7 +2735,6 @@ int main( int argc, char * argv[] )
 
   uint64_t tlutime0 = 0;
   uint64_t prevtlutime = 0;
-
   uint64_t prevdtbtime = 0;
 
   bool ldbt = 0;
@@ -3011,7 +3010,7 @@ int main( int argc, char * argv[] )
     zeit1 += s2 - s1 + ( u2 - u1 ) * 1e-6; // read and cluster
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // read DUT stream:
+    // read R4S DUT stream:
 
     string DUTev;
     if( readnext )
