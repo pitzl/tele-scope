@@ -69,6 +69,17 @@ struct triplet {
   double ttdmin; // distance top next track [mm]
 };
 
+struct cpixel // for hot pixel counting
+{
+  int col;
+  int row;
+  int cnt;
+  bool operator < (const cpixel & pxObj ) const
+  {
+    return cnt > pxObj.cnt;
+  }
+};
+
 //------------------------------------------------------------------------------
 vector < cluster > getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
 {
@@ -181,7 +192,7 @@ int main( int argc, char * argv[] )
 
   string runnum( argv[argc-1] );
   int run = atoi( argv[argc-1] );
-
+  
   cout << "run " << run << endl;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1075,6 +1086,60 @@ int main( int argc, char * argv[] )
   if( chip0 == 102 && run >= 34345 ) ke = 0.0356;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // DUT hot pixels:
+
+  cout << endl;
+
+  ostringstream DUThotFileName; // output string stream
+
+  DUThotFileName << "hotDUT_" << run << ".dat";
+
+  ifstream iDUThotFile( DUThotFileName.str() );
+
+  if( iDUThotFile.bad() || ! iDUThotFile.is_open() ) {
+    cout << "no " << DUThotFileName.str() << endl;
+  }
+  else {
+
+    cout << "read DUT hot pixel list from " << DUThotFileName.str() << endl;
+
+    string hash( "#" );
+    string pix( "pix" );
+
+    while( ! iDUThotFile.eof() ) {
+
+      string line;
+      getline( iDUThotFile, line );
+      //cout << line << endl;
+
+      if( line.empty() ) continue;
+
+      stringstream tokenizer( line );
+      string tag;
+      tokenizer >> tag; // leading white space is suppressed
+      if( tag.substr(0,1) == hash ) // comments start with #
+	continue;
+
+      if( tag == pix ) {
+	int ix, iy;
+	tokenizer >> ix;
+	tokenizer >> iy;
+	int ipx = ix * 160 + iy;
+	hotset[iDUT].insert(ipx);
+      }
+
+    } // while getline
+
+  } // hotFile
+
+  iDUThotFile.close();
+
+  cout << "DUT hot " << hotset[iDUT].size() << endl;
+
+  DUThotFileName.seekp(0);
+  DUThotFileName << "hotDUT_" << run << ".datx"; // for filling later
+  
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // MOD:
 
   int iMOD = 6;
@@ -1217,7 +1282,7 @@ int main( int argc, char * argv[] )
 
   ostringstream rootFileName; // output string stream
 
-  rootFileName << "scopes" << run << ".root";
+  rootFileName << "scopes1" << run << ".root";
 
   TFile* histoFile = new TFile( rootFileName.str(  ).c_str(  ), "RECREATE" );
 
@@ -1532,7 +1597,7 @@ int main( int argc, char * argv[] )
 		       100, 0, 25 );
 
   TH1I dutphHisto( "dutph", "DUT PH;ADC-PED [ADC];pixels", 500, -100, 900 );
-  TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
+  TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 1000, -100, 900 );
   TProfile dutqvsdph( "dutqvsdph", "gain;#DeltaPH [ADC];q [ke]", 500, -100, 900, -11, 99 );
   TH1I dutpxqHisto( "dutpxq", "DUT pixel charge;pixel charge [ke];all ROI pixels", 100, -2, 8 );
 
@@ -1548,7 +1613,7 @@ int main( int argc, char * argv[] )
 
   TH1I dutq0Histo( "dutq0",
 		   "normal cluster charge;normal cluster charge [ke];clusters",
-		   160, 0, 80 );
+                   480, 0, 120 );
 
   TH1I dutnpxHisto( "dutnpx",
 		     "DUT cluster size;cluster size [pixels];clusters",
@@ -2335,6 +2400,9 @@ int main( int argc, char * argv[] )
   TH1I cmsq0Histo( "cmsq0",
 		   "normal cluster charge;normal cluster charge [ke];isolated linked clusters",
 		   480, 0, 120 );
+  TH1I dutclq( "dutclq",
+                   "dut cluster charge;cluster charge [ke];all clusters",
+                    480, 0, 120 );
   TH1I cmsq00Histo( "cmsq00",
 		   "normal cluster charge;normal cluster charge [ke];isolated linked clusters",
 		   160, 0, 40 );
@@ -2706,7 +2774,7 @@ int main( int argc, char * argv[] )
 
   // DUT R4S:
 
-  string evFileName = Form( "roi%06i.txt", run );
+  string evFileName = Form( "data/roi%06i.txt", run );
   cout << "try to open  " << evFileName;
   ifstream evFile( evFileName.c_str() );
   if( !evFile ) {
@@ -3124,7 +3192,11 @@ int main( int argc, char * argv[] )
 	roiss >> col;
 	roiss >> row;
 	roiss >> ph;
-	if( ldb ) cout << " " << col << " " << row << " " << ph;
+
+	if( roiss.eof() ) 
+	  continue;
+	if( ldb )
+	  cout << " " << col << " " << row << " " << ph << endl;
 	hcol[iDUT].Fill( col+0.5 );
 	hrow[iDUT].Fill( row+0.5 );
 
@@ -3134,6 +3206,13 @@ int main( int argc, char * argv[] )
 
       } // roi px
 
+      unsigned sizecut = 999;
+      if( vpx.size() > sizecut ) {
+        cout << endl << "R4S vpx " << vpx.size() << " cleared in event " << iev;
+        vpx.clear();
+        filled = A;
+      }
+      
       // column-wise common mode correction:
 
       set <pixel> compx[156]; // per column, sorted along row
@@ -3172,8 +3251,31 @@ int main( int argc, char * argv[] )
 	  else
 	    dph = ph4 - ph7;
 
-	  dutphHisto.Fill( ph4 );
-	  dutdphHisto.Fill( dph ); // sig 2.7
+          pixel px; // sensor px
+          
+	  if( fifty ) {
+	    px.col = col4; // 50x50
+	    px.row = row4;
+	  }
+	  else {
+	    px.col = (col4+1)/2; // 100 um
+	    if( col4%2 ) 
+	      px.row = 2*row4 + 0;
+	    else
+	      px.row = 2*row4 + 1;
+	  }
+
+	  bool cool = 1;
+	  int hpx = col4 * 160 + row4;
+	  if( hotset[iDUT].count(hpx) ) {
+	    if( ldb ) cout << " hot" << flush;
+	    cool = 0;
+	  }
+	  
+	  if( cool ) {
+            dutphHisto.Fill( ph4 );
+            dutdphHisto.Fill( dph );
+          }
 
 	  // r4scal.C
 
@@ -3202,24 +3304,12 @@ int main( int argc, char * argv[] )
 	  q = ke * dph * g; // overwrite! cmsdy8cq 5.09 instead 4.94
 	  */
 
-	  if( col4 > 19 ) {
+	  if( col4 > 19 && cool ) {
 	    dutqvsdph.Fill( dph, q );
+	  }
+	  if( cool )
 	    dutpxqHisto.Fill( q );
-	  }
 
-	  pixel px;
-
-	  if( fifty ) {
-	    px.col = col4; // 50x50
-	    px.row = row4;
-	  }
-	  else {
-	    px.col = (col4+1)/2; // 100 um
-	    if( col4%2 ) 
-	      px.row = 2*row4 + 0;
-	    else
-	      px.row = 2*row4 + 1;
-	  }
 	  px.adc = ph4;
 	  px.ph = dph;
 	  px.q = q;
@@ -3264,7 +3354,11 @@ int main( int argc, char * argv[] )
 	  if( chip0 == 156 ) dphcut = 16; // gain_1 
 	  if( chip0 > 300 ) dphcut = 20; // irradiated 3D is noisy
 
-	  if( dph > dphcut ) {
+	  
+	  if( iev == 501 )
+            cout << endl << "applying dphcut " << dphcut << " ADC units" << endl;
+	  
+          if( dph > dphcut ) {
 
 	    //if( q > 0.8 ) { // 31166 cmsdycq 5.85
 	    //if( q > 0.9 ) { // 31166 cmsdycq 5.74
@@ -3281,10 +3375,13 @@ int main( int argc, char * argv[] )
 	    //if( q > 5.0 ) { // 31166 cmsdycq 10.44  eff 98.0
 	    //if( q > 5.5 ) { // 31166 cmsdycq 11.3  eff 96.3
 	    //if( q > 6.0 ) { // 31166 cmsdycq 12.05  eff 93.5
+            
+            hmap[iDUT]->Fill( col4+0.5, row4+0.5 ); // chip coordinates
 
-	    hmap[iDUT]->Fill( col4+0.5, row4+0.5 ); // chip coordinates
-	    pb.push_back(px);
-
+	    if( cool ) {
+              pb.push_back(px);
+            }
+              
 	  } // dph cut
 
 	} // px4
@@ -3325,6 +3422,8 @@ int main( int argc, char * argv[] )
     for( unsigned icl = 0; icl < cl[iDUT].size(); ++ icl ) {
 
       hsiz[iDUT].Fill( cl[iDUT][icl].size );
+      dutclq.Fill(     cl[iDUT][icl].charge );
+      
       //hclph.Fill( cl[iDUT][icl].sum );
       //hclmap->Fill( cl[iDUT][icl].col, cl[iDUT][icl].row );
 
@@ -3346,6 +3445,10 @@ int main( int argc, char * argv[] )
     long u3 = tv.tv_usec; // microseconds
     zeit2 += s3 - s2 + ( u3 - u2 ) * 1e-6; // read and cluster DUT
 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // DUT align vs time:
+    
+    
     if( run == 31153 ) {
       double p0 = -0.00467371;
       double p1 =  1.26074e-08;
@@ -5243,12 +5346,16 @@ int main( int argc, char * argv[] )
 
 	// for 25x10 on rot90:
 
-	if( ymod > 0.010 && ymod < 0.090 ) { // central row
-	  roiq0vsxm.Fill( xmod5*1E3, q0 );
-	  roiq1vsxm.Fill( xmod5*1E3, q1 );
-	  roiq2vsxm.Fill( xmod5*1E3, q2 );
-	}
-
+	if( fifty && ymod > 0.010 && ymod < 0.040 ) { // central row
+          roiq0vsxm.Fill( xmod5*1E3, q0 );
+          roiq1vsxm.Fill( xmod5*1E3, q1 );
+          roiq2vsxm.Fill( xmod5*1E3, q2 );
+        }
+        else if( !fifty && ymod > 0.010 && ymod < 0.090 ) { // central row
+          roiq0vsxm.Fill( xmod5*1E3, q0 );
+          roiq1vsxm.Fill( xmod5*1E3, q1 );
+          roiq2vsxm.Fill( xmod5*1E3, q2 );
+        }
 	// 5 3 6
 	// 1 0 2
 	// 7 4 8
@@ -5333,7 +5440,8 @@ int main( int argc, char * argv[] )
       double pdxmin = 9;
       double pdymin = 9;
       double pdmin = 19;
-      double clQ0 = -1; // hide ineficiency
+      double clQ0 = 0;
+      //double clQ0 = -1; // hide ineficiency
       int clsz0 = 0;
 
       for( vector<cluster>::iterator c = cl0[iDUT].begin(); c != cl0[iDUT].end(); ++c ) {
@@ -5347,7 +5455,8 @@ int main( int argc, char * argv[] )
 	for( vector<cluster>::iterator c2 = cl0[iDUT].begin(); c2 != cl0[iDUT].end(); ++c2 ) {
 	  if( c2 == c ) continue;
 	  if( fabs( c2->col - ccol ) < 8 &&
-	      fabs( c2->row - crow ) < 8 )
+	      fabs( c2->row - crow ) < 8 &&
+              c2->charge > c->charge ) // mask close-by small clusters
 	    isoc = 0;
 	}
 
@@ -5484,7 +5593,7 @@ int main( int argc, char * argv[] )
 
 	double q12 = q1 + q2;
 	double eta = 0;
-	if( q12 > 1 ) eta = ( q1 - q2 ) / q12; // always negative
+	if( q12 > 1 ) eta = ( q2 - q1 ) / q12; // always negative
 	if( i1 > i2 ) eta = -eta; // right-left
 
 	double p12 = p1 + p2;
@@ -5553,8 +5662,8 @@ int main( int argc, char * argv[] )
 	if( q12 > 1 ) cuta = 0.5*(j1+j2) + 0.20*(j2-j1)*(q2-q1)/q12; // cmsdvc2 13.7
 
 	bool lq = 1; // Landau peak
-	//if( ( Q0 < 8 || Q0 > 16 ) ) lq = 0; // r102 50x50
-	if( ( Q0 < 8 || Q0 > 14 ) ) lq = 0; // r144
+	if( ( Q0 < 8 || Q0 > 16 ) ) lq = 0; // r102 50x50
+	//if( ( Q0 < 8 || Q0 > 14 ) ) lq = 0; // r144
 
 	if( run >= 31632 && chip0 >= 119 && chip0 <= 138 ) { // Feb-Mar 2018 irrad gain_2
 	  lq = 1;
@@ -5586,14 +5695,12 @@ int main( int argc, char * argv[] )
 	  cmsv = ( cuta + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // y from uta
 	}
 
-	if( liso &&  isoc ) {
-	  cmsxvsx->Fill( x4, cmsx );
-	  cmsyvsy->Fill( y4, cmsy );
-	}
-
 	// residuals for pre-alignment:
 
-	if( liso &&  isoc ) {
+	if( liso && isoc ){//&& lddt ) {
+          
+	  cmsxvsx->Fill( x4, cmsx );
+	  cmsyvsy->Fill( y4, cmsy );
 
 	  cmssxaHisto.Fill( cmsx + x3 ); // rot, tilt and turn but no shift
 	  cmsdxaHisto.Fill( cmsx - x3 ); // peak
@@ -5790,7 +5897,7 @@ int main( int argc, char * argv[] )
 
 	} // dxy
 
-	if( fabs(x4) < 3.9 && fabs(y4) < 3.9 && // fiducial
+	if( fabs(x4) < 3.8 && fabs(y4) < 3.9 && // fiducial
 	    fabs(cmsdx) < xcut &&
 	    fabs(cmsdy) < ycut ) {
 
@@ -5817,7 +5924,7 @@ int main( int argc, char * argv[] )
 	  triyclkHisto.Fill( yc );
 	  trixyclkHisto->Fill( xc, yc ); // telescope coordinates
 
-	  if( fabs(x4) < 3.9 && fabs(y4) < 3.9 ) { // isolated fiducial
+	  if( fabs(x4) < 3.8 && fabs(y4) < 3.9 ) { // isolated fiducial
 
 	    cmsnpxHisto.Fill( c->size );
 	    cmsncolHisto.Fill( ncol );
@@ -6126,9 +6233,62 @@ int main( int argc, char * argv[] )
        << "resyncs " << nresync
        << endl;
 
+      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // hot pixels:
+
+    cout << endl << "DUT hot pixel list for run " << run << endl;
+
+    int hotcut = iev / 1024;
+
+    ofstream oDUThotFile( DUThotFileName.str() );
+
+    oDUThotFile << "# DUT hot pixel list for run " << run
+		<< " with " << iev << " events"
+		<< ", hot cut " << hotcut
+		<< endl;
+
+    multiset <cpixel> pxset;
+
+    cout << hmap[iDUT]->GetTitle() << endl;
+    cout << hmap[iDUT]->GetEntries() << endl;
+    cout << hmap[iDUT]->GetNbinsX() << endl;
+    cout << hmap[iDUT]->GetNbinsY() << endl << flush;
+
+    for( int ii = 1; ii <= hmap[iDUT]->GetNbinsX(); ++ii )
+
+      for( int jj = 1; jj <= hmap[iDUT]->GetNbinsY(); ++jj ) {
+
+	//cout << ii << " " << jj << endl;
+        
+	int n = hmap[iDUT]->GetBinContent(ii,jj);
+
+	if( n > hotcut ) {
+	  cpixel px{ ii-1, jj-1, n };
+	  pxset.insert(px); // sorted by descending cnt
+	}
+      }
+
+    cout << "hot " << pxset.size() << endl;
+
+    for( auto px = pxset.begin(); px != pxset.end(); ++px ) {
+      cout << setw(3) << px->col << ", "
+	   << setw(3) << px->row << ":  "
+	   << px->cnt << endl;
+      oDUThotFile << "pix "
+		 << setw(3) << px->col
+		 << setw(5) << px->row
+		 << "  " << px->cnt
+		 << endl;
+    }
+    cout << "DUT hot pixel list written to " << DUThotFileName.str() << endl;
+
+    oDUThotFile.close();
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  
   histoFile->Write();
   histoFile->Close();
-
+  
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // MOD alignment:
 
@@ -6585,12 +6745,14 @@ int main( int argc, char * argv[] )
 
   // write new DUT alignment:
 
-  cout << "update DUT alignment file? (y/n)" << endl;
-  string ans{"y"};
-  string YES{"y"};
-  cin >> ans;
-  if( ans == YES ) {
-
+  // i dont want to be asked
+  //cout << "update DUT alignment file? (y/n)" << endl;
+  //string ans{"y"};
+  //string YES{"y"};
+  //cin >> ans;
+  //if( ans == YES ) {
+  cout << "DUT alignment update is switched off" << endl;
+  if( false ) {
     ofstream DUTalignFile( DUTalignFileName.str() );
 
     DUTalignFile << "# DUT alignment for run " << run << endl;

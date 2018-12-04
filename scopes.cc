@@ -2328,7 +2328,7 @@ int main( int argc, char * argv[] )
 			100, 0, 100, 0, 20 );
   TProfile cmsnrowvsxm( "cmsnrowvsxm",
 			"DUT cluster size vs xmod;x track mod 50 [#mum];<cluster size> [rows]",
-			50, 0, 50, 0, 80 );
+			100, 0, 100, 0, 80 );
 
   TProfile cmsncolvsym( "cmsncolvsym",
 			"DUT cluster size vs ymod;y track mod 100 [#mum];<cluster size> [columns]",
@@ -2366,6 +2366,9 @@ int main( int argc, char * argv[] )
   TH1I cmsq0Histo( "cmsq0",
 		   "normal cluster charge;normal cluster charge [ke];isolated linked clusters",
 		   480, 0, 120 );
+  TH1I dutclq( "dutclq",
+               "dut cluster charge;cluster charge [ke];all clusters",
+               480, 0, 120 );
   TH1I cmsq03Histo( "cmsq03",
 		   "normal cluster charge, < 4 px;normal cluster charge [ke];linked clusters, < 4 px",
 		    480, 0, 120 );
@@ -2734,7 +2737,7 @@ int main( int argc, char * argv[] )
 
   // DUT R4S:
 
-  string evFileName = Form( "roi%06i.txt", run );
+  string evFileName = Form( "data/roi%06i.txt", run );
   cout << "try to open  " << evFileName;
   ifstream evFile( evFileName.c_str() );
   if( !evFile ) {
@@ -3275,6 +3278,9 @@ int main( int argc, char * argv[] )
 	hcol[iDUT].Fill( col+0.5 );
 	hrow[iDUT].Fill( row+0.5 );
 
+	if( ldb )
+	  cout << "col " << col << " row " << row << " ph " << ph << endl;
+	
 	pixel px { col, row, ph, ph, 0 }; // ROC px
 	vpx.push_back(px);
 	++ipx;
@@ -3436,7 +3442,10 @@ int main( int argc, char * argv[] )
 	  if( chip0 == 109 && run >= 33692 ) dphcut = 22; // gain_1 irrad_2
 	  if( chip0 > 300 ) dphcut = 20; // irradiated 3D is noisy gain_1
 
-	  if( dph > dphcut ) {
+          if( iev == 501 )
+            cout << endl << "applying dphcut " << dphcut << " ADC units" << endl;
+	  
+          if( dph > dphcut ) {
 
 	    //if( q > 0.8 ) { // 31166 cmsdycq 5.85
 	    //if( q > 0.9 ) { // 31166 cmsdycq 5.74
@@ -3510,6 +3519,7 @@ int main( int argc, char * argv[] )
     for( unsigned icl = 0; icl < vcl.size(); ++ icl ) {
 
       hsiz[iDUT].Fill( vcl[icl].scr % 256 );
+      dutclq.Fill(     vcl[icl].charge );
       //hclph.Fill( vcl[icl].sum );
       //hclmap->Fill( vcl[icl].col, vcl[icl].row );
 
@@ -5894,7 +5904,7 @@ int main( int argc, char * argv[] )
 
 	  // residuals for pre-alignment:
 
-	  if( liso &&  isoc && lddt ) {
+	  if( liso &&  isoc ){//&& lddt ) {
 
 	    cmsxvsx->Fill( x4, cmsx );
 	    cmsyvsy->Fill( y4, cmsy );
@@ -6139,8 +6149,9 @@ int main( int argc, char * argv[] )
 		  cmsetapqHisto.Fill( etap );
 		  cmsetavsxm2->Fill( xmod5*1E3, eta ); // within pixel, rot90
 		  cmsetavsym.Fill( ymod*1E3, eta ); // within pixel
-		}
-	      }
+                }
+              
+              }
 
 	      if( ncol == 2 ) {
 		cmsutaHisto.Fill( uta );
@@ -6927,12 +6938,13 @@ int main( int argc, char * argv[] )
 
   // write new DUT alignment:
 
-  cout << "update DUT alignment file? (y/n)" << endl;
-  string ans{"n"};
-  string YES{"y"};
-  cin >> ans;
-  if( ans == YES ) {
-
+  //cout << "update DUT alignment file? (y/n)" << endl;
+  //string ans{"n"};
+  //string YES{"y"};
+  //cin >> ans;
+  //if( ans == YES ) {
+  cout << "DUT alignment update is switched off" << endl;
+  if( false ) {
     ofstream DUTalignFile( DUTalignFileName.str() );
 
     DUTalignFile << "# DUT alignment for run " << run << endl;
