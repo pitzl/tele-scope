@@ -839,6 +839,28 @@ int main( int argc, char * argv[] )
 
   int iDUT = 7;
 
+  // error handling for pixel geometry
+  if( fifty ){
+    if( nx[iDUT] == 156 && ny[iDUT] == 160 ){
+      cout << "fifty flag matches DUT pixel sizes in geometry file." << endl << flush;      
+    }
+    else{
+      cout << endl << "ERROR -- " 
+      << "fifty flag mismatches DUT pixel sizes in geometry file. Is this 100x25?" << endl << endl << flush;
+      return 0;
+    }
+  }
+  else{
+    if( nx[iDUT] == 78 && ny[iDUT] == 320 ){
+      cout << "fifty flag matches DUT pixel sizes in geometry file." << endl << flush;      
+    }
+    else{
+      cout << endl << "ERROR -- "
+      << "fifty flag mismatches DUT pixel sizes in geometry file. Is this 50x50?" << endl <<endl << flush;
+      return 0;
+    }
+  }
+  
   int DUTaligniteration = 0;
   double DUTalignx = 0.0;
   double DUTaligny = 0.0;
@@ -1588,6 +1610,162 @@ int main( int argc, char * argv[] )
       dutaHisto.Fill( a );
     }
 
+  // #################################################################################  
+  // finn for tsunami and noise analysis and eta telescope calculation
+  
+  TH1I dutadcAll( "dutadcAll", "DUT PH;ADC-PED [ADC];pixels", 500, -100, 900 );
+  TH1I dutadcPix( "dutadcPix", "DUT PH;ADC-PED [ADC];pixels", 500, -100, 900 );
+  
+  // 100 event dispalys
+  //TProfile2D* evtdspls[100];
+  //for( int i = 0; i < 100; i++ ) 
+  //  evtdspls[i] = new TProfile2D( Form( "evtdspl%i", i ), Form( "Display Event 401 + %i;col;row;PH <ADC>", i ), 
+  //                                      155, 0, 155, 160, 0, 160, -2222, 2222 );
+ 
+  //plots for correlation studies
+  // 09 10 11 12 13
+  // 14  1  2  3 15
+  // 16  4  x  5 17
+  // 18  6  7  8 19
+  // 20 21 22 23 24
+  
+  TH1I posxdph ( "posxdph", "Hit Pixel #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
+  TH1I pos2dph ( "pos2dph", "Pos 2 Pixel #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
+  TH1I pos7dph ( "pos7dph", "Pos 7 Pixel #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
+  
+  // encoding neighbours
+  int corPosx[24] = {-1,+0,+1,-1,+1,-1,+0,+1,
+                     -2,-1,+0,+1,+2,-2,+2,-2,+2,-2,+2,-2,-1,+0,+1,+2};
+  int corPosy[24] = {+1,+1,+1,+0,+0,-1,-1,-1,
+                     +2,+2,+2,+2,+2,+1,+1,+0,+0,-1,-1,-2,-2,-2,-2,-2};
+  
+  //TGraph* gphCor [24]; // correlations of dph
+  //TGraph* gdphCor[24]; // correlations of dph
+  //TGraph* gq0Cor [24]; // correlations of q
+  //int gphCorPtnr [24];
+  //int gdphCorPtnr[24];
+  //int gq0CorPtnr [24];
+  //TProfile pphCor [24];
+  //TProfile pq0Cor [24];
+  TProfile pdphCor[24];
+  for( int i = 0; i < 24; i++ ){
+    // cout << "at i " << i+1 << " look at " << corPosx[i] << " -- " << corPosy[i] << endl << flush;
+    //gphCor[i] = new TGraph();
+    //gphCor[i]->SetName( Form( "gphCor%i", i+1 ) );
+    //gphCor[i]->SetTitle( Form( "PH Correlations %i", i+1 ) );
+    //gphCor[i]->GetXaxis()->SetTitle( "PH Center" );
+    //gphCor[i]->GetYaxis()->SetTitle( Form( "PH Pos %i", i+1 ) );
+    //gphCorPtnr[i]= 0;
+    //
+    //gdphCor[i] = new TGraph();
+    //gdphCor[i]->SetName( Form( "gdphCor%i", i+1 ) );
+    //gdphCor[i]->SetTitle( Form( "DPH Correlations %i", i+1 ) );
+    //gdphCor[i]->GetXaxis()->SetTitle( "DPH Center" );
+    //gdphCor[i]->GetYaxis()->SetTitle( Form( "DPH Pos %i", i+1 ) );
+    //gdphCorPtnr[i]= 0;
+    //
+    //gq0Cor[i] = new TGraph();
+    //gq0Cor[i]->SetName( Form( "gq0Cor%i", i+1 ) );
+    //gq0Cor[i]->SetTitle( Form( "q0 Correlations %i", i+1 ) );
+    //gq0Cor[i]->GetXaxis()->SetTitle( "Q Center" );
+    //gq0Cor[i]->GetYaxis()->SetTitle( Form( "Q Pos %i", i+1 ) );
+    //gq0CorPtnr[i]= 0;
+    //
+    //pphCor[i] = TProfile( Form( "pphCor%i", i+1 ),
+    //                      Form( "PH Correlations %i;PH Center; PH Pos %i", i+1, i+1 ),
+    //                      180, -200, 1600, -200, 1600 );
+    //pq0Cor[i] = TProfile( Form( "pq0Cor%i", i+1 ),
+    //                      Form( "Q0 Correlations %i;Q Center; Q Pos %i", i+1, i+1 ),
+    //                      180, -5, 35, -5, 35 );
+    pdphCor[i] = TProfile( Form( "pdphCor%i", i+1 ),
+                           Form( "DPH Correlations %i;DPH Center; DPH Pos %i", i+1, i+1 ),
+                           180, -200, 1600, -200, 1600 );
+  }
+  
+  TH1I dutcoldist( "dutcoldist", "Distance to next hit column in ROI; ncol; pixels", 1100, -10, 100 );  
+  TH1I dutdphCntrl( "dutdphCntrl", "Common mode control plot ;ADC-PED [ADC];pixels", 500, -100, 900 );  
+  
+  TProfile2D* cntrlvsxmym = new TProfile2D( "cntrlvsxmym","accepted vs xmod, ymod;x track mod 50 [#mum];y track mod     50 [#mum];central pixel <charge> [ke]",
+                          50, 0, 100, 50, 0, 100, 0, 20 );
+  
+  // plots for noise studies
+  double avgdph[155][160] = {0}; // storage for dph average calculation
+  double rmsdph[155][160] = {0}; // storage for dph rms calcultation
+  double cntdph[155][160] = {0}; // storage for number of dph stored for average and rms
+  TProfile2D* pavgdph = new TProfile2D( "pavgdph", "Average pulse height if not hit;col;row;<ADC>",
+                      //155, 0, 155, 160, 0, 160, -2222, 2222 );
+                      77, 0, 154, 80, 0, 160, -2222, 2222 );
+  TProfile2D* prmsdph = new TProfile2D( "prmsdph", "RMS pulse height if not hit;col;row;<ADC>", 
+                      155, 0, 155, 160, 0, 160, -2222, 2222 );
+                      //77, 0, 154, 80, 0, 160, -2222, 2222 );
+  TProfile2D* pcntdph = new TProfile2D( "pcntdph", "N entries for avgdph and rmsdph;col;row;<ADC>", 
+                      //155, 0, 155, 160, 0, 160, -2222, 2222 );
+                      77, 0, 154, 80, 0, 160, -2222, 2222 );
+  
+  TH1I hrmsdph( "hrmsdph", "Dph RMS histogram ;ADC-PED [ADC];pixels", 500, -10, 90 );
+  TH1I hrmsdphEff1( "hrmsdphEff1", "Dph RMS histogram for efficient pixels;ADC-PED [ADC];pixels", 100, -10, 90 );
+  TH1I hrmsdphEff0( "hrmsdphEff0", "Dph RMS histogram for inefficient pixels;ADC-PED [ADC];pixels", 100, -10, 90 );
+  
+  TProfile rmsvseff( "rmsvseff",
+                     "Pixel DPH RMS vs Efficiency; DPH RMS; efficiency",
+                     100 , 0, 200, -1, 2 );
+  
+  // eta plots
+  TProfile2D* cntrletacol1 = new TProfile2D( "cntrletacol1","accepted eta col 1 vs xmod, ymod;x track mod 50 [#mum];y track mod 50 [#mum];central pixel <charge> [ke]",
+                                50, 0, 100, 50, 0, 100, 0, 20 );
+  TProfile2D* cntrletacol2 = new TProfile2D( "cntrletacol2","accepted eta col 2vs xmod, ymod;x track mod 50 [#mum];y track mod 50 [#mum];central pixel <charge> [ke]",
+                                50, 0, 100, 50, 0, 100, 0, 20 );
+  
+  // etacol pixel selection grid
+  int etacolPosx[6] = {-1,+0,+1,-1,+0,+1};
+  int etacolPosy[6] = {+0,+0,+0,+1,+1,+1};
+  // 0 1 2
+  // 3 4 5
+  
+  TH1I etaCol2( "etaCol2",
+                    "Two Pixel Eta in Columns; #eta;pixel",
+                    200, -0.5, 1.5 );
+  TH1I etaCol5( "etaCol5",
+                    "Five.5 Pixel Eta in Columns; #eta;pixel",
+                    200, -0.5, 1.5 );
+  TH1I etaCol6( "etaCol6",
+                    "Six Pixel Eta in Columns; #eta;pixel",
+                    200, -0.5, 1.5 );
+  TH1I dphEtaCol( "dphEtaCol", "Eta Col #DeltaPH;#DeltaPH [ADC];pixels", 1000, -100, 900 );
+  
+  TProfile2D* cntrletarow1 = new TProfile2D( "cntrletarow1","accepted eta row 1 vs xmod, ymod;x track mod 50 [#mum];y track mod 50 [#mum];central pixel <charge> [ke]",
+                                             50, 0, 100, 50, 0, 100, 0, 20 );
+  TProfile2D* cntrletarow2 = new TProfile2D( "cntrletarow2","accepted eta row 2vs xmod, ymod;x track mod 50 [#mum];y track mod 50 [#mum];central pixel <charge> [ke]",
+                                             50, 0, 100, 50, 0, 100, 0, 20 );
+  
+  // etarow pixel selection grid
+  int etarowPosx[6] = {+0,+0,+0,+1,+1,+1};
+  int etarowPosy[6] = {-1,+0,+1,-1,+0,+1};
+  // 0 3
+  // 1 4
+  // 2 5
+  
+  TH1I etaRow2( "etaRow2",
+                    "Two Pixel Eta in Rows; #eta;pixel",
+                    200, -0.5, 1.5 );
+  TH1I etaRow5( "etaRow5",
+                    "Five.5 Pixel Eta in Rows; #eta;pixel",
+                    200, -0.5, 1.5 );
+  TH1I etaRow6( "etaRow6",
+                    "Six Pixel Eta in Rows; #eta;pixel",
+                    200, -0.5, 1.5 );
+  TH1I dphEtaRow( "dphEtaRow", "Eta Row #DeltaPH;#DeltaPH [ADC];pixels", 1000, -100, 900 );
+  
+  TH1I dutq0allHisto( "dutq0all",
+                      "normal pixel charge;normal pixel charge [ke];pixel",
+                      500, -5.0, 45.0 ); // 10.75/222 = 0.048423 ==>> -100 -> -5 and 900 -> 45
+  
+  TH1I dutq0cutHisto( "dutq0cut",
+                      "normal pixel charge dph < 10;normal pixel charge [ke];pixel",
+                      500, -5.0, 45.0 );
+  
+  // #################################################################################  
+    
   TH1I dutpxq1stHisto( "dutpxq1st",
 		       "DUT pixel charge 1st;1st pixel charge [ke];1st pixels",
 		       100, 0, 25 );
@@ -1596,8 +1774,11 @@ int main( int argc, char * argv[] )
 		       "DUT pixel charge 2nd;2nd pixel charge [ke];2nd pixels",
 		       100, 0, 25 );
 
+  TProfile dutphvsprev( "dutphvsprev", "Tsunami;previous PH [ADC];<PH> [ADC]", 90, -100, 800, -999, 1999 );
+  TProfile dutdphvsprev( "dutdphvsprev", "Tsunami;previous #DeltaPH [ADC];<#DeltaPH> [ADC]", 90, -100, 300, -999, 1999 );
   TH1I dutphHisto( "dutph", "DUT PH;ADC-PED [ADC];pixels", 500, -100, 900 );
   TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 1000, -100, 900 );
+  TH1I dutdpiHisto( "dutdpi", "DUT -#DeltaPH;-#DeltaPH [ADC];pixels", 1000, -100, 900 );
   TProfile dutqvsdph( "dutqvsdph", "gain;#DeltaPH [ADC];q [ke]", 500, -100, 900, -11, 99 );
   TH1I dutpxqHisto( "dutpxq", "DUT pixel charge;pixel charge [ke];all ROI pixels", 100, -2, 8 );
 
@@ -2044,6 +2225,11 @@ int main( int argc, char * argv[] )
 			     "DUT vs Telescope y;track y [mm];DUT y [mm];track-cluster combinations",
 			     160, -4, 4, 160, -4, 4 );
 
+  TH1I cmsxHisto("cmsx", "DUT cluster x-position; x [mm]; clusters",
+                 168, -4.2, 4.2);
+  TH1I cmsyHisto("cmsy", "DUT cluster y-position; y [mm]; clusters",
+                 168, -4.2, 4.2);
+  
   TH1I cmsdxHisto( "cmsdx",
 		   "DUT - Telescope x;cluster - triplet #Deltax [mm];clusters",
 		   200, -0.5, 0.5 );
@@ -2539,6 +2725,11 @@ int main( int argc, char * argv[] )
     TProfile2D( "effvsxy",
 		"DUT efficiency vs x;x track at DUT [mm];y track at DUT [mm];efficiency",
 		90, -4.5, 4.5, 90, -4.5, 4.5, -1, 2 ); // bin = pix
+  TProfile2D * effvsxyf = new
+  TProfile2D( "effvsxyf",
+                "DUT efficiency vs x;x track at DUT [mm] (fine) ;y track at DUT [mm];efficiency",
+                160, 0, 160, 160, 0, 160, -1, 2 );
+  //            80, 0, 160, 80, 0, 160, -1, 2 ); // combine 4
   TProfile effvsx =
     TProfile( "effvsx",
 	      "DUT efficiency vs x;x track at DUT [mm];efficiency",
@@ -3202,6 +3393,7 @@ int main( int argc, char * argv[] )
 
 	pixel px { col, row, ph, ph, ph, ipx, 0 };
 	vpx.push_back(px);
+        dutadcAll.Fill( ph );
 	++ipx;
 
       } // roi px
@@ -3233,11 +3425,17 @@ int main( int argc, char * argv[] )
 	auto px7 = compx[col].end(); --px7; // last row
 
 	int row1 = px1->row;
-	int row7 = px7->row;
-	double ph1 = px1->ph;
+	//int row7 = px7->row;
+        int rowprv = row1;
+	
+        double ph1 = px1->ph;
 	double ph7 = px7->ph;
-
-	auto px4 = px1; ++px4;
+        double dphprev = 0;
+        double phprev = ph1;
+        double phprv = ph1;
+        
+	auto px4 = px1;
+        ++px4;
 
 	for( ; px4 != px7; ++px4 ) { // between 1 and 7, exclusively
 
@@ -3245,11 +3443,42 @@ int main( int argc, char * argv[] )
 	  int row4 = px4->row;
 	  double ph4 = px4->ph;
 
-	  double dph;
-	  if( row4 - row1 < row7 - row4 )
-	    dph = ph4 - ph1;
-	  else
-	    dph = ph4 - ph7;
+          // correction for x-talk -- switched OFF for nw
+          double cx = 0.; // x-talk correction factor
+          if( run == 32171 ) cx =  0.146; // c118 50x50  p-stop default -- gain = 2
+          if( run == 32197 ) cx =  0.076; // c108 100x25 p-stop default -- gain = 2
+          if( run == 32214 ) cx =  0.082; // c111 50x50  p-stop open    -- gain = 2
+          if( run == 32246 ) cx =  0.094; // c173 50x50  p-stop open    -- gain = 2
+          if( run == 32216 ) cx =  0.097; // c147 50x50  p-stop default -- gain = 2
+          if( run == 32268 ) cx =  0.040; // c118 50x50  p-stop default -- gain = 1
+          if( run == 32269 ) cx = -0.016; // c111 50x50  p-stop open    -- gain = 1
+          if( run == 32288 ) cx = -0.020; // c108 100x25 p-stop default -- gain = 1
+          
+          cx = 0.; // SWITCH
+          if ( row4 - rowprv == 1 )
+            ph4 = ph4 - cx * phprv;
+          phprv = ph4;
+          
+          // cross hairs -- this is manipulation to get missing columns
+          //if( col4 ==  20 || row4 ==  20 ||
+          //    col4 ==  21 || row4 ==  21 ||
+          //    col4 == 140 || row4 == 140 ||
+          //    col4 == 141 || row4 == 141
+          //  )
+          //ph4 = 0;s
+          
+          double dph;
+          // -> (take whats closer -- works fine but mean is better)
+          //if( row4 - row1 < row7 - row4 )
+          //  dph = ph4 - ph1;
+          //else
+          //  dph = ph4 - ph7;
+          
+          // -> (linear interpolation -- bad idea)
+          //dph = ph4 - ((ph7-ph1)/(row7-row1))*(row4-row1)+ph1;
+          
+          // -> (mean -- good idea )
+          dph = ph4 - ( ph1 + ph7 ) / 2;
 
           pixel px; // sensor px
           
@@ -3272,10 +3501,20 @@ int main( int argc, char * argv[] )
 	    cool = 0;
 	  }
 	  
+	  dutadcPix.Fill( px4->adc );
+	  
 	  if( cool ) {
             dutphHisto.Fill( ph4 );
+            dutphvsprev.Fill( phprev, ph4 );
+            dutdphvsprev.Fill( dphprev, dph );
             dutdphHisto.Fill( dph );
+            dutdpiHisto.Fill( -dph );
           }
+          
+          rowprv = px4->row;
+          phprev = ph4;
+          dphprev = dph;
+          
 
 	  // r4scal.C
 
@@ -3318,6 +3557,8 @@ int main( int argc, char * argv[] )
 
 	  colpx.insert(px); // sorted along col
 
+          dutq0allHisto.Fill( q * norm );
+          
 	  double dphcut = 12; // gain_1 2017  144 31376 cmsdy8cq 4.98
 	  //dphcut = 8; // 144 31376 cmsdy8cq 4.94
 	  //dphcut = 16; // 144 31376 cmsdy8cq 5.16
@@ -3376,6 +3617,7 @@ int main( int argc, char * argv[] )
 	    //if( q > 5.5 ) { // 31166 cmsdycq 11.3  eff 96.3
 	    //if( q > 6.0 ) { // 31166 cmsdycq 12.05  eff 93.5
             
+            dutq0cutHisto.Fill( q * norm );
             hmap[iDUT]->Fill( col4+0.5, row4+0.5 ); // chip coordinates
 
 	    if( cool ) {
@@ -4910,6 +5152,9 @@ int main( int argc, char * argv[] )
       double xmod5 = fmod( 9.000 + x4, 0.05 );
       double ymod5 = fmod( 9.000 + y4, 0.05 );
 
+      double xcol = (x4 + 3.85 ) / 0.05; 
+      double yrow = (y4 + 4.00 ) / 0.05;
+            
       double x8 = x4;
       double y8 = y4;
 
@@ -5220,6 +5465,11 @@ int main( int argc, char * argv[] )
 	  ptx = ptchy[iDUT];
 	  pty = ptchx[iDUT];
 	}
+	
+	vector<pixel> hitList; // storing hit pixels (flowing some hit criteria)
+	vector<vector<pixel>> coletaList;
+        vector<vector<pixel>> rowetaList;
+        bool etadb = false;
 
 	for( int col = 0; col < 155; ++col ) { // x
 
@@ -5227,6 +5477,383 @@ int main( int argc, char * argv[] )
 
 	  for( auto px = colpxmap[col].begin(); px != colpxmap[col].end(); ++px ) {
 
+            // 100 event dispalys
+            //if( iev < 501 ) 
+            //  evtdspls[iev-401]->Fill( px->col, px->row, px->adc );
+            
+            //-------------------------- #tsunamifinn - estimate tsunami correction --------------------------
+            //   coments
+            // find hit pixels
+            // later draw the neighbor pixels pulse hight as function of hit pixels pulse hight
+            // this is also helpfull to veto hit pixels for noise analysis
+            
+            pixel hitPix { px->col, px->row, px->adc, px->ph, px->q, px->ord, px->big };
+            pixel eptPix { -17, -17, 0, 0, 0, 0, 0}; // empty pixel for initialisation
+            
+            // using pixel pulse height to find hit pixels
+            // loose and tight comparable in all quantities
+            //if( px->adc > 100 ){ // tight threshold
+            //if( px->adc >  50 ){ // loose threshold
+            //if( px->ph  > 100 ){ // tight threshold
+            //if( px->ph  >  50 ){ // loose threshold
+            //if( px->q   > 3.0 ){ // tight threshold
+            //if( px->q   > 1.5 ){ // loose threshold
+            //  hitList.push_back( hitPix );
+            //  cntrlvsxmym->Fill( xmod * 1e3, ymod * 1e3, 7 );  
+            //}
+            
+            // using telescope pointing  to find hit pixels
+            double xpix = ( px->col + 1.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // mm
+            double ypix = ( px->row + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT];
+            if( rot90 ) {
+              xpix = ( px->row + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // -4..4 mm
+              ypix = ( px->col + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // -3.9..3.9 mm
+            }
+            double dx = xpix - x4;
+            double dy = ypix - y4;
+            
+            if ( fifty ) { // for 50x50
+              if( fabs( dx ) < 0.010 && fabs( dy ) < 0.010 ){ // nptm (new pointing tele medium)
+                
+                hitList.push_back( hitPix );
+                cntrlvsxmym->Fill( xmod * 1e3, ymod * 1e3, 7 );
+                posxdph.Fill( hitPix.ph );
+                
+              }
+            }
+            else { // for 25x100
+              if( fabs( dx ) < 0.0025 && fabs( dy ) < 0.040 ){ // nptm (pointing tele tight)
+                
+                hitList.push_back( hitPix );
+                cntrlvsxmym->Fill( xmod * 1e3, ymod * 1e3, 7 );
+                posxdph.Fill( hitPix.ph );
+                
+              }
+            }
+            //-------------------------- #tsunamifinn - estimate tsunami correction -------------------------- end
+            
+            //-------------------------- #etafinn - calculate "telescope eta" -----------------------------
+            //   coments
+            // usually we fix telescope coordinates and rotate the sensor.
+            // since i want to calculate eta for columns and rows, the senor needs to stay fixed
+            // and i have to rotate the telescope coordinates.
+            
+            // dutdx in column direction
+            // dutdy in row    direction
+            double coldx = dx;
+            double rowdx = dy;
+            if( rot90 ) {
+              coldx = dy;
+              rowdx = dx;
+            }
+            
+            // fill columns to coletaList ------------------------------------------------------
+            // hit one half 
+            if( fabs( coldx - 0.0 )           < ptchx[iDUT]/2 && // allows /pm half pitch
+                fabs( rowdx - ptchy[iDUT]/4 ) < ptchy[iDUT]/4    // allows lower half off the pixel 
+            ){
+              
+              cntrletacol1->Fill( xmod * 1e3, ymod * 1e3, 7 );
+              
+              vector<pixel> coleta;
+              coleta.push_back( eptPix );
+              coleta.push_back( eptPix );
+              coleta.push_back( eptPix );
+              coleta.push_back( eptPix );
+              coleta.push_back( hitPix ); // hit in the lower part, want to store pixels below
+              coleta.push_back( eptPix );
+              
+              coletaList.push_back( coleta );
+              
+              if( etadb )
+                cout << "found lower hitPix at col : row " << hitPix.col << " : " << hitPix.row << endl;
+              
+            }
+            
+            // hit the other half
+            if( fabs( coldx - 0.0 )           < ptchx[iDUT]/2 && // allows /pm half pitch
+                fabs( rowdx + ptchy[iDUT]/4 ) < ptchy[iDUT]/4    // allows higher half off the pixel
+            ){
+              
+              cntrletacol2->Fill( xmod * 1e3, ymod * 1e3, 7 );
+              
+              vector<pixel> coleta;
+              coleta.push_back( eptPix );
+              coleta.push_back( hitPix ); // hit in the upper part, want to store pixels above
+              coleta.push_back( eptPix );
+              coleta.push_back( eptPix );
+              coleta.push_back( eptPix );
+              coleta.push_back( eptPix );
+              
+              coletaList.push_back( coleta );
+              
+              if( etadb )
+                cout << "found upper hitPix at col : row " << hitPix.col << " : " << hitPix.row << endl;
+              
+            }
+            // fill columns to coletaList ------------------------------------------------------ end
+            
+            //fill rows to rowetaList ------------------------------------------------------
+            // hit one half
+            if( fabs( rowdx - 0.0 )           < ptchy[iDUT]/2 && // allows /pm half pitch
+                fabs( coldx - ptchx[iDUT]/4 ) < ptchx[iDUT]/4    // allows left half off the pixel
+            ){
+              
+              cntrletarow1->Fill( xmod * 1e3, ymod * 1e3, 7 );
+              
+              vector<pixel> roweta;
+              roweta.push_back( eptPix );
+              roweta.push_back( eptPix );
+              roweta.push_back( eptPix );
+              roweta.push_back( eptPix );
+              roweta.push_back( hitPix ); // hit on the left side, want to store pixels on the left
+              roweta.push_back( eptPix );
+              
+              rowetaList.push_back( roweta );
+              
+              if( etadb )
+                cout << "found left hitPix at evt col : row " << iev << " "
+                << hitPix.col << " : " << hitPix.row << endl;
+              
+            }
+            
+            // hit the other half
+            if( fabs( rowdx - 0.0 )           < ptchy[iDUT]/2 && // allows /pm half pitch
+                fabs( coldx + ptchx[iDUT]/4 ) < ptchx[iDUT]/4    // allows right half off the pixel
+            ){
+              
+              cntrletarow2->Fill( xmod * 1e3, ymod * 1e3, 7 );
+              
+              vector<pixel> roweta;
+              roweta.push_back( eptPix );
+              roweta.push_back( hitPix ); // hit on the right side, want to store pixels on the right
+              roweta.push_back( eptPix );
+              roweta.push_back( eptPix );
+              roweta.push_back( eptPix );
+              roweta.push_back( eptPix );
+              
+              rowetaList.push_back( roweta );
+              
+              if( etadb )
+                cout << "found right hitPix at evt col : row " << iev << " " 
+                << hitPix.col << " : " << hitPix.row << endl;
+              
+            }
+            //fill rows to rowetaList ------------------------------------------------------ end
+            //-------------------------- #etafinn - calculate "telescope eta" ----------------------------- end
+            
+          } //pixel
+        } // columns
+        
+        // for debugging
+        if( etadb ) {
+          // test: printout col and roweta
+          cout << "---------------------------------------" << endl;
+          cout << endl;
+          for( unsigned int ihl = 0; ihl < coletaList.size(); ihl++){ // coletaList
+            
+            vector<pixel> coleta = coletaList.at( ihl );
+            for( int i = 0; i < 6; i++ )
+              cout << "coletaList i:" << i 
+              << " col : row " << coleta.at(i).col << " : " << coleta.at(i).row << endl;
+          }
+          cout << endl;
+          for( unsigned int ihl = 0; ihl < rowetaList.size(); ihl++){ // rowetaList
+            
+            vector<pixel> roweta = rowetaList.at( ihl );
+            for( int i = 0; i < 6; i++ )
+              cout << "rowetaList i:" << i 
+              << " col : row " << roweta.at(i).col << " : " << roweta.at(i).row << endl;
+            
+          }
+          cout << endl;
+          cout << "---------------------------------------" << endl;
+        }
+        
+        for( int col = 0; col < 155; ++col ) { // columns
+          
+          if( colpxmap.count(col) < 1 ) continue; // empty
+          
+          for( auto px = colpxmap[col].begin(); px != colpxmap[col].end(); ++px ) {
+            
+            pixel thisPx { px->col, px->row, px->adc, px->ph, px->q, px->big };
+            
+            // distance to next hit column for common mode control plot -- initialize
+            double dHitCol = 500;
+            
+            // fill plots for tsunami analysis
+            for( unsigned int ihl = 0; ihl < hitList.size(); ihl++){ // hitList
+              pixel hitPix = hitList.at( ihl );
+              
+              // compare dph distribution for different positions 
+              // relative to hit pixel (-1 for c++ arrays)
+              if( px->col == ( hitPix.col + corPosx[2-1] ) && px->row == ( hitPix.row + corPosy[2-1] ) )
+                pos2dph.Fill( px->ph );
+              if( px->col == ( hitPix.col + corPosx[7-1] ) && px->row == ( hitPix.row + corPosy[7-1] ) )
+                pos7dph.Fill( px->ph );
+              
+              //-------------------------- #tsunamifinn - estimate tsunami correction --------------------------
+              // fill plots for tsunami analysis
+              
+              // 09 10 11 12 13
+              // 14  1  2  3 15
+              // 16  4  0  5 17
+              // 18  6  7  8 19
+              // 20 21 22 23 24
+              
+              // position condition
+              for( int i = 0; i < 24; i++ ){
+                if( px->col == ( hitPix.col + corPosx[i] ) && px->row == ( hitPix.row + corPosy[i] ) ){
+                  
+                  // fill graph and increment point counter
+                  //gphCor[i]->SetPoint( gphCorPtnr[i], hitPix.adc, px->adc );
+                  //gdphCor[i]->SetPoint( gdphCorPtnr[i], hitPix.ph, px->ph );
+                  //gq0Cor[i]->SetPoint( gq0CorPtnr[i], hitPix.q*norm, px->q*norm );
+                  
+                  //pphCor[i]. Fill( hitPix.adc, px->adc );
+                  //pq0Cor[i]. Fill( hitPix.q*norm, px->q*norm );
+                  pdphCor[i].Fill( hitPix.ph, px->ph );
+                  
+                  //++gphCorPtnr[i];
+                  //++gdphCorPtnr[i];
+                  //++gq0CorPtnr[i];
+                  
+                } // position conition
+              } // pixels for scatter plot
+              //-------------------------- #tsunamifinn - estimate tsunami correction -------------------------- end
+              
+              
+              // distance to next hit column for common mode control plot -- calculate
+              if( dHitCol > fabs( px->col - hitPix.col ) )
+                dHitCol = fabs( px->col - hitPix.col );
+              
+            } // hitList
+            
+            //-------------------------- #etafinn - calculate "telescope eta" -----------------------------
+            // get the other needed pixels for eta telescope calculation
+            
+            // #coleta #finn #eta
+            // 0 1 2
+            // 3 4 5
+            // etacol pixel selection grid
+            // etacolPosx[6] = {-1,+0,+1,-1,+0,+1};
+            // etacolPosy[6] = {+0,+0,+0,+1,+1,+1};
+            
+            for( unsigned int ihl = 0; ihl < coletaList.size(); ihl++){ // coletaList
+              
+              vector<pixel> coleta = coletaList.at( ihl );
+              
+              if( coleta.at(4).row != -17 && coleta.at(4).col != -17 ){ // if down
+                for( int i = 0; i < 6; i++ ){
+                  if( i == 4 ) continue;
+                  if( px->col == ( coleta.at(4).col + etacolPosx[i] ) && 
+                    px->row == ( coleta.at(4).row + etacolPosy[i] - 1 ) ){ 
+                    
+                    // fill the other 5 pixels in coletaList.at( ihl )
+                    coleta.at(i) = thisPx;
+                  
+                  if( etadb )  
+                    cout << "doloop " << iev << " -- " << i << " col : row " 
+                    << px->col << " : " << px->row << endl;
+                  
+                    } // position condition
+                } // pixels for col eta
+              } // if down
+              
+              if( coleta.at(1).row != -17 && coleta.at(1).col != -17 ){ // if up
+                for( int i = 0; i < 6; i++ ){
+                  if( i == 1 ) continue;
+                  if( px->col == ( coleta.at(1).col + etacolPosx[i] ) && 
+                    px->row == ( coleta.at(1).row + etacolPosy[i] - 0 ) ){
+                    
+                    // fill the other 5 pixels in coletaList.at( ihl )
+                    coleta.at(i) = thisPx;
+                  
+                  if( etadb )
+                    cout << "uploop " << iev << " -- " << i << " col : row " 
+                    << px->col << " : " << px->row << endl;
+                  
+                    } // position condition
+                } // pixels for col eta
+              } // if up
+              
+              // fill back the selected pixels
+              coletaList.at( ihl ) = coleta;
+              
+            } // coletaList
+            
+            // #roweta #finn #eta
+            // 0 3
+            // 1 4
+            // 2 5
+            // etarow pixel selection grid
+            // int etarowPosx[6] = {+0,+0,+0,+1,+1,+1};
+            // int etarowPosy[6] = {-1,+0,+1,-1,+0,+1};
+            
+            for( unsigned int ihl = 0; ihl < rowetaList.size(); ihl++){ // rowetaList
+              
+              vector <pixel> roweta = rowetaList.at( ihl );
+              
+              if( roweta.at(4).row != -17 && roweta.at(4).col != -17 ){
+                for( int i = 0; i < 6; i++ ){
+                  if( i == 4 ) continue;
+                  if( px->col == ( roweta.at(4).col + etarowPosx[i] - 1 ) && 
+                    px->row == ( roweta.at(4).row + etarowPosy[i] ) ){ 
+                    
+                    // fill the other 5 pixels in rowetaList.at( ihl )
+                    roweta.at(i) = thisPx;
+                  
+                  if( etadb )  
+                    cout << "left_loop " << iev << " -- " << i << " col : row " 
+                    << px->col << " : " << px->row << endl;
+                  
+                    } // position condition
+                } // pixels for col eta
+              } // if left
+              
+              if( roweta.at(1).row != -17 && roweta.at(1).col != -17 ){
+                for( int i = 0; i < 6; i++ ){
+                  if( i == 1 ) continue;
+                  if( px->col == ( roweta.at(1).col + etarowPosx[i] - 0 ) && 
+                    px->row == ( roweta.at(1).row + etarowPosy[i] ) ){
+                    
+                    // fill the other 5 pixels in rowetaList.at( ihl )
+                    roweta.at(i) = thisPx;
+                  
+                  if( etadb )
+                    cout << "rightloop " << iev << " -- " << i << " col : row " 
+                    << px->col << " : " << px->row << endl;
+                  
+                    } // position condition
+                } // pixels for row eta
+              } // if right
+              
+              // fill back the selected pixels
+              rowetaList.at( ihl ) = roweta;
+              
+            } // rowetaList
+            
+            dutcoldist.Fill( dHitCol );
+            //-------------------------- #etafinn - calculate "telescope eta" ----------------------------- end
+            
+            // fill plots for offline noise analysis
+            if( dHitCol > 0 ){ // one is to hard for loose selection
+              
+              // mask for noisy pixel (run 32171)
+              //if( 
+              //  px->col  >  10 && px->col  < 145 && // fiducial col
+              //  px->row  >  10 && px->row  < 150    // fiducial row
+              //){  
+              
+              dutdphCntrl.Fill( px->ph );
+              
+              avgdph[px->col][px->row] += px->ph;
+              rmsdph[px->col][px->row] += px->ph * px->ph;
+              cntdph[px->col][px->row] += 1;
+              
+              //}
+            }            
+          
 	    // match pixel and track:
 
 	    double xpix = ( px->col + 1.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // mm
@@ -5343,6 +5970,126 @@ int main( int argc, char * argv[] )
 	  } // colpx
 
 	} // cols
+	
+	//-------------------------- #etafinn - calculate "telescope eta" -----------------------------
+	// calculate eta and fill the plots
+	
+	// for debugging
+	if( etadb ) {
+          // test: printout col and roweta
+          cout << "---------------------------------------" << endl;
+          cout << endl;
+          for( unsigned int ihl = 0; ihl < coletaList.size(); ihl++){ // coletaList
+            
+            vector<pixel> coleta = coletaList.at( ihl );
+            for( int i = 0; i < 6; i++ )
+              cout << "coletaList i:" << i 
+              << " col : row " << coleta.at(i).col << " : " << coleta.at(i).row << endl;
+          }
+          cout << endl;
+          for( unsigned int ihl = 0; ihl < rowetaList.size(); ihl++){ // rowetaList
+            
+            vector<pixel> roweta = rowetaList.at( ihl );
+            for( int i = 0; i < 6; i++ )
+              cout << "rowetaList i:" << i 
+              << " col : row " << roweta.at(i).col << " : " << roweta.at(i).row << endl;
+            
+          }
+          cout << endl;
+          cout << "---------------------------------------" << endl;
+          cout << endl;
+          cout << endl;
+        }
+        
+        // calculate and fill
+        
+        for( unsigned int ihl = 0; ihl < coletaList.size(); ihl++){ // coletaList
+          
+          if( etadb )
+            cout << "this is coleta hit nr " << ihl << endl;
+          
+          vector<pixel> coleta = coletaList.at( ihl );
+          
+          bool allFill = true; // not always all needed pixels in roi
+          for(int i = 0; i < 6; i++){ // pixels in coleta
+            
+            if( etadb )
+              cout << "i | row : col | ph ---- " << i << " | " 
+              << coleta.at(i).row << " : " 
+              << coleta.at(i).col << " | " 
+              << coleta.at(i).ph  << endl; 
+            
+            if( coleta[i].row == -17 ) allFill = false; // 
+            
+          }
+          
+          // central only
+          double loval = coleta.at(1).ph;
+          double upval = coleta.at(4).ph;
+          etaCol2.Fill( ( upval ) / ( loval + upval ) );
+          
+          // add neighbours
+          loval += coleta.at(0).ph;
+          loval += coleta.at(2).ph;
+          upval += coleta.at(3).ph;
+          upval += coleta.at(5).ph;
+          etaCol5.Fill( ( upval ) / ( loval + upval ) );
+          
+          if( allFill )
+            etaCol6.Fill( ( upval ) / ( loval + upval ) );
+          
+          if( etadb )
+            cout << "loval, upval, eta -- " << loval << ", "
+            << upval << ", "
+            << ( upval ) / ( loval + upval ) << endl;
+          
+          dphEtaCol.Fill( loval + upval ); // charge control plot
+          
+        } // coletaList
+        
+        for( unsigned int ihl = 0; ihl < rowetaList.size(); ihl++){ // rowetaList
+          
+          if( etadb )
+            cout << "this is roweta hit nr " << ihl << endl;
+          
+          vector<pixel> roweta = rowetaList.at( ihl );
+          
+          bool allFill = true; // not always all needed pixels in roi
+          for(int i = 0; i < 6; i++){ // pixels in roweta
+            
+            if( etadb )
+              cout << "i | row : col | ph ---- " << i << " | " 
+              << roweta.at(i).row << " : " 
+              << roweta.at(i).col << " | " 
+              << roweta.at(i).ph  << endl; 
+            
+            if( roweta[i].row == -17 ) allFill = false; // 
+            
+          }
+          
+          // central only
+          double loval = roweta.at(1).ph;
+          double upval = roweta.at(4).ph;
+          etaRow2.Fill( ( upval ) / ( loval + upval ) );
+          
+          // add neighbours
+          loval += roweta.at(0).ph;
+          loval += roweta.at(2).ph;
+          upval += roweta.at(3).ph;
+          upval += roweta.at(5).ph;
+          etaRow5.Fill( ( upval ) / ( loval + upval ) );
+          
+          if( allFill )
+            etaRow6.Fill( ( upval ) / ( loval + upval ) );
+          
+          if( etadb )
+            cout << "loval, upval, eta -- " << loval << ", "
+            << upval << ", "
+            << ( upval ) / ( loval + upval ) << endl;
+          
+          dphEtaRow.Fill( loval + upval ); // charge control plot
+          
+        } // rowetaList
 
 	// for 25x10 on rot90:
 
@@ -5694,6 +6441,9 @@ int main( int argc, char * argv[] )
 	  cmsu = ( ceta + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // x from eta
 	  cmsv = ( cuta + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // y from uta
 	}
+	
+	cmsxHisto.Fill( cmsx ); // check positioning
+        cmsyHisto.Fill( cmsy );
 
 	// residuals for pre-alignment:
 
@@ -6097,7 +6847,8 @@ int main( int argc, char * argv[] )
 	    if( nm[49] ) sixxyeffHisto->Fill( xA, yA );
 
 	    effvsxy->Fill( x4, y4, nm[49] ); // map
-
+            effvsxyf->Fill( xcol, yrow, 1-nm[49] ); // map; now really in pixel size
+            
 	    if( y4 > fidy0 && y4 < fidy9 )
 	      effvsx.Fill( x4, nm[49] );
 
@@ -6236,53 +6987,83 @@ int main( int argc, char * argv[] )
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // hot pixels:
 
-    cout << endl << "DUT hot pixel list for run " << run << endl;
+  cout << endl << "DUT hot pixel list for run " << run << endl;
 
-    int hotcut = iev / 1024;
+  int hotcut = iev / 1024;
 
-    ofstream oDUThotFile( DUThotFileName.str() );
+  ofstream oDUThotFile( DUThotFileName.str() );
 
-    oDUThotFile << "# DUT hot pixel list for run " << run
-		<< " with " << iev << " events"
-		<< ", hot cut " << hotcut
-		<< endl;
+  oDUThotFile << "# DUT hot pixel list for run " << run
+              << " with " << iev << " events"
+              << ", hot cut " << hotcut
+              << endl;
 
-    multiset <cpixel> pxset;
+  multiset <cpixel> pxset;
 
-    cout << hmap[iDUT]->GetTitle() << endl;
-    cout << hmap[iDUT]->GetEntries() << endl;
-    cout << hmap[iDUT]->GetNbinsX() << endl;
-    cout << hmap[iDUT]->GetNbinsY() << endl << flush;
+  cout << hmap[iDUT]->GetTitle() << endl;
+  cout << hmap[iDUT]->GetEntries() << endl;
+  cout << hmap[iDUT]->GetNbinsX() << endl;
+  cout << hmap[iDUT]->GetNbinsY() << endl << flush;
 
-    for( int ii = 1; ii <= hmap[iDUT]->GetNbinsX(); ++ii )
+  for( int ii = 1; ii <= hmap[iDUT]->GetNbinsX(); ++ii )
 
-      for( int jj = 1; jj <= hmap[iDUT]->GetNbinsY(); ++jj ) {
+    for( int jj = 1; jj <= hmap[iDUT]->GetNbinsY(); ++jj ) {
 
-	//cout << ii << " " << jj << endl;
+      //cout << ii << " " << jj << endl;
         
-	int n = hmap[iDUT]->GetBinContent(ii,jj);
+      int n = hmap[iDUT]->GetBinContent(ii,jj);
 
-	if( n > hotcut ) {
-	  cpixel px{ ii-1, jj-1, n };
-	  pxset.insert(px); // sorted by descending cnt
-	}
+      if( n > hotcut ) {
+        cpixel px{ ii-1, jj-1, n };
+        pxset.insert(px); // sorted by descending cnt
       }
+  }
 
-    cout << "hot " << pxset.size() << endl;
+  cout << "hot " << pxset.size() << endl;
 
-    for( auto px = pxset.begin(); px != pxset.end(); ++px ) {
-      cout << setw(3) << px->col << ", "
-	   << setw(3) << px->row << ":  "
-	   << px->cnt << endl;
-      oDUThotFile << "pix "
-		 << setw(3) << px->col
-		 << setw(5) << px->row
-		 << "  " << px->cnt
-		 << endl;
+  for( auto px = pxset.begin(); px != pxset.end(); ++px ) {
+    cout << setw(3) << px->col << ", "
+         << setw(3) << px->row << ":  "
+         << px->cnt << endl;
+    oDUThotFile << "pix "
+              << setw(3) << px->col
+              << setw(5) << px->row
+              << "  " << px->cnt
+              << endl;
+  }
+  cout << "DUT hot pixel list written to " << DUThotFileName.str() << endl;
+
+  oDUThotFile.close();
+    
+  //for( int i = 0; i < 24; i++){ tgraphs not used now
+  //  gphCor[i]->Write();
+  //  gdphCor[i]->Write();
+  //  gq0Cor[i]->Write();
+  //}
+  
+  // finish noise efficiency analysis
+  for(int col = 0; col < 155; col++){
+    for(int row = 0; row < 160; row++){
+      pavgdph->Fill( col+0.5, row+0.5, avgdph[col][row] / cntdph[col][row] );
+      pcntdph->Fill( col+0.5, row+0.5, cntdph[col][row] );
+      
+      if( cntdph[col][row] > 5 ){ // want at least 5
+        prmsdph->Fill( col+0.5, row+0.5, sqrt( rmsdph[col][row] / cntdph[col][row] ) );
+        hrmsdph.Fill( sqrt( rmsdph[col][row] / cntdph[col][row] ) );
+      }
     }
-    cout << "DUT hot pixel list written to " << DUThotFileName.str() << endl;
-
-    oDUThotFile.close();
+  }
+  for(int col = 5; col < 155; col++){
+    for(int row = 5; row < 155; row++){
+      if( effvsxyf->GetBinContent( col, row ) < 0.01 ) { // effvsxyf is inverted efficiency
+        hrmsdphEff1.Fill( prmsdph->GetBinContent( col, row ) );
+      }
+      else {
+        hrmsdphEff0.Fill( prmsdph->GetBinContent( col, row ) );
+      }
+      rmsvseff.Fill( prmsdph->GetBinContent( col, row ) , 1 - effvsxyf->GetBinContent( col, row ) ); //re-invert
+    }
+  }  
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
@@ -6745,7 +7526,6 @@ int main( int argc, char * argv[] )
 
   // write new DUT alignment:
 
-  // i dont want to be asked
   //cout << "update DUT alignment file? (y/n)" << endl;
   //string ans{"y"};
   //string YES{"y"};
