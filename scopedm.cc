@@ -154,7 +154,7 @@ vector < cluster > getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
 
   // nothing left, return clusters
 
-  delete gone;
+  delete[] gone;
   return v;
 }
 
@@ -2264,6 +2264,10 @@ int main( int argc, char* argv[] )
 	  continue;
 	}
 
+	hcol[ipl].Fill( ix+0.5 );
+	hrow[ipl].Fill( iy+0.5 );
+	hmap[ipl]->Fill( ix+0.5, iy+0.5 );
+
 	double q = ph;
 
 	int xm = ix; // remember original
@@ -2307,10 +2311,6 @@ int main( int argc, char* argv[] )
 	  } // valid
 
 	} // MOD
-
-	hcol[ipl].Fill( ix+0.5 );
-	hrow[ipl].Fill( iy+0.5 );
-	hmap[ipl]->Fill( ix+0.5, iy+0.5 );
 
 	// fill pixel block
 

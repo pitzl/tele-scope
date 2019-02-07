@@ -703,6 +703,17 @@ int main( int argc, char * argv[] )
   if( chip0 == 179 ) rot90 = 1;
   if( chip0 == 193 ) rot90 = 1;
 
+  if( chip0 == 194 ) rot90 = 1; // 4E15 n
+  if( chip0 == 195 ) rot90 = 1; // 0.6E15 n
+  if( chip0 == 196 ) rot90 = 1; // 8E15 n
+
+  if( chip0 == 206 ) rot90 = 1; // p-spray max imp 8E15 n
+  if( chip0 == 210 ) rot90 = 1; // FDD 4E15 n
+  if( chip0 == 211 ) rot90 = 1; // FDD 0.6E15 n
+  if( chip0 == 216 ) rot90 = 1; // FDD 8E15 n
+
+  if( chip0 == 227 ) rot90 = 1;
+
   bool fifty = 0;
   if( chip0 == 102 ) fifty = 1;
   if( chip0 == 106 ) fifty = 1;
@@ -745,6 +756,21 @@ int main( int argc, char * argv[] )
   if( chip0 == 186 ) fifty = 1;
   if( chip0 == 187 ) fifty = 1;
   if( chip0 == 191 ) fifty = 1;
+
+  if( chip0 == 198 ) fifty = 1; // 8E15 n
+  if( chip0 == 199 ) fifty = 1; // 0.6E15 n
+  if( chip0 == 202 ) fifty = 1; // 4E15 n
+  if( chip0 == 203 ) fifty = 1; // 0.6E15 n
+  if( chip0 == 204 ) fifty = 1; // 8E15 n
+  if( chip0 == 212 ) fifty = 1; // FDD 4E15 n
+  if( chip0 == 214 ) fifty = 1; // FDD 0.6E15 n
+  if( chip0 == 215 ) fifty = 1; // FDD 8E15 n
+
+  if( chip0 == 225 ) fifty = 1;
+  if( chip0 == 226 ) fifty = 1;
+  if( chip0 == 229 ) fifty = 1;
+  if( chip0 == 230 ) fifty = 1;
+
   if( chip0 >= 300 ) fifty = 1; // 3D
 
   double upsignx =  1; // w.r.t. telescope
@@ -796,7 +822,8 @@ int main( int argc, char * argv[] )
   if( chip0 == 191 ) upsigny = -1; // Apr 2018
   if( chip0 == 193 ) upsigny = -1; // Apr 2018
 
-  if( ( chip0 == 174 || chip0 == 179 || chip0 == 193 || chip0 == 109 || chip0 == 115 || chip0 == 120 ) &&
+  if( ( chip0 == 174 || chip0 == 179 || chip0 == 193 || chip0 == 109 ||
+	chip0 == 115 || chip0 == 120 || chip0 == 108 ) &&
       run > 33500 ) { 
     upsignx = 1;
     upsigny = 1; // Sep 2018
@@ -1219,7 +1246,7 @@ int main( int argc, char * argv[] )
 
   rootFileName << "scopes" << run << ".root";
 
-  TFile* histoFile = new TFile( rootFileName.str(  ).c_str(  ), "RECREATE" );
+  TFile * histoFile = new TFile( rootFileName.str(  ).c_str(  ), "RECREATE" );
 
   // book histos:
 
@@ -1508,11 +1535,6 @@ int main( int argc, char * argv[] )
 			    11, -0.5, 10.5 );
 
   // DUT:
-  /*
-  TH1I dutphHisto( "dutph",
-		   "DUT pixel PH;pixel pulse height [ADC];DUT pixels",
-		   200, -100, 900 );
-  */
 
   TH1I dutaHisto( "duta", "DUT ADC for Vcal 300 mV;pulse height [ADC];pixels", 300, 0, 600 );
 
@@ -1531,8 +1553,13 @@ int main( int argc, char * argv[] )
 		       "DUT pixel charge 2nd;2nd pixel charge [ke];2nd pixels",
 		       100, 0, 25 );
 
-  TH1I dutphHisto( "dutph", "DUT PH;ADC-PED [ADC];pixels", 500, -100, 900 );
-  TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
+  TProfile dutphvsprev( "dutphvsprev", "Tsunami;previous PH [ADC];<PH> [ADC]", 120, -100, 500, -999, 1999 );
+  TProfile dutdphvsprev( "dutdphvsprev", "Tsunami;previous #DeltaPH [ADC];<#DeltaPH> [ADC]", 120, -100, 500, -999, 1999 );
+  TH1I dutphHisto( "dutph", "DUT PH;ADC-PED [ADC];pixels", 1000, -200, 800 );
+  TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 1000, -200, 800 );
+  TH1I dutdpiHisto( "dutdpi", "DUT -#DeltaPH;-#DeltaPH [ADC];pixels", 1000, -200, 800 );
+  TH1I dutdp2Histo( "dutdp2", "DUT #DeltaPH_{2};#DeltaPH_{2} [ADC];pixels", 1000, -200, 800 );
+
   TProfile dutqvsdph( "dutqvsdph", "gain;#DeltaPH [ADC];q [ke]", 500, -100, 900, -11, 99 );
   TH1I dutpxqHisto( "dutpxq", "DUT pixel charge;pixel charge [ke];all ROI pixels", 100, -2, 8 );
 
@@ -1882,6 +1909,20 @@ int main( int argc, char * argv[] )
 
   TH1I dutgHisto( "dutg", "DUT gain;1/gain [mv/ADC];pixels", 200, 0, 2 );
 
+  TProfile roipvsdx( "roipvsdx",
+		     "pixel charge vs x distance;x distance from track [#mum];<pixel PH> [ADC]",
+		     100, -100, 100 );
+  TProfile roipvsdy( "roipvsdy",
+		     "pixel charge vs y distance;y distance from track [#mum];<pixel PH> [ADC]",
+		     100, -100, 100 );
+  TProfile roipvsd( "roipvsd",
+		    "pixel charge vs distance;distance from track [mm];<pixel PH> [ADC]",
+		    200, 0, 200 );
+  TProfile2D * roipvsdxdy = new
+    TProfile2D( "roipvsdxdy",
+		"pixel charge vs distance;#Deltax from track [#mum];#Deltay from track [#mum];<pixel PH> [ADC]",
+		100, -100, 100, 100, -100, 100 );
+
   TProfile roiqvsdph( "roiqvsdph", "gain;#DeltaPH [ADC];q [ke]", 500, -100, 900, -11, 99 );
 
   TH1I roiq1Histo( "roiq1",
@@ -1904,18 +1945,18 @@ int main( int argc, char * argv[] )
   TProfile roiq3vsq0( "roiq3vsq0", "tsunami up;q_{mid} [ke];<q_{up}> [ke]", 25, 0, 25, -99, 99 );
   TProfile roiq4vsq0( "roiq4vsq0", "tsunami down;q_{mid} [ke];<q_{down}> [ke]", 25, 0, 25, -99, 99 );
 
-  TH1I roiphHisto( "roiph", "ROI charge;ROI charge [ADC];fiducial ROI", 100, -200, 800 );
+  TH1I roiphHisto( "roiph", "ROI PH;ROI PH [ADC];fiducial ROI", 100, -200, 800 );
   TH1I roip0Histo( "roip0",
-		   "central pixel charge;central pixel charge [ADC];fiducial ROI", 100, -200, 800 );
+		   "central pixel PH;central pixel PH [ADC];fiducial ROI", 100, -200, 800 );
   TH1I roippHisto( "roipp",
-		   "central + 2nd pixel charge;central + 2nd pixel charge [ADC];fiducial ROI",
+		   "central + 2nd pixel PH;central + 2nd pixel PH [ADC];fiducial ROI",
 		   100, -200, 800 );
   TH1I roipcHisto( "roipc",
-		   "ROI cluster charge;ROI cluster charge [ADC];fiducial ROI", 100, -200, 800 );
+		   "ROI cluster PH;ROI cluster PH [ADC];fiducial ROI", 100, -200, 800 );
   TH1I roipAHisto( "roipA",
- 		   "1st ring charge;1st ring charge [ADC];fiducial ROI", 100, -200, 800 );
+ 		   "1st ring PH;1st ring PH [ADC];fiducial ROI", 100, -200, 800 );
   TH1I roipBHisto( "roipB",
-		   "2nd ring charge;2nd ring charge [ADC];fiducial ROI", 100, -200, 800 );
+		   "2nd ring PH;2nd ring PH [ADC];fiducial ROI", 100, -200, 800 );
 
   TH1I roiqHisto( "roiq", "ROI charge;ROI charge [ke];fiducial ROI", 180, -5, 40 );
   TH1I roiq0Histo( "roiq0",
@@ -1994,13 +2035,6 @@ int main( int argc, char * argv[] )
     TProfile( "cmsdxvsev",
 	      "DUT #Deltax vs time;time [events];<#Deltax> [mm]",
 	      1400, 0, 14000*1000, -0.2, 0.2 );
-
-  TH2I * cmsdxvsev1 = new TH2I( "cmsdxvsev1",
-				"DUT - Telescope x;event;#Deltax [mm]",
-				100, 0, 50000, 100, -5, 5 );
-  TH2I * cmsdxvsev2 = new TH2I( "cmsdxvsev2",
-				"DUT - Telescope x;event;#Deltax [mm]",
-				1000, 0, 1000*1000, 50, -5, 5 );
 
   TH1I cmsdxcHisto( "cmsdxc",
 		    "DUT - Telescope x, cut dy;cluster - triplet #Deltax [mm];clusters",
@@ -2407,18 +2441,28 @@ int main( int argc, char * argv[] )
 				  76, -3.8, 3.8, 76, -3.8, 3.8, 0, qxmax );
 
   TProfile cmspxvsx( "cmspxvsx",
-		     "DUT cluster charge vs x;x track [mm];<cluster charge> [ADC]",
+		     "DUT cluster PH vs x;x track [mm];<cluster PH> [ADC]",
 		     76, -3.8, 3.8, 0, pxmax ); // cutoff at 5 ke
   TProfile cmspxvsy( "cmspxvsy",
-		     "DUT cluster charge vs y;y track [mm];<cluster charge> [ADC]",
+		     "DUT cluster PH vs y;y track [mm];<cluster PH> [ADC]",
 		     76, -3.8, 3.8, 0, pxmax );
   TProfile cmspxvsr( "cmspxvsr",
-		     "DUT cluster charge vs beam;beam distance [mm];<cluster charge> [ADC]",
+		     "DUT cluster PH vs beam;beam distance [mm];<cluster PH> [ADC]",
 		     80, 0, 8, 0, pxmax );
   TProfile2D * cmspxvsxy = new
 		      TProfile2D( "cmspxvsxy",
-				  "DUT cluster charge vs xy;x track [mm];y track [mm];<cluster charge> [ADC]",
+				  "DUT cluster PH vs xy;x track [mm];y track [mm];<cluster PH> [ADC]",
 				  76, -3.8, 3.8, 76, -3.8, 3.8, 0, pxmax );
+  TProfile cmspxvsxm( "cmspxvsxm",
+		      "DUT cluster PH vs xmod;x track mod 100 [#mum];<cluster PH> [ke]",
+		      100, 0, 100, 0, pxmax );
+  TProfile cmspxvsym( "cmspxvsym",
+		      "DUT cluster PH vs ymod;y track mod 100 [#mum];<cluster PH> [ke]",
+		      100, 0, 100, 0, pxmax );
+  TProfile2D * cmspxvsxmym = new
+    TProfile2D( "cmspxvsxmym",
+	      "DUT cluster PH vs xmod ymod;x track mod 100 [#mum];y track mod 100 [#mum];<cluster PH> [ke]",
+		50, 0, 100, 50, 0, 100, 0, pxmax );
 
   TProfile cmsqxvsxm( "cmsqxvsxm",
 		      "DUT cluster charge vs xmod;x track mod 100 [#mum];<cluster charge> [ke]",
@@ -3158,7 +3202,10 @@ int main( int argc, char * argv[] )
 	double ph1 = px1->ph;
 	double ph7 = px7->ph;
 
-	auto px4 = px1; ++px4;
+	auto px4 = px1;
+	double phprev = px4->ph;
+	double dphprev = 0;
+	++px4;
 
 	for( ; px4 != px7; ++px4 ) { // between 1 and 7, exclusively
 
@@ -3166,14 +3213,28 @@ int main( int argc, char * argv[] )
 	  int row4 = px4->row;
 	  double ph4 = px4->ph;
 
+	  if( chip0 == -198 )
+	    ph4 -= 0.13*phprev; // Tsunami, worse resolution
+
+	  dutphHisto.Fill( ph4 );
+	  dutphvsprev.Fill( phprev, ph4 ); // Tsunami
+
 	  double dph;
 	  if( row4 - row1 < row7 - row4 )
 	    dph = ph4 - ph1;
 	  else
 	    dph = ph4 - ph7;
 
-	  dutphHisto.Fill( ph4 );
-	  dutdphHisto.Fill( dph ); // sig 2.7
+	  dutdphHisto.Fill( dph );
+	  dutdpiHisto.Fill( -dph );
+
+	  dph = ph4 - 0.5*(ph1+ph7); // 20.11.2018 less noise
+
+	  dutdp2Histo.Fill( dph );
+	  dutdphvsprev.Fill( dphprev, dph );
+
+	  phprev = ph4;
+	  dphprev = dph;
 
 	  // r4scal.C
 
@@ -3241,6 +3302,7 @@ int main( int argc, char * argv[] )
 	  if( run >= 32267 && run <= 32273 ) dphcut = 12; // gain_1
 	  if( run >= 32277 ) dphcut = 12; // gain_1 2018
 	  if( run == 32301 ) dphcut = 24; // gain_2 20 MHz
+
 	  if( run >= 33511 ) dphcut = 16; // irrad Sep 2018
 
 	  if( chip0 == 118 && run <= 32266 ) dphcut = 20; // gain_2
@@ -3262,6 +3324,7 @@ int main( int argc, char * argv[] )
 	  if( chip0 == 134 ) dphcut = 40; // irrad, gain_2 rms 13
 	  if( chip0 == 137 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 156 ) dphcut = 16; // gain_1 
+	  if( chip0 == 198 ) dphcut = 20; // irrad, gain_1
 	  if( chip0 > 300 ) dphcut = 20; // irradiated 3D is noisy
 
 	  if( dph > dphcut ) {
@@ -4007,6 +4070,36 @@ int main( int argc, char * argv[] )
 
     }
 
+    if( run == 33738 ) { // cmsdxvsev->Fit("pol9")
+
+      double p0 =  0.000749201;
+      double p1 = -4.38877e-09;
+      double p2 =  6.20815e-15;
+      double p3 = -6.32697e-21;
+      double p4 =  3.77479e-27;
+      double p5 = -1.32841e-33;
+      double p6 =  2.82111e-40;
+      double p7 = -3.55561e-47;
+      double p8 =  2.44473e-54;
+      double p9 = -7.04834e-62;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =  0.000196486;
+      p1 = -1.21685e-09;
+      p2 = -2.07655e-16;
+      p3 =  3.15971e-21;
+      p4 = -3.04501e-27;
+      p5 =  1.26438e-33;
+      p6 = -2.79942e-40;
+      p7 =  3.46139e-47;
+      p8 = -2.26162e-54;
+      p9 =  6.09649e-62;
+
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
     if( run == 33758 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
 
       double p0 = -0.000593637;
@@ -4033,6 +4126,35 @@ int main( int argc, char * argv[] )
       p8 = -2.55974e-56;
       p9 =  4.46725e-64;
   
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 33812 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =  0.000337515;
+      double p1 =  9.06965e-09;
+      double p2 = -1.00617e-14;
+      double p3 =  5.24149e-21;
+      double p4 = -1.32997e-27;
+      double p5 =  1.22038e-34;
+      double p6 =  1.44433e-41;
+      double p7 = -4.53914e-48;
+      double p8 =  4.03895e-55;
+      double p9 = -1.26881e-62;
+
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =    0.0019927;
+      p1 = -5.83539e-09;
+      p2 =  6.52648e-15;
+      p3 = -3.49112e-21;
+      p4 =  8.77934e-28;
+      p5 = -8.37084e-35;
+      p6 = -5.60188e-42;
+      p7 =  1.97512e-48;
+      p8 = -1.62536e-55;
+      p9 =  4.58936e-63;
       DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
 
     }
@@ -4095,6 +4217,34 @@ int main( int argc, char * argv[] )
 
     }
 
+    if( run == 34273 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 = -0.000208681;
+      double p1 =  3.60131e-09;
+      double p2 = -1.12164e-14;
+      double p3 =  1.91969e-20;
+      double p4 = -1.71567e-26;
+      double p5 =  8.66582e-33;
+      double p6 = -2.56181e-39;
+      double p7 =  4.38744e-46;
+      double p8 = -4.02822e-53;
+      double p9 =  1.53309e-60;
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 = -0.000103573;
+      p1 = -7.41915e-09;
+      p2 =  1.26307e-14;
+      p3 =  -1.3765e-20;
+      p4 =  9.50192e-27;
+      p5 = -4.17411e-33;
+      p6 =   1.1504e-39;
+      p7 = -1.91461e-46;
+      p8 =  1.75279e-53;
+      p9 = -6.76228e-61;
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
     if( run == 34328 ) { // cmsdxvsev->Fit("pol3")
 
       double p0 =   0.00014384;
@@ -4120,6 +4270,62 @@ int main( int argc, char * argv[] )
       p2 =  6.00303e-15;
       p3 = -1.07828e-21;
       DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + p3 * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 34411 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 = -0.000332046;
+      double p1 =  4.93466e-09;
+      double p2 = -1.37443e-14;
+      double p3 =  2.12207e-20;
+      double p4 = -1.65677e-26;
+      double p5 =   7.1956e-33;
+      double p6 = -1.82898e-39;
+      double p7 =  2.71207e-46;
+      double p8 = -2.17614e-53;
+      double p9 =   7.3087e-61;
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =  0.000863566;
+      p1 = -6.13325e-09;
+      p2 =   1.3975e-15;
+      p3 =  3.77283e-21;
+      p4 = -4.27482e-27;
+      p5 =  2.12757e-33;
+      p6 = -5.89929e-40;
+      p7 =  9.36656e-47;
+      p8 = -7.94696e-54;
+      p9 =  2.79129e-61;
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+    }
+
+    if( run == 34475 ) { // cmsdxvsev->Fit("pol9","","",0,1.54e6)
+
+      double p0 =  -0.00478745;
+      double p1 =  4.37673e-08;
+      double p2 = -7.17473e-14;
+      double p3 =  6.90465e-20;
+      double p4 = -3.87279e-26;
+      double p5 =  1.30764e-32;
+      double p6 = -2.69044e-39;
+      double p7 =   3.2967e-46;
+      double p8 = -2.20857e-53;
+      double p9 =  6.22251e-61;
+      DUTalignx = DUTalignx0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
+
+      p0 =  -0.00237661;
+      p1 =  1.88489e-08;
+      p2 = -2.55386e-14;
+      p3 =  1.92608e-20;
+      p4 = -8.18558e-27;
+      p5 =  2.09544e-33;
+      p6 = -3.35318e-40;
+      p7 =  3.33901e-47;
+      p8 = -1.92225e-54;
+      p9 =  4.93975e-62;
+      DUTaligny = DUTaligny0 + p0 + ( p1 + ( p2 + ( p3 + ( p4 + ( p5 + ( p6 + ( p7 + ( p8 + p9 * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev ) * iev;
 
     }
 
@@ -4950,92 +5156,7 @@ int main( int argc, char * argv[] )
 	  x8 = upsignx*x7 + DUTalignx; // shift to mid
 	  y8 = upsigny*y7 + DUTaligny;
 
-	  if( chip0 == 102 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 123 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 126 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 128 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 133 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 134 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 152 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 158 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 159 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 160 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 166 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 172 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 173 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 175 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 176 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 191 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 == 192 ) { // straight, no Cu behind DUT
-	    x4 = x8; // sixplet interpol
-	    y4 = y8;
-	  }
-
-	  if( chip0 >= 300 ) { // straight, no Cu behind DUT
+	  if( ! rot90 ) { // straight, no Cu behind DUT
 	    x4 = x8; // sixplet interpol
 	    y4 = y8;
 	  }
@@ -5164,6 +5285,20 @@ int main( int argc, char * argv[] )
 	    double ph = px->ph;
 	    //double q = ke * ph * g;
 	    double q = px->q;
+
+	    roipvsd.Fill( dd*1E3, ph );
+
+	    if( !rot90 && fabs(dy) < 0.5*ptchy[iDUT] )
+	      roipvsdx.Fill( dx*1E3, ph );
+	    else if( rot90 && fabs(dy) < 0.5*ptchx[iDUT] )
+	      roipvsdx.Fill( dx*1E3, ph );
+
+	    if( !rot90 && fabs(dx) < 0.5*ptchx[iDUT] )
+	      roipvsdy.Fill( dy*1E3, ph );
+	    else if( rot90 && fabs(dx) < 0.5*ptchy[iDUT] )
+	      roipvsdy.Fill( dy*1E3, ph );
+
+	    roipvsdxdy->Fill( dx*1E3, dy*1E3, ph );
 
 	    if( ring < 3 ) {
 	      qset.insert( -q); // negative, sort increasing
@@ -5562,9 +5697,16 @@ int main( int argc, char * argv[] )
 	}
 
 	if( run >= 33500 && // Sep 2018
-	    ( chip0 == 174 || chip0 == 179 || chip0 == 193 || chip0 == 109 || chip0 == 155 || chip0 == 115 ) ) {
+	    ( chip0 == 174 || chip0 == 179 || chip0 == 193 ||
+	      chip0 == 109 || chip0 == 155 || chip0 == 115 ) ) {
 	  lq = 1;
 	  if( ( Q0 < 3 || Q0 > 10 ) ) lq = 0;
+	}
+
+	if( run >= 34475 && // Nov 2018
+	    chip0 == 198 ) {
+	  lq = 1;
+	  if( ( Q0 < 4 || Q0 > 10 ) ) lq = 0;
 	}
 
 	if( chip0 >= 300 ) { // 3D
@@ -5650,8 +5792,6 @@ int main( int argc, char * argv[] )
 
 	    cmsdxciHisto.Fill( cmsdx ); // align: same sign
 	    cmsdxvsev.Fill( iev, cmsdx ); // align stability
-	    cmsdxvsev1->Fill( iev, cmsdx ); // sync stability
-	    cmsdxvsev2->Fill( iev, cmsdx ); // sync stability
 	    cmsdxvst5.Fill( evsec, cmsdx ); // trend?
 
 	    if( lq ) {
@@ -5906,17 +6046,20 @@ int main( int argc, char * argv[] )
 	      cmslqndriHisto.Fill( driplets.size() );
 	    }
 
+	    cmspxvsx.Fill( x4, Px );
+	    cmspxvsy.Fill( y4, Px );
+	    cmspxvsr.Fill( drbeam, Px );
+	    cmspxvsxy->Fill( x4, y4, Px );
+	    cmspxvsxm.Fill( xmod*1E3, Px );
+	    cmspxvsym.Fill( ymod*1E3, Px );
+	    cmspxvsxmym->Fill( xmod*1E3, ymod*1E3, Px );
+
 	    // cluster charge profiles, exponential weighting Qx:
 
 	    cmsqxvsx.Fill( x4, Qx );
 	    cmsqxvsy.Fill( y4, Qx );
 	    cmsqxvsr.Fill( drbeam, Qx );
 	    cmsqxvsxy->Fill( x4, y4, Qx );
-
-	    cmspxvsx.Fill( x4, Px );
-	    cmspxvsy.Fill( y4, Px );
-	    cmspxvsr.Fill( drbeam, Px );
-	    cmspxvsxy->Fill( x4, y4, Px );
 
 	    cmsqxvsxm.Fill( xmod*1E3, Qx ); // Q within pixel, depends on ph cut
 	    cmsqxvsym.Fill( ymod*1E3, Qx ); // Q within pixel
@@ -6127,7 +6270,7 @@ int main( int argc, char * argv[] )
        << endl;
 
   histoFile->Write();
-  histoFile->Close();
+  //histoFile->Close();
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // MOD alignment:
@@ -6350,7 +6493,7 @@ int main( int argc, char * argv[] )
   double newDUTalignx = DUTalignx0;
   double newDUTaligny = DUTaligny0;
 
-  if( cmsdxaHisto.GetEntries() > 999 ) {
+  if( cmsdxaHisto.GetEntries() > 4999 ) {
 
     if( cmsdxaHisto.GetMaximum() > cmssxaHisto.GetMaximum() ) {
       cout << endl << cmsdxaHisto.GetTitle()
@@ -6441,7 +6584,7 @@ int main( int argc, char * argv[] )
   // finer alignment:
 
   if( DUTaligniteration > 0 && fabs( newDUTalignx - DUTalignx0 ) < 0.1 &&
-      cmsdxcHisto.GetEntries() > 999 ) {
+      cmsdxcHisto.GetEntries() > 4999 ) {
 
     cout << endl << cmsdxcHisto.GetTitle()
 	 << " bin " << cmsdxcHisto.GetBinWidth(1)
@@ -6463,7 +6606,7 @@ int main( int argc, char * argv[] )
 
     // dxvsy -> -rot for 25x100 on rot90:
 
-    if( cmsdxvsy.GetEntries() > 999 && !fifty && rot90 ) {
+    if( cmsdxvsy.GetEntries() > 4999 && !fifty && rot90 ) {
       cmsdxvsy.Fit( "pol1", "q", "", -midy[iDUT]+0.2, midy[iDUT]-0.2 );
       TF1 * fdxvsy = cmsdxvsy.GetFunction( "pol1" );
       cout << endl << cmsdxvsy.GetTitle();
@@ -6533,9 +6676,9 @@ int main( int argc, char * argv[] )
       cmsdyvsx.Fit( "pol1", "q", "", -midx[iDUT]+0.2, midx[iDUT]-0.2 );
       TF1 * fdyvsx = cmsdyvsx.GetFunction( "pol1" );
       cout << endl << cmsdyvsx.GetTitle();
-      cout << ": extra rot " << -upsigny*fdyvsx->GetParameter(1);
+      cout << ": extra rot " << upsigny*upsignx*fdyvsx->GetParameter(1);
       cout << endl;
-      DUTrot -= upsigny*fdyvsx->GetParameter(1);
+      DUTrot -= upsigny*upsignx*fdyvsx->GetParameter(1);
       delete fdyvsx;
     }
 

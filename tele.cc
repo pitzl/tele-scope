@@ -155,7 +155,7 @@ vector<cluster> getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
 
   } // while over seeds
 
-  delete gone;
+  delete [] gone;
 
   return vc; // vector of clusters
 }
@@ -215,15 +215,15 @@ int main( int argc, char* argv[] )
   cout << "run " << run << endl;
   FileReader * reader;
   if( run < 100 )
-    reader = new FileReader( runnum.c_str(), "data/run0000$2R$X");
+    reader = new FileReader( runnum.c_str(), "data/run0000$2R$X" );
   else if( run < 1000 )
-    reader = new FileReader( runnum.c_str(), "data/run000$3R$X");
+    reader = new FileReader( runnum.c_str(), "data/run000$3R$X" );
   else if( run < 10000 )
-    reader = new FileReader( runnum.c_str(), "data/run00$4R$X");
+    reader = new FileReader( runnum.c_str(), "data/run00$4R$X" );
   else if( run < 100000 )
-    reader = new FileReader( runnum.c_str(), "data/run0$5R$X");
+    reader = new FileReader( runnum.c_str(), "data/run0$5R$X" );
   else
-    reader = new FileReader( runnum.c_str(), "data/run$6R$X");
+    reader = new FileReader( runnum.c_str(), "data/run$6R$X" );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // further arguments:
@@ -370,7 +370,7 @@ int main( int argc, char* argv[] )
 
   // for profile plots:
   //double drng = 0.1*f; // narrow spacing
-  double drng = 0.2*f; // wide spacing
+  double drng = 0.2*f; // [mm] wide spacing
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // hot pixels:
@@ -1463,6 +1463,13 @@ int main( int argc, char* argv[] )
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // cluster pair correlations:
 
+      double dxcut = 1; // [mm] Feb 2019
+      double dycut = 1;
+      if( aligniteration ) {
+	dxcut = 0.3;
+	dycut = 0.3;
+      }
+
       for( int itd = 0; itd < 2; ++itd ) { // triplets 0-1-2 and driplets 3-4-5
 
 	int im = 1; // mid plane triplet
@@ -1498,10 +1505,14 @@ int main( int argc, char* argv[] )
 
 	      double dx = xB - xA;
 	      double dy = yB - yA;
-	      hdx[ipl].Fill( dx );
-	      hdy[ipl].Fill( dy );
-	      dxvsy[ipl].Fill( yB, dx );
-	      dyvsx[ipl].Fill( xB, dy );
+	      if( fabs(dx) < dxcut ) { // Feb 2019
+		hdy[ipl].Fill( dy );
+		dyvsx[ipl].Fill( xB, dy );
+	      }
+	      if( fabs(dy) < dycut ) {
+		hdx[ipl].Fill( dx );
+		dxvsy[ipl].Fill( yB, dx );
+	      }
 
 	    } // clusters
 
