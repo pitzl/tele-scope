@@ -119,7 +119,7 @@ run 15430  Trim 36  719  62  68
 gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim40-gaincal.dat
 run 15436  Trim 40 + 502  61  68  eff 99.854 sy 8.41
 
-# trim 36, gate delay scan with stable conditions:
+# trim 36  gate delay scan with stable conditions:
 
 gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim36-gaincal.dat
 
@@ -150,9 +150,9 @@ run 15467  779  62  68  eff 99.806  sy 7.12
 
 #-------------------------------------------------------------------------------
 # Sat 11.4.2015: chip 239i
-# IA27, Vdig 6, trim 40
+# IA27  Vdig 6  trim 40
 # same GEAR 04g: 0  152  305  DUT  503  655  807  REF
-# set tilt -21 (forward /), get 18.4
+# set tilt -21 (forward /)  get 18.4
 # chiller -20
 chip 239
 gain /home/pitzl/psi/dtb/tst400/c239-ia27-vd6-cold-trim40-gaincal.dat
@@ -168,10 +168,10 @@ run 15710
 #-------------------------------------------------------------------------------
 # Mon 27.4.2015 chip 504 tilt 19
 # REF 404
-# chip 504, trim 27  tilt 19.6  ia 24 mA  bias 200  chiller 15  no box
+# chip 504  trim 27  tilt 19.6  ia 24 mA  bias 200  chiller 15  no box
 # minimal gate length: 4.2 ns
 # gear_desy2015_04x: 764  612  458  305  153  0
-# distance 49 mm, 5.6 GeV, 150 mm telescope spacing: ex151-49 = 4.83 um
+# distance 49 mm  5.6 GeV  150 mm telescope spacing: ex151-49 = 4.83 um
 # Mimosa threshold 5
 # DUT clock: extra delay 6 ns (in hall) to  sync with REF
 
@@ -181,7 +181,7 @@ geo geo_2015_04x.dat
 
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim27-gaincal.dat
 
-run 19037  delay 20   100  59  66  eff 99.5   sy 7.04  .x fittp0.C("cmsdyfcq4nod",-0.022,0.022
+run 19037  delay 20   100  59  66  eff 99.5   sy 7.04  .x fittp0.C("cmsdyfcq4nod" -0.022 0.022
 run 19038             312  59  66  eff 99.4   sy      7.35
 run 19042  delay 16   101  59  67  eff 99.7   sy 7.15 7.33
 run 19043  delay 16   262  59  67  eff 99.74  sy      7.40 7.23
@@ -207,7 +207,7 @@ run 19068             795  60  68  eff 99.79  sy      7.32
 run 19069             804  60  68  eff 99.75  sy      7.30
 run 19070             13000      RunControl crashed just after midnight
 
-# Tue 28.4.2015, contimue 504
+# Tue 28.4.2015  contimue 504
 # trim 31
 # gate delay 18 ns
 
@@ -221,7 +221,7 @@ run 19079            -775  59  67  eff 99.78  sy      7.34 drop 800s
 run 19080             773  59  67  eff 99.84  sy      7.33
 run 19081             776  59  67  eff 99.84  sy      7.30
 run 19082             781  59  67  eff 99.84  sy      7.37 7.17
-run 19083             784  59  67  eff 99.85  sy      7.39 7.21 DUT,REF, TLU 1 event remains
+run 19083             784  59  67  eff 99.85  sy      7.39 7.21 DUT REF  TLU 1 event remains
 run 19084             785  59  67  eff 99.88  sy      7.32
 run 19085            -786  59  67  eff 99.65  sy      drop 500s Mimosa 3 events remaining
 run 19086             784  59  67  eff 99.86  sy      7.30
@@ -274,15 +274,15 @@ run 19129             774          eff 99.90  sy 7.16
 run 19130             778          eff 99.90  sy 7.15
 run 19131             780          eff 99.92  sy 7.18
 run 19132             781          eff 99.90  sy 7.10
-run 19133           -7780          loose sync, run control crash
+run 19133           -7780          loose sync  run control crash
 
 # chip 505
 run 19194
 
 #-------------------------------------------------------------------------------
-#Sat 2.5.2015 chip 504, tilt scan in row direction
+#Sat 2.5.2015 chip 504  tilt scan in row direction
 
-#bias -150, ia24 mA, trim 28, WBC 141, no cooling
+#bias -150  ia24 mA  trim 28  WBC 141  no cooling
 chip 504
 gain /home/pitzl/psi/dtb/tst305/c504-ia24-trim28-gaincal.dat
 
@@ -340,7 +340,7 @@ run 19286
 
 #-------------------------------------------------------------------------------
 #Mon 25.5.2015
-#chip 504, trim 32, chiller 15 deg, bias -200
+#chip 504  trim 32  chiller 15 deg  bias -200
 #no box
 
 chip 504
@@ -350,21 +350,21 @@ geo geo_2015_05c.dat
 gain /home/pitzl/psi/dtb/tst400/c504-vd6-ia24-trim32-chiller15-gaincal.dat
 
 tilt 18.6
-run 19626  gate delay 16, trig delay 16  18.6   160  63.6  69  eff 99.77, only 25 % links
-run 19628  gate delay 16, trig delay 12  18.6   416  63.5  69  
+run 19626  gate delay 16  trig delay 16  18.6   160  63.6  69  eff 99.77  only 25 % links
+run 19628  gate delay 16  trig delay 12  18.6   416  63.5  69  
 tilt 19.2
-run 19629                                19.2   165  63.2  69  eff 99.77, only 25 % links
-run 19631  gate delay 18, trig delay 12  19.2    57  63.4  71  eff 99.84, only 25 % links
-run 19632  gate delay 14, trig delay 12  19.2    80  63.2  48  
-run 19633  gate delay 20, trig delay 12  19.2    64  62.8  70  
-run 19634  gate delay 17, trig delay 12  19.2    62  63.3  70  
-run 19635  gate delay 18, trig delay 12  19.2   145  63.5  71  
+run 19629                                19.2   165  63.2  69  eff 99.77  only 25 % links
+run 19631  gate delay 18  trig delay 12  19.2    57  63.4  71  eff 99.84  only 25 % links
+run 19632  gate delay 14  trig delay 12  19.2    80  63.2  48  
+run 19633  gate delay 20  trig delay 12  19.2    64  62.8  70  
+run 19634  gate delay 17  trig delay 12  19.2    62  63.3  70  
+run 19635  gate delay 18  trig delay 12  19.2   145  63.5  71  
 #restart DAQ
-run 19636  gate delay 18, trig delay 12  19.2   159  63.2  70  eff 99.79, 63% links
-run 19637  gate delay 18, trig delay 12  19.2   527  63.4  70  eff 99.78, 63% links
-run 19638  gate delay 18, trig delay 12  19.2   440  63.4  70  eff 99.80, 63% links
+run 19636  gate delay 18  trig delay 12  19.2   159  63.2  70  eff 99.79  63% links
+run 19637  gate delay 18  trig delay 12  19.2   527  63.4  70  eff 99.78  63% links
+run 19638  gate delay 18  trig delay 12  19.2   440  63.4  70  eff 99.80  63% links
 tilt 20.3
-run 19639  gate delay 18, trig delay 12  20.3   531  63.4  71  eff 99.79, drop 1060s
+run 19639  gate delay 18  trig delay 12  20.3   531  63.4  71  eff 99.79  drop 1060s
 run 19640                                20.3   525  63.3  70  drop 200s
 run 19641                                20.3   173  63.2  70  eff 99.79
 #run control crash
@@ -375,24 +375,24 @@ run 19642                                21     374  63.1  70  eff 99.83  bias d
 geo geo_2015_05d.dat
 
 tilt 22.2
-run 19643  22.2     169  62.5  70  25% lks, drop at 100s
+run 19643  22.2     169  62.5  70  25% lks  drop at 100s
 run 19644  22.2     480  62.3  70  
 #restart DAQ
 run 19645  22.2     164  62.5  70  loose sync at ev 3000
 
-run 19647  21.1     163  62.8  70  60% lks, eff 99.78, dip in mid pix: timewalk?
+run 19647  21.1     163  62.8  70  60% lks  eff 99.78  dip in mid pix: timewalk?
 run 19648  21.1     168  63.1  71  
 #power cycle TLU box
 run 19649  21.1     159  63.1  71  
 run 19650  21.1     241  62.8  70  
-#more narrow gate: 100k/410k = 6 ns, 320 Hz
+#more narrow gate: 100k/410k = 6 ns  320 Hz
 run 19654  21.1     162  62.0  70  
-#longer gate: 200k/390k = 13 ns, 500 Hz
+#longer gate: 200k/390k = 13 ns  500 Hz
 run 19656  21.1      41  58.0  71  
-#longer gate: 200k/530k = 9.4 ns, 425 Hz
+#longer gate: 200k/530k = 9.4 ns  425 Hz
 run 19657  21.1     159  63.2  70  eff 99.73
-#over night, shown in Visegrad
-run 19658           500  eff 99.87  step up at 410s,
+#over night  shown in Visegrad
+run 19658           500  eff 99.87  step up at 410s 
 run 19659           511  eff 99.91  effvsym flat
 run 19660           511  eff 99.90
 run 19661           511  eff 99.90
@@ -405,7 +405,7 @@ run 19667          -511  eff 99.66  step down 300s
 run 19668          -511  eff 99.84  step down 400s
 run 19669           511  eff 99.91
 run 19670           511  eff 99.92
-run 19671          -511  eff 99.82  step up 150, step down 650s
+run 19671          -511  eff 99.82  step up 150  step down 650s
 run 19672           511  eff 99.92  sy 8.33  q0 23.1
 run 19673          -511  eff 99.64  step down 250s
 run 19674           511  eff 99.93
@@ -509,8 +509,8 @@ run 20230  14.0  202  62  69  eff 99.77  sy 12.9  row 1.687  col 1.114  Lan 20.6
 
 #Fri 26.6.2015
 #finish tilt scan with 504
-#5.2 GeV, 10E9 in DESY, up to 660 Hz, gate 140k/406k, delay 4 ns
-#trim 28, VIColOr 255, VIBias_Bus 90
+#5.2 GeV  10E9 in DESY  up to 660 Hz  gate 140k/406k  delay 4 ns
+#trim 28  VIColOr 255  VIBias_Bus 90
 #same gear 06c
 
 tilt 15
@@ -540,7 +540,7 @@ tilt  1
 run 20247   1.0  155  64  69  eff 99.78  sy 30.5  row 1.231  col 1.119  Lan 20.31  edg 0.987
 run 20248   1.0  170  65  69  eff 99.79  sy 34.9  row 1.182  col 1.118  Lan 20.20  edg 0.943
 
-#close the telescope, gear 06e: 753  603  451  304  151  0
+#close the telescope  gear 06e: 753  603  451  304  151  0
 geo geo_2015_06e.dat
 tilt  0    REF yield 54%
 run 20249  
@@ -635,11 +635,11 @@ run 20325  -s  eff 99.78
 #-------------------------------------------------------------------------------
 #Sat 27.6.2015
 #threshold scan with 504 at tilt 19.3
-#chiller +17 deg (humidity, avoid condensation)
+#chiller +17 deg (humidity  avoid condensation)
 #prepare trim 26..80
 #tdr: noisy below trim 36
 #same gear 06e
-#5.2 GeV, 10E9 in DESY, 650 Hz
+#5.2 GeV  10E9 in DESY  650 Hz
 
 chip 504
 GeV 5.2
@@ -676,13 +676,13 @@ run 20384        29175 61  69  all night
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #Sun 28.6.2015 chip 504
 #repeat threshold scan
-# 5.2 GeV, 10E9 in DESY, 660 Hz, medium gate 400k/980k, delay 3 ns
+# 5.2 GeV  10E9 in DESY  660 Hz  medium gate 400k/980k  delay 3 ns
 # chiller +17deg
 
 tilt 19.5
 
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-gaincal.dat
-run 20385  thr 32   54  61  69  DUT, REF, TLU: 45 ev remain, eff 98.98, trend in x
+run 20385  thr 32   54  61  69  DUT  REF  TLU: 45 ev remain  eff 98.98  trend in x
 run 20386  thr 32  326  61  69  eff 98.90  sy 7.07  row 1.949  col 1.105  Lan 21.43  edg 0.89
 
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim36tb-chiller17-gaincal.dat
@@ -722,7 +722,7 @@ gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim80tb-chiller17-gaincal.dat
 run 20398  thr 80  406  61  69  eff 99.89  sy 8.29  row 1.774  col 1.058  Lan 21.38  edg 3.10
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-# disconnect chiller, same gear 06e
+# disconnect chiller  same gear 06e
 # tilt scan at thr 80
 
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim80tb-nochiller-gaincal.dat
@@ -764,10 +764,10 @@ run 20416  14.5  401  62  69  eff 99.89  sy 15.4  row 1.534  col 1.052  Lan 22.7
 #-------------------------------------------------------------------------------
 #Sun 12.7.2015 chip 504 tilt scan
 #gear 07b: 754  603  452  305  152  0
-#5.2 GeV, 7E9 in DESY
-#trim 28 from April, no chiller
+#5.2 GeV  7E9 in DESY
+#trim 28 from April  no chiller
 #bias -200
-#gate 13 ns, up to 700 Hz
+#gate 13 ns  up to 700 Hz
 
 chip 504
 GeV 5.2
@@ -851,9 +851,9 @@ tilt  4.5
 run 20821   4.5  271  66  73  eff 99.94  sy 25.1  row 1.269  col 1.101  Lan 20.97  edg 1.66  sy0 27.7 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#connect chiller, +17 deg
+#connect chiller  +17 deg
 #ex151-45: 4.7 um
-#trim 36, tilt 18.8
+#trim 36  tilt 18.8
 
 tilt 18.8
 GeV 5.2
@@ -874,7 +874,7 @@ run 20830  delay 16     +521  64  72
 run 20831               +522  64  72  
 run 20832                126  64  72  
 
-# gate 11 ns, delay 16
+# gate 11 ns  delay 16
 run 20833                 66  64  73  DUT eff 99.97
 run 20834               +344  64  73  
 
@@ -1028,7 +1028,7 @@ gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim56-chiller17-2016-03-gaincal.dat
 run 23309  eff 99.96  sy 8.15  row 1.821  Lan 22.43  edg 2.61
 
 # thr 32 all night
-# wider gate, delay optimized by online yield
+# wider gate  delay optimized by online yield
 # VIBias_Bus 60
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32-chiller17-2016-03-gaincal.dat
 run 23310 # 500k           eff 99.74  sy 7.66  row 1.915  Lan 23.24  edg 1.77
@@ -1059,12 +1059,12 @@ run 23324  eff 99.80  sy 8.30  row 1.901  Lan 22.32  edg 1.71
 
 # thr 32
 gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32-chiller17-2016-03-gaincal.dat
-#gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-gaincal.dat # 2015, worse sy
+#gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-gaincal.dat # 2015  worse sy
 #gain /home/pitzl/psi/dtb/tst400/c504-ia24-trim32tb-chiller17-Jul-gaincal.dat # 2015
 run 23326  eff 99.42  sy 8.58  row 1.920  Lan 22.57  edg 1.60
 
-# new alignment: telescope opened an closed, same geo
-# thr 32, bias 200
+# new alignment: telescope opened an closed  same geo
+# thr 32  bias 200
 run 23331
 
 # bias -150
@@ -1357,7 +1357,7 @@ run 23517  #14300k  eff 99.94  sy 7.82  row 1.903  Lan 22.13  edg 1.57
 #-------------------------------------------------------------------------------
 # Sat 19.3.2016
 # VIBias_Bus from 60 to 90 for DUT
-# short 6 ns gate, delay 14
+# short 6 ns gate  delay 14
 run 23518  # 500 k  eff 99.97  sy 8.02  row 1.918  Lan 22.18  edg 1.80
 run 23519  # 500 k  eff 99.97  sy 7.90  row 1.917  Lan 22.10  edg 1.76
 run 23520  #  
@@ -1481,7 +1481,7 @@ refgain /home/pitzl/psi/dtb/tst400/c500-ia24-trim32-2016-03-gaincal.dat
 # mod 4028
 
 GeV 5.6
-# 700 Hz, filling Petra every 50 s
+# 700 Hz  filling Petra every 50 s
 geo geo_2016_04a.dat
 tilt 17.4
 # trim 32
@@ -1490,13 +1490,13 @@ run 24025 #
 tilt 19.4
 run 24028 # 
 
-# delay 12, bias 250
+# delay 12  bias 250
 run 24032 # 40 k
 run 24033 # 406 k  eff 99.88  sy 8.03  row 1.906  Lan 22.66  edg 1.67
 
 # all night
 # high intensity: <ntri> 13: close movable collimator?
-# trix well centered (broad, flat)
+# trix well centered (broad  flat)
 # triy peaks at -3 mm: move tele platform ?
 run 24093 # -s
 
@@ -1536,7 +1536,7 @@ chip 603
 gain /home/pitzl/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig9-gaincal.dat
 GeV 4.8
 geo geo_2016_04b.dat
-# 6 ns gate, delay 12
+# 6 ns gate  delay 12
 # bias -200V
 tilt 18.9
 run 24230 # 180k tele align
@@ -1553,72 +1553,72 @@ GeV 4.8
 # Vdig 9
 # Vthr_Comp 90
 gain /home/pitzl/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig9-gaincal.dat
-run 24272 # 362k, tele align, 2 eff drops
+run 24272 # 362k  tele align  2 eff drops
 
 # Vthr_Comp 70  eff 99.95  sy 10.8  row 1.679  Lan 22.54  edg 6.37
-run 24282 # 500k  eff 99.95 flat, reflk 28%
+run 24282 # 500k  eff 99.95 flat  reflk 28%
 
-# tilt DUT by 180 degree, 5 cm cable to DTB, upsigny -1
+# tilt DUT by 180 degree  5 cm cable to DTB  upsigny -1
 tilt 18.9
 
 # Vthr_Comp 60
-run 24295 # align tele  -s 500k, eff 99.84 stable
+run 24295 # align tele  -s 500k  eff 99.84 stable
 
 # Vthr_Comp 70
-run 24296 # -s 500k, eff 99.5, one short dip, reflk 9.2%
+run 24296 # -s 500k  eff 99.5  one short dip  reflk 9.2%
 
 # Vthr_Comp 80
-run 24297 # -s 500k, eff 98.7, 2 drops
+run 24297 # -s 500k  eff 98.7  2 drops
 
 # Vthr_Comp 90 noisy
-run 24298 # -s 500k, eff 61%, flucts
+run 24298 # -s 500k  eff 61%  flucts
 
 # ia24-trim40 + Vdig 10
 gain /home/pitzl/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig10-gaincal.dat
-# Vthr_Comp 80, row stripes
+# Vthr_Comp 80  row stripes
 run 24304 # -s
 
 # lower MOD by 3 mm
 
-# Vthr_Comp 80, row stripes
+# Vthr_Comp 80  row stripes
 run 24306 # tele align  eff 83%  bad Q0
 
 # Vthr_Comp 70
-run 24307 # 500k, eff 91.5
+run 24307 # 500k  eff 91.5
 
 #-------------------------------------------------------------------------------
 # Fri 8.4.2016
-# DUT PROC603, bias -200, chiller +17
-# REF 500, bias -100V
-# MOD D4028, bias -100V
+# DUT PROC603  bias -200  chiller +17
+# REF 500  bias -100V
+# MOD D4028  bias -100V
 GeV 4.8
 tilt 18.9
-# Vdig 8, VthrComp 60 for trim40
+# Vdig 8  VthrComp 60 for trim40
 gain /home/pitzl/psi/dtb/tst400/c603-ia24-trim40-vthr90-vdig8-gaincal.dat
 run 24315 # 
 
-# Vdig 8, VthrComp 70 for trim40
+# Vdig 8  VthrComp 70 for trim40
 run 24317 # 
 
-# Vdig 8, VthrComp 80 for trim40
+# Vdig 8  VthrComp 80 for trim40
 run 24319 # eff 99.95%
 
-# Vdig 8, VthrComp 90 for trim40
+# Vdig 8  VthrComp 90 for trim40
 run 24320 # 
 
 # magnet test
 
-# Vdig 6, VthrComp 90 for trim40
+# Vdig 6  VthrComp 90 for trim40
 gain /home/pitzl/psi/dtb/tst400/c603-vthr90-vdig6-gaincal.dat
 run 24321 # eff 99.9% but drops twice
 
-# Vdig 6, VthrComp 80 for trim40
+# Vdig 6  VthrComp 80 for trim40
 run 24323 # 
 run 24324 # 
 
 # solder RC
 
-# Vdig 6, VthrComp 90 for trim40
+# Vdig 6  VthrComp 90 for trim40
 run 24350 # tele align  eff 98.65  sy 9.44  row 1.779  Lan 20.19  edg 3.92  2 drops
 run 24351 # eff 94.90  sy 9.44  row 1.778  Lan 20.30  edg 3.88  2 drops
 run 24352 # eff 92.41  sy 9.41  row 1.778  Lan 20.28  edg 4.00  3 drops
@@ -1632,20 +1632,20 @@ run 24359 # eff 92.94  sy 9.31  row 1.779  Lan 20.30  edg 4.05  2 drops
 
 #-------------------------------------------------------------------------------
 # Sat 9.4.2016
-# DUT PROC603, bias -150, no chiller
+# DUT PROC603  bias -150  no chiller
 gain /home/pitzl/psi/dtb/tst400/c603-ia24-vd6-trim60-vdig4-gaincal.dat
-# REF 500, bias -100V
-# MOD D4028, bias -100V
+# REF 500  bias -100V
+# MOD D4028  bias -100V
 GeV 4.8
 tilt 18.9
 
-# Vdig 6, trim 60
+# Vdig 6  trim 60
 run 24397 # 
 
-# Vdig 4, trim 60
+# Vdig 4  trim 60
 run 24398 # 
 
-# Vdig 4, trim 60
+# Vdig 4  trim 60
 run 24401 # 450k  
 run 24402 # 500k  eff 91.18  sy 9.47  row 1.780  Lan 21.71  edg 4.81  drop in the middle tele align
 run 24410 # 500k
@@ -1656,7 +1656,7 @@ run 24413 # 500k  eff 99.96  sy 9.22  row 1.794  Lan 20.29  edg 2.98
 run 24419 # 500k  eff 91.87  sy 9.35  row 1.779  Lan 21.79  edg 4.27  drop in the middle
 run 24420 # 419k  
 
-# Vdig 2, trim 60 over night
+# Vdig 2  trim 60 over night
 gain /home/pitzl/psi/dtb/tst400/c603-ia24-vd6-trim60-vd2-gaincal.dat
 # eff drops towards row 0 (y below -3 mm)
 run 24421 # 500k  eff 99.08  sy 9.19  row 1.79  Lan 21.37  edg 4.26  one short drop
@@ -1671,21 +1671,21 @@ run 24429 # 26.5M
 
 #-------------------------------------------------------------------------------
 # Sun 10.4.2016
-# DUT PROC603, bias -150, no chiller
-# REF 500, bias -100V
-# MOD D4028, bias -100V
+# DUT PROC603  bias -150  no chiller
+# REF 500  bias -100V
+# MOD D4028  bias -100V
 # tri: Datura 6.4 um resolution ? (need better clustering?)
 # ex151 by  47 mm at 4.8 GeV: 5.0 um
 # ex151 by 105 mm at 4.8 GeV: 8.4 um
-# expect 9.8 um for sixdxcsid, see 15.3 in 24295, depends on sixdt
+# expect 9.8 um for sixdxcsid  see 15.3 in 24295  depends on sixdt
 
-# Vdig 0, trim 60
+# Vdig 0  trim 60
 run 24431 # eff drop towards row 0
 
-# Vdig 2, trim 60
+# Vdig 2  trim 60
 run 24432 # eff drop towards row 0
 
-# Vdig 4, trim 60
+# Vdig 4  trim 60
 gain /home/pitzl/psi/dtb/tst400/c603-ia24-vd6-trim60-vdig4-gaincal.dat
 run 24434 # eff 99.92  sy 16.9  row 1.601  Lan 12.41  edg -0.0704  reflk 28% tele align
 run 24435 # eff 98.46  sy 9.33  row 1.788  Lan 20.40  edg 3.06  one drop
@@ -1778,9 +1778,9 @@ run 24510 # eff 91.86  sy 8.90  row 1.784  Lan 21.46  edg 4.27  1 drop
 # 2 weeks later: 2016 April B
 #-------------------------------------------------------------------------------
 # Mon 25.4.2016
-# DUT 502, bias -150, chiller 17
-# REF 501, bias -100V
-# MOD D4028, bias -100V
+# DUT 502  bias -150  chiller 17
+# REF 501  bias -100V
+# MOD D4028  bias -100V
 
 # ref 501 bias 100 trim 32
 refchip 501
@@ -1831,14 +1831,14 @@ run 25027 # 320 k +
 # gate delay 20 ns
 run 25029 # 100 k  eff 99.89  sy 8.48  row 1.845  Lan 23.99  edg 2.95
 
-# trim 22, VIBias_Bus 11
+# trim 22  VIBias_Bus 11
 run 25030 # 100 k  eff
 run 25031 #  69 k +
 
-# trim 22, VIBIas_Bus 90
+# trim 22  VIBIas_Bus 90
 run 25032 #  78 k  eff
 
-# trim 32, VIBias_Bus 90, for offline threshold scan at 5.2 GeV
+# trim 32  VIBias_Bus 90  for offline threshold scan at 5.2 GeV
 run 25033 # 501 k  eff 99.74  sy 6.09  row 1.934  Lan 21.97  edg 1.95  ntr 5.69
 run 25034 # 501 k  
 run 25035 # 501 k  
@@ -1887,9 +1887,9 @@ run 25073 # 236 k  eff 99.74  sy 6.13  row 1.933  Lan 22.05  edg 2.01  ntr 5.28
 
 #-------------------------------------------------------------------------------
 # Tue 26.4.2016
-# DUT 502, bias -150, chiller 17
-# REF 501, bias -100V
-# MOD D4028, bias -100V
+# DUT 502  bias -150  chiller 17
+# REF 501  bias -100V
+# MOD D4028  bias -100V
 
 # MOD lowered 2 mm: new tele align
 GeV 5.2
@@ -1912,7 +1912,7 @@ run 25088 # 500 k  eff 98.17  sy 5.98  row 1.979  Lan 21.68  edg 1.40  ntr 5.55
 # trim 22
 run 25090 # 500 k  eff 96.16  sy 6.28  row 1.972  Lan 21.79  edg 1.43  ntr 5.84
 
-# gate delay 22 ns (from 21 ns), extra 5 ns cable for MOD clock in hall
+# gate delay 22 ns (from 21 ns)  extra 5 ns cable for MOD clock in hall
 # trim 22
 run 25104 # 490 k  eff 91.12  sy 7.23  row 1.941  Lan 21.87  edg 1.44
 
@@ -1953,9 +1953,9 @@ run 25116 #
 
 #-------------------------------------------------------------------------------
 # Wed 27.4.2016
-# DUT 504, bias -150, chiller 17
-# REF 501, bias -100V
-# MOD D4028, bias -100V
+# DUT 504  bias -150  chiller 17
+# REF 501  bias -100V
+# MOD D4028  bias -100V
 
 geo geo_2016_04c.dat
 
@@ -1967,7 +1967,7 @@ GeV 4.8
 run 25161
 
 GeV 5.6
-# trim 32, delay 21, tele align
+# trim 32  delay 21  tele align
 run 25166 # 100 k  eff 97.97  sy 6.20  row 1.975  Lan 21.99  edg 1.59  ntr 3.80
 
 GeV 4.8
@@ -1979,15 +1979,15 @@ run 25173 # 105 k  eff 98.89  sy 6.33  row 1.973  Lan 21.90  edg 1.53  ntr 7.95
 gain /home/pitzl/psi/dtb/tst400/c504-ia27-trim36-chiller17-gaincal-2016-04.dat
 run 25174 # 105 k  eff 99.89  sy 6.02  row 1.959  Lan 22.04  edg 1.80  ntr 7.01
 
-# trim 32, VIBias_Bus 90
+# trim 32  VIBias_Bus 90
 gain /home/pitzl/psi/dtb/tst400/c504-ia27-trim32-chiller17-gaincal-2016-04.dat
 run 25176 # 106 k  eff 98.93  sy 6.43  row 1.971  Lan 22.08  edg 2.07  ntr 4.59
 
-# trim 36, VIBias_Bus 90
+# trim 36  VIBias_Bus 90
 gain /home/pitzl/psi/dtb/tst400/c504-ia27-trim36-chiller17-gaincal-2016-04.dat
 run 25178 # 267 k  eff 99.77  sy 6.23  row 1.954  Lan 22.14  edg 2.23  ntr 4.83
 
-# raise DUT, for offline threshold scan at 4.8 GeV:
+# raise DUT  for offline threshold scan at 4.8 GeV:
 
 run 25180 # 501 k  eff 99.76  sy 6.38  row 1.955  Lan 22.15  edg 2.23  ntr 3.96
 run 25181 # 501 k  eff 99.80  sy 6.24  row 1.956  Lan 22.12  edg 2.20  ntr 4.53
@@ -2046,13 +2046,13 @@ run 25229 # 501 k  eff 99.73  sy 6.14  row 1.956  Lan 22.01  edg 2.13  ntr 8.67
 
 #-------------------------------------------------------------------------------
 # Thu 28.4.2016
-# DUT 504, bias -150, chiller 17
-# REF 501, bias -100V
-# MOD D4028, bias -100V
+# DUT 504  bias -150  chiller 17
+# REF 501  bias -100V
+# MOD D4028  bias -100V
 
 geo geo_2016_04c.dat
 
-# trim 36, VIBias_Bus 90
+# trim 36  VIBias_Bus 90
 
 GeV 5.6 # tele -p 5.6 -g geo_2016_04c.dat 25230
 #                  .x r.C                                                        .x s.C
@@ -2106,6 +2106,8 @@ run 25244 # 432 k  eff 99.88  sy 5.99  row 1.953  Lan 22.06  edg 2.20  ntr 4.71 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # DUT bias scan
 
+# 25251-25259
+
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 1.6 GeV at tilt 0
 GeV 1.6
@@ -2141,10 +2143,10 @@ run 25412 # thr 11   8.23  10.29   7.68   7.68   8.19   7.87  87.9  92.9  87.4  
 run 25413 # thr 12   7.21   8.98   6.41   6.46   7.06   7.09  83.8  88.9  81.1  80.4  85.9  84.7  6.56  6.58
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# spacing 150 mm extrapol 45 mm vs p, empty:
+# spacing 150 mm extrapol 45 mm vs p  empty:
 
 geo geo_2016_04e.dat # 0  153  305  350 496 654
-# .x fittp0.C("exdxc3",-0.02,0.02); .x t.C
+# .x fittp0.C("exdxc3" -0.02 0.02); .x t.C
 GeV 5.6 # tele -g geo_2016_04e.dat -p 5.6 25420
 run 25420 # ntr 4.17  dx 5.91  dy 5.94  ex2 5.78  ex3 5.78  tx 0.721
 
@@ -2185,7 +2187,7 @@ GeV 5.6
 run 25432 # ntr 4.13  dx 5.92  dy 5.93  ex2 5.78  ex3 5.78
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# narrow tele spacing, empty
+# narrow tele spacing  empty
 geo geo_2016_04f.dat # 0  19  39  84 230 388
 
 # thr 5
@@ -2269,9 +2271,9 @@ thr 12
 run 25455 # ntr 2.61  dx 4.97  dy 4.90  ex2 7.45  ex3 13.15  7.24  9.40  6.82  6.85  7.33  7.36
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# DUT 502, trim 32, VIBias_Bus 90, bias -150, no chiller
-# REF 501, trim 32, bias -100V
-# MOD D4028, bias -100V
+# DUT 502  trim 32  VIBias_Bus 90  bias -150  no chiller
+# REF 501  trim 32  bias -100V
+# MOD D4028  bias -100V
 
 geo geo_2016_04g.dat # 0  153  305 DUT 389  534  MOD  693  REF
 
@@ -2294,29 +2296,29 @@ run 25472 # 1440 k  eff 99.85  sy 25.23  row 1.218  Lan 21.15  edg 1.30  ntr 7.7
 
 #-------------------------------------------------------------------------------
 # Sat 30.4.2016
-# DUT 502, bias -150, no chiller
-# REF 501, bias -100V
-# MOD D4028, bias -100V
+# DUT 502  bias -150  no chiller
+# REF 501  bias -100V
+# MOD D4028  bias -100V
 
 geo geo_2016_04g.dat
 GeV 4.8
 tilt 19
-# veto gate 11 ns, delay 21 ns
+# veto gate 11 ns  delay 21 ns
 run 25473 # 114 k  eff 99.93  sy 6.09  row 1.931  Lan 21.27  edg 1.68  ntr 8.62
 
-# veto gate 10 ns, delay 21 ns
+# veto gate 10 ns  delay 21 ns
 run 25475 #  92 k  eff 99.95  sy 6.07  row 1.934  Lan 21.29  edg 1.69  ntr 8.24
 
-# veto gate 9 ns, delay 21 ns
+# veto gate 9 ns  delay 21 ns
 run 25476 # 262 k  eff 99.96  sy 6.15  row 1.932  Lan 21.29  edg 1.64  ntr 7.98
 
-# veto gate 9 ns, delay 20 ns
+# veto gate 9 ns  delay 20 ns
 run 25477 # 252 k  eff 99.92  sy 7.14  row 1.881  Lan 21.35  edg 1.67
 
-# veto gate 9 ns, delay 22 ns  251k
+# veto gate 9 ns  delay 22 ns  251k
 run 25478 # 251 k  eff 99.95  sy 6.08  row 1.935  Lan 21.35  edg 1.68
 
-# veto gate 9 ns, delay 21 ns
+# veto gate 9 ns  delay 21 ns
 run 25479 # 4031k  eff 99.95  sy 7.14  row 1.881  Lan 21.31  edg 1.65
 
 # 45 hours: 
@@ -2332,7 +2334,7 @@ run 26064 # tilt 15  bias 200  uA 15  trim 30  cool 0  GeV 5.6  750 k
 
 #-------------------------------------------------------------------------------
 # Fri 8.7.2016
-# new AIDA telescope in TB22, narrowest spacing, thin Al foil
+# new AIDA telescope in TB22  narrowest spacing  thin Al foil
 # Azalea?
 
 geo geo_2016_07b.dat
@@ -2360,7 +2362,7 @@ geo geo_2016_07b.dat
 # 3-col clusters have tridxc3 4.1 um
 # hits per plane    10.96  11.55  12.53  9.69  14.78  10.10
 # plane efficiency  93.6  92.8  95.0  87.8  95.9  84.8
-#   ntri, tridx, y  3.10  4.93  4.87
+#   ntri  tridx  y  3.10  4.93  4.87
 
 #  1996344875 Jul  8 16:21 run002083.raw  1
 #  2636262445 Jul  8 16:39 run002084.raw  2
@@ -2369,7 +2371,7 @@ geo geo_2016_07b.dat
 
 #-------------------------------------------------------------------------------
 # Sat 9.7.2016
-# Duranta in TB22, narrow spacing
+# Duranta in TB22  narrow spacing
 
 geo geo_2016_07c.dat
 
@@ -2379,17 +2381,17 @@ GeV 5.6
 run 26101 # 2109 k
 # tele  hits per plane    4.35  5.06  5.69  6.76  5.96  7.58
 # tele  plane efficiency  81.3  83.5  85.7  85.7  78.2  84.6
-# tele   ntri, tridx, dy  1.15  5.37  5.31
+# tele   ntri  tridx  dy  1.15  5.37  5.31
 
 # Mimosa thr 5
 run 26102 # 2109 k
 # tele  hits per plane    7.54  9.31  10.19  11.91  9.33  11.14
 # tele  plane efficiency  88.1  90.7  92.7  91.9  85.4  89.8
-# tele   ntri, tridx, dy  2.18  5.11  5.09
+# tele   ntri  tridx  dy  2.18  5.11  5.09
 
 # Mimosa26 from 2008 and 2008
 # standard epi layer 14 um
-# HR option: 10, 15, 20 um epi
+# HR option: 10  15  20 um epi
 # pixel 18.4 um
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2403,7 +2405,7 @@ modgain /home/pitzl/psi/dtb/tst400/D4294-tb24-gaincal.dat
 run 26155 # 1192k
 # tele  hits per plane    7.47  8.57  5.46  10.56  7.58  8.91
 # tele  plane efficiency  87.4  90.6  78.5  93.6  85.8  87.2
-# tele   ntri, tridx, dy  1.70  6.22  6.32
+# tele   ntri  tridx  dy  1.70  6.22  6.32
 
 #-------------------------------------------------------------------------------
 # Sun 10.7.2016
@@ -2428,12 +2430,12 @@ GeV 4.8 # to get 300 Hz
 run 26166 # 256k
 # tele  hits per plane    18.45  19.14  5.07  25.96  19.51  22.08
 # tele  plane efficiency  86.8  89.5  32.4  92.7  85.7  86.4
-# tele   ntri, tridx, dy  1.77  6.38  6.54
+# tele   ntri  tridx  dy  1.77  6.38  6.54
 
 run 26167 # 216 k  MOD 98% yield  dyq 8.7
 # tele  hits per plane    23.42  24.52  14.04  33.00  25.54  28.94
 # tele  plane efficiency  86.2  89.9  60.0  92.8  85.3  84.9
-# tele   ntri, tridx, dy  4.21  6.38  6.67
+# tele   ntri  tridx  dy  4.21  6.38  6.67
 
 GeV 4.0 # 600 Hz
 
@@ -2441,43 +2443,43 @@ GeV 4.0 # 600 Hz
 run 26169 # 100k  MOD 98%  2.16 px/cl
 # tele  hits per plane    34.89  36.29  29.49  49.54  38.12  42.85
 # tele  plane efficiency  86.0  90.0  80.5  92.8  85.2  84.1
-# tele   ntri, tridx, dy  8.35  6.80  7.44
+# tele   ntri  tridx  dy  8.35  6.80  7.44
 
 # gate delay 4
 run 26170 # 100k  98%  2.16 px/cl
 # tele  hits per plane    34.47  35.89  29.16  48.98  37.68  42.46
 # tele  plane efficiency  86.0  90.0  80.6  92.8  85.1  84.0
-# tele   ntri, tridx, dy  8.27  6.83  7.42
+# tele   ntri  tridx  dy  8.27  6.83  7.42
 
 # gate delay 8
 run 26171 # 100k  98%  2.14 px/cl
 # tele  hits per plane    35.63  36.99  30.03  50.47  38.79  43.69
 # tele  plane efficiency  86.0  90.0  80.5  92.8  85.1  84.0
-# tele   ntri, tridx, dy  8.53  6.83  7.40
+# tele   ntri  tridx  dy  8.53  6.83  7.40
 
 # gate delay 12
 run 26172 # 100k  98%  2.12 px/cl
 # tele  hits per plane    35.04  36.36  29.50  49.60  38.09  43.02
 # tele  plane efficiency  86.0  90.0  80.6  92.8  85.1  84.1
-# tele   ntri, tridx, dy  8.38  6.82  7.40
+# tele   ntri  tridx  dy  8.38  6.82  7.40
 
 # gate delay 16
 run 26173 # 100k  97%  2.08 px/cl
 # tele  hits per plane    35.40  36.78  29.92  50.23  38.62  43.63
 # tele  plane efficiency  86.0  90.0  80.7  92.8  85.1  84.1
-# tele   ntri, tridx, dy  8.49  6.79  7.44
+# tele   ntri  tridx  dy  8.49  6.79  7.44
 
 # gate delay 20
 run 26174 # 100k  68%  1.95 px/cl
 # tele  hits per plane    35.29  36.65  29.95  50.11  38.55  43.35
 # tele  plane efficiency  86.0  90.0  80.7  92.8  85.2  84.1
-# tele   ntri, tridx, dy  8.46  6.83  7.45
+# tele   ntri  tridx  dy  8.46  6.83  7.45
 
 # gate delay 24
 run 26175 # 100k  97%  2.13 px/cl
 # tele  hits per plane    34.65  36.10  29.28  49.11  37.79  42.49
 # tele  plane efficiency  85.9  90.1  80.7  92.8  85.2  84.0
-# tele   ntri, tridx, dy  8.29  6.82  7.41
+# tele   ntri  tridx  dy  8.29  6.82  7.41
 
 # gate delay 0
 run 26176 # 2360k
@@ -2488,7 +2490,7 @@ run 26176 # 2360k
 run 26191
 # tele  hits per plane    16.37  17.04  4.46  23.29  17.93  20.51
 # tele  plane efficiency  63.4  67.9  18.5  72.3  61.9  65.5
-# tele   ntri, tridx, dy  0.85  6.98  7.22
+# tele   ntri  tridx  dy  0.85  6.98  7.22
 
 #-------------------------------------------------------------------------------
 # Tue 12.7.2016
@@ -2523,42 +2525,42 @@ run 26242 # 250k
 # hot 27  146  84  106  26  189
 # tele  hits per plane    6.16  6.91  7.08  7.54  5.41  6.30
 # tele  plane efficiency  86.9  90.1  92.0  93.1  85.4  86.5
-# tele   ntri, tridx, dy  1.78  1.71  5.93  6.03
+# tele   ntri  tridx  dy  1.78  1.71  5.93  6.03
 
 # thr 4
 run 26243 # 250k
 # hot 117  332  331  358  96  182
 # tele  hits per plane    8.72  10.17  10.98  12.71  7.83  8.35
 # tele  plane efficiency  92.6  95.3  96.4  97.5  92.7  91.0
-# tele   ntri, tridx, dy  2.11  2.05  5.70  5.82
+# tele   ntri  tridx  dy  2.11  2.05  5.70  5.82
 
 # thr 3
 run 26244 # 250k
 # hot 422  782  704  948  336  460
 # tele  hits per plane    14.77  18.12  18.51  21.92  12.72  14.00
 # tele  plane efficiency  95.5  97.3  97.8  98.4  96.7  93.8
-# tele   ntri, tridx, dy  2.33  2.29  5.48  5.61
+# tele   ntri  tridx  dy  2.33  2.29  5.48  5.61
 
 # thr 6
 run 26245 # 250k
 # hot 11  56  34  33  11  41
 # tele  hits per plane    4.80  5.02  5.11  5.52  4.26  5.16
 # tele  plane efficiency  79.9  83.7  85.4  86.9  77.6  80.8
-# tele   ntri, tridx, dy  1.40  1.35  6.08  6.15
+# tele   ntri  tridx  dy  1.40  1.35  6.08  6.15
 
 # thr 7
 run 26246 # 250k
 # hot 2  41  25  8  3  26
 # tele  hits per plane    3.82  4.00  4.12  4.44  3.46  3.95
 # tele  plane efficiency  71.3  76.5  78.2  80.1  69.4  73.9
-# tele   ntri, tridx, dy  1.03  1.00  6.14  6.19
+# tele   ntri  tridx  dy  1.03  1.00  6.14  6.19
 
 # thr 8
 run 26247 # 250k
 # hot 0  40  23  5  2  23
 # tele  hits per plane    3.10  3.18  3.26  3.49  2.75  3.13
 # tele  plane efficiency  64.0  69.0  70.4  72.6  60.9  65.6
-# tele   ntri, tridx, dy  0.72  0.67  6.14  6.19
+# tele   ntri  tridx  dy  0.72  0.67  6.14  6.19
 #
 #-------------------------------------------------------------------------------
 # Wed 13.7.2016
@@ -2602,7 +2604,7 @@ run 26292 # 258k  24%
 
 run 26294 # 74k  24%  21 ev remain
 
-# vbias -140V, 0.9 uA, noisy region at row 79
+# vbias -140V  0.9 uA  noisy region at row 79
 
 run 26295 # 53 k clean end
 run 26296 # 83 k clean end
@@ -2619,7 +2621,7 @@ run 26297 # 66k
 
 run 26307 # 109k
 
-# bias -80V, covered by cloth, alignment shifted
+# bias -80V  covered by cloth  alignment shifted
 
 run 26308 # 462
 
@@ -2724,7 +2726,7 @@ tilt 19
 # trim35
 run 27097 # eff 57%
 
-#trim40 like yesterday, delay 22  19
+#trim40 like yesterday  delay 22  19
 run 27099 #
 
 #vthrcomp +2
@@ -2733,7 +2735,7 @@ run 27100 #*eff 99.75
 #vthrcomp +4
 run 27101 #*eff 98.5
 
-#vthrcomp +6, delay changed to 24 ns
+#vthrcomp +6  delay changed to 24 ns
 run 27103 #*eff 49.8 wild flucts
 
 #vthrcomp +7
@@ -2769,10 +2771,10 @@ turn 89
 run 27116 #+U-shaped column map
 
 turn 84
-run 27121 #+257k  6  52  cluster size peak at 18.5, but still V-shaped x map
+run 27121 #+257k  6  52  cluster size peak at 18.5  but still V-shaped x map
 
 turn 81
-run 27122 #+217k  10  52  cluster size peak at 12.5, flat x map
+run 27122 #+217k  10  52  cluster size peak at 12.5  flat x map
             
 #for the night
 turn 27
@@ -2782,9 +2784,9 @@ run 27124 #+
 # 2017
 #-------------------------------------------------------------------------------
 # Tue  7.3.2017
-# DUT 523i, chiller -20 deg
-# REF 502, bias -150V
-# MOD D4294, bias -150V
+# DUT 523i  chiller -20 deg
+# REF 502  bias -150V
+# MOD D4294  bias -150V
 # online: eudaq 1.7
 # Mimosa  plane counting changed: 1-6
 # DUT = 7
@@ -2801,7 +2803,7 @@ run 27124 #+
 # bias scans to 800 V at row tilt 17.5° and 78.3°
 
 # 519i: 1.05E15 p/cm2  rot90
-# bias scans to 800 V at column tilt 0°, 26.8°, and 78.5°
+# bias scans to 800 V at column tilt 0°  26.8°  and 78.5°
 
 # 528i: 1.54E15 p/cm2  straight
 # bias scans to 800 V at row tilt 18.7° and 77.7°
@@ -3128,7 +3130,7 @@ run 28186 # eff poor
 # go to 38 Vcal
 
 # bias -500 V
-run 28215 # eff 89%, lots PKAM
+run 28215 # eff 89%  lots PKAM
 
 # bias -600 V
 run 28216 # eff 99.88  Q0 11.66
@@ -3224,7 +3226,7 @@ run 28245 # eff 99.86  Q0 10.84
 #run 28247 # eff 98 dropping
 
 # bias -600 V
-#run 28248 # eff 95%, >99% after 145 s
+#run 28248 # eff 95%  >99% after 145 s
 
 # bias -650 V
 run 28249 # eff 99.93  Q0 12.00
@@ -3309,43 +3311,43 @@ gain /home/pitzl/psi/dtb/tst400/c529i-chill-m20-trim35-gaincal.dat
 
 tilt 19
 
-# bias 800, gate delay 4
+# bias 800  gate delay 4
 run 28315
 
-# bias 600, gate delay 0
+# bias 600  gate delay 0
 run 28317
 
-# bias 600, gate delay 2
+# bias 600  gate delay 2
 run 28319
 
-# bias 600, gate delay 1
+# bias 600  gate delay 1
 run 28320
 
-# bias 600, gate delay 0, 8 ns wide
+# bias 600  gate delay 0  8 ns wide
 run 28321
 
-# bias 600, gate delay 0, 8 ns wide, thr 64 (from 72, from 80)
+# bias 600  gate delay 0  8 ns wide  thr 64 (from 72  from 80)
 run 28323
 
-# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 60 -> 90
+# bias 600  gate delay 0  5 ns wide  thr 64  VIBiasBus 60 -> 90
 run 28325
 
-# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 110
+# bias 600  gate delay 0  5 ns wide  thr 64  VIBiasBus 110
 run 28326 # one dead DC
 
-# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 60 -> 10
+# bias 600  gate delay 0  5 ns wide  thr 64  VIBiasBus 100  VwllPr  VwllSh 60 -> 10
 run 28328
 
-# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 60 -> 10, Vdig 9 -> 12
+# bias 600  gate delay 0  5 ns wide  thr 64  VIBiasBus 100  VwllPr  VwllSh 60 -> 10  Vdig 9 -> 12
 run 28329 # eff 98.3
 
-# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 10, Vdig 15
+# bias 600  gate delay 0  5 ns wide  thr 64  VIBiasBus 100  VwllPr  VwllSh 10  Vdig 15
 run 28330 # eff 98.3
 
-# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 10, Vdig 15
+# bias 600  gate delay 0  5 ns wide  thr 64  VIBiasBus 100  VwllPr  VwllSh 10  Vdig 15
 run 28332 # eff 98.3
 
-# bias 600, gate delay 0, 5 ns wide, thr 64, VIBiasBus 100, VwllPr, VwllSh 10, Vdig 15, VthrComp 64 -> 72
+# bias 600  gate delay 0  5 ns wide  thr 64  VIBiasBus 100  VwllPr  VwllSh 10  Vdig 15  VthrComp 64 -> 72
 run 28333 -l 246000 # eff 98.3
 
 # bias 500 over night
@@ -3358,7 +3360,7 @@ run 28333 -l 246000 # eff 98.3
 # bias -500
 run 28337 # eff 97.4  Q0 6.48
 
-# bias -500, WBC 141 -> 56
+# bias -500  WBC 141 -> 56
 run 28338 # eff 97.3  Q0 6.48
 
 # gate delay 0 -> 4 ns
@@ -3412,7 +3414,7 @@ run 28362
 # bias -500
 run 28363
 
-# bias -400, threshold 80 -> 72, else noisy
+# bias -400  threshold 80 -> 72  else noisy
 run 28365
 
 # bias -450
@@ -3426,7 +3428,7 @@ run 28368
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 529i
-# back to tilt 19, thr 72
+# back to tilt 19  thr 72
 #
 tilt 19
 
@@ -3583,7 +3585,7 @@ run 28449
 run 28450
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# install 515i: 1.5E15, rot90
+# install 515i: 1.5E15  rot90
 chip 515
 gain /home/pitzl/psi/dtb/tst400/c515i-chill-m20-trim35-gaincal.dat
 tilt 29
@@ -3748,7 +3750,7 @@ run 28513
 run 28514
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# install 516i, 1.9E15 p/cm2, rot90
+# install 516i  1.9E15 p/cm2  rot90
 chip 516
 gain /home/pitzl/psi/dtb/tst400/c516i-chill-m20-trim35-gaincal.dat
 tilt 28
@@ -3760,83 +3762,83 @@ tilt 28
 # bias 800 ?
 run 28530 # eff 11%
 
-# bias 800, gate delay 0
+# bias 800  gate delay 0
 run 28533 # eff 99.16
 
-# bias 800, gate delay 2
+# bias 800  gate delay 2
 run 28534 # eff 99.68  Q0 10.35
 
-# bias 800, gate delay 4
+# bias 800  gate delay 4
 run 28535 # eff 99.59
 
-# bias 800, gate delay 6
+# bias 800  gate delay 6
 run 28536 # eff 99.72
 
-# bias 800, gate delay 23
+# bias 800  gate delay 23
 run 28538 # eff 99.16
 
-# bias 10, gate delay 0
+# bias 10  gate delay 0
 run 28540 # eff 12.3  Q0 1.41
 
-# bias 15, gate delay 0
+# bias 15  gate delay 0
 run 28541 # eff 25.7  Q0 1.41
 
-# bias 20, gate delay 0
+# bias 20  gate delay 0
 run 28542 # eff 43.6  Q0 1.43
 
-# bias 30, gate delay 0
+# bias 30  gate delay 0
 run 28543 # eff 69.2  Q0 1.45
 
-# bias 40, gate delay 2
+# bias 40  gate delay 2
 run 28544 # eff 79.7  Q0 1.55
 
-# bias 50, gate delay 2
+# bias 50  gate delay 2
 run 28545 # eff 85.8  Q0 1.67
 
-# bias 60, gate delay 2
+# bias 60  gate delay 2
 run 28546 # eff 89.3  Q0 1.80
 
-# bias 80, gate delay 2
+# bias 80  gate delay 2
 run 28547 # eff 93.2  Q0 2.04
 
-# bias 100, gate delay 2
+# bias 100  gate delay 2
 run 28548 # eff 95.6  Q0 2.25
 
-# bias 125, gate delay 2
+# bias 125  gate delay 2
 run 28549 # eff 97.3  Q0 2.57
 
-# bias 150, gate delay 2
+# bias 150  gate delay 2
 run 28550 # eff 98.3  Q0 2.92
 
-# bias 175, gate delay 2
+# bias 175  gate delay 2
 run 28551 # eff 98.8  Q0 3.21
 
-# bias 200, gate delay 2
+# bias 200  gate delay 2
 run 28552 # eff 99.2  Q0 3.60
 
-# bias 225, gate delay 2
+# bias 225  gate delay 2
 run 28553 # eff 99.39  Q0 3.91
 
-# bias 250, gate delay 2
+# bias 250  gate delay 2
 run 28554 # eff 99.53  Q0 4.18
 
-# bias 275, gate delay 2
+# bias 275  gate delay 2
 run 28555 # eff 99.68  Q0 4.51
 
-# bias 300, gate delay 2
+# bias 300  gate delay 2
 run 28557 # eff 99.68  Q0 4.96
 
-# bias 325, gate delay 2
+# bias 325  gate delay 2
 run 28558 # eff 99.74  Q0 5.31
 
-# bias 350, gate delay 2
+# bias 350  gate delay 2
 run 28559 # eff 99.76  Q0 5.72
 
-# bias 375, gate delay 2
+# bias 375  gate delay 2
 run 28560 # eff 99.70  Q0 6.30
 
-# bias 400, gate delay 2
-run 28561 # PKAM, noisy  eff 84.5  Q0 6.84
+# bias 400  gate delay 2
+run 28561 # PKAM  noisy  eff 84.5  Q0 6.84
 
 # bias 425
 run 28562 # PKAM  eff 74.5  Q0 7.11
@@ -3940,7 +3942,7 @@ run 28610
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # install 519i: 1E15 rot90
-# over night with LV on, HV off
+# over night with LV on  HV off
 # temperature annealing?
 
 # Fri 17.3.2017
@@ -4142,22 +4144,22 @@ tilt 20
 # ex 151 at 4.8 GeV: 6.85 um
 # chiller -20 as always in March 2017
 
-# bias 600, gate delay 6 ns
+# bias 600  gate delay 6 ns
 # tele
 run 28790 # 267k  ntr 4.29  eff 97.94  ry 12.57  col 1.117  row 1.960  Lan 17.43  edg 0.71
 #          600 Hz trigger
 # bias 800
 run 28791 # 596k  ntr 4.27  eff 97.89  ry 12.37  col 1.115  row 1.963  Lan 17.98  edg 0.79
 
-# bias 800, gate delay 4 ns
+# bias 800  gate delay 4 ns
 run 28793 #  98k  ntr 4.06  eff 87.97  ry 12.42  col 1.115  row 1.948  Lan 17.82  edg 0.76
 
-# bias 800, gate delay 6 ns, width 3 ns
+# bias 800  gate delay 6 ns  width 3 ns
 run 28797 # 311k  ntr 3.99  eff 99.04  ry 12.39  col 1.116  row 1.967  Lan 17.95  edg 0.72
 
-# bias 600, gate delay 6 ns, width 3 ns
+# bias 600  gate delay 6 ns  width 3 ns
 run 28800 # 309k  ntr 3.88  eff 98.95  ry 12.55  col 1.110  row 1.935  Lan 16.12  edg 1.06
-#         only 250 Hz trigger rate during first half, then 450 Hz: different chip temp?
+#         only 250 Hz trigger rate during first half  then 450 Hz: different chip temp?
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # unirradiated chips (PH ref)
@@ -4194,9 +4196,9 @@ run 28808 # eff 99.95  Q0 20.81  ry 7.88
 # Apr 2017
 #-------------------------------------------------------------------------------
 # Tue 4.4.2017
-# DUT 505 no chiller, bias 150, ROC periphery down
-# REF 502, bias 150V
-# MOD D4139, bias 150V
+# DUT 505 no chiller  bias 150  ROC periphery down
+# REF 502  bias 150V
+# MOD D4139  bias 150V
 # online: eudaq 1.6
 
 geo geo_2017_04a.dat
@@ -4214,17 +4216,17 @@ gain /home/pitzl/psi/dtb/tst400/c505-tb21-ia24-trim36-gaincal.dat
 tilt 16.6
 turn 0
 
-# narrow gate: 5 ns, 500 Hz
-run 28847 # eff 99.6, lower right corner dead
+# narrow gate: 5 ns  500 Hz
+run 28847 # eff 99.6  lower right corner dead
 
 tilt 19.6
 run 28848 # ntr 4.32  eff 99.65  ry 8.63  col 1.150  row 1.939  Lan 22.81  edg 1.97
 
-# wider gate: 9 ns, 800 Hz
+# wider gate: 9 ns  800 Hz
 # lunch runs:
 run 28857 # ntr 3.95  eff 99.51  ry 8.60  col 1.147  row 1.939  Lan 22.62  edg 1.92
 run 28858 # ntr 4.09  eff 99.55  ry 8.50  col 1.145  row 1.936  Lan 22.62  edg 1.89
-#                .x fittp0.C("cmsdyfcq4nod",-0.022,0.022)  ry 7.58
+#                .x fittp0.C("cmsdyfcq4nod" -0.022 0.022)  ry 7.58
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 518 # rot 90
@@ -4238,13 +4240,13 @@ run 28862 # ntr 3.28  eff 99.71  ry 11.59  col 1.880  row 1.245  Lan 22.74  edg 
 # full copy?
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 514 # rot 90, now dead
+chip 514 # rot 90  now dead
 gain /home/pitzl/psi/dtb/tst400/c514-ia24-trim35-gaincal.dat
 run 28864 # ntr 3.46  eff 95.92  ry 10.74  col 1.890  row 1.262  Lan 23.15  edg 2.38
 #                    even-odd col effect: bad timing
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 513 # rot 90, now dead
+chip 513 # rot 90  now dead
 gain /home/pitzl/psi/dtb/tst400/c513-ia24-trim35-gaincal.dat
 run 28865 # ntr 3.57  eff 99.86  ry 10.79  col 1.918  row 1.268  Lan 22.65  edg 2.56
 
@@ -4263,7 +4265,7 @@ geo geo_2017_04b.dat
 
 # red LED at 12 V (blue cap on sensor)
 # bias 180
-#run 28873 # double junction, more charge (chiller overdrive?)
+#run 28873 # double junction  more charge (chiller overdrive?)
 
 # bias 800
 #run 28874
@@ -4283,7 +4285,7 @@ geo geo_2017_04b.dat
 #run 28886 # double junction
 
 # bias 180
-#run 28887 # double junction, less charge than 28873
+#run 28887 # double junction  less charge than 28873
 
 # bias 160
 #run 28888 # nice double junction
@@ -4291,15 +4293,15 @@ geo geo_2017_04b.dat
 # bias 180 LED off
 #run 28889 #
 
-# bias 180 LED off, chiller -15
+# bias 180 LED off  chiller -15
 #run 28890 # qy 1 ke lower than 28889 at -20 deg
 
 # gain vs T: -0.2ke/K (?)
 
-# bias 180 LED off, chiller -23
+# bias 180 LED off  chiller -23
 #run 28891 #
 
-# bias 180 LED off, chiller -24
+# bias 180 LED off  chiller -24
 #run 28892 #
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4324,7 +4326,7 @@ tilt 78.8  need 800V alignment run!
 #run 28899
 
 tilt 19
-# bias 500, good for telescope align 04c
+# bias 500  good for telescope align 04c
 run 28904
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4338,10 +4340,10 @@ geo geo_2017_04c.dat
 #run 28906 # align: DUT dz 136 mm (not fully closed)
 
 # bias 180  LED on
-#run 28907 # double junction, peak 6 ke
+#run 28907 # double junction  peak 6 ke
 
 # bias 180  LED off
-#run 28908 # double junction, peak 5.5 ke
+#run 28908 # double junction  peak 5.5 ke
 
 # close telescope around DUT: geo_2017_04c
 
@@ -4415,7 +4417,7 @@ run 28928 #
 # LED off:
 
 # bias 800  LED off  IB 31.7
-run 28929 # cmsqy60 6.13 ke, mean 7.75 (126%)  nrow 18  cp shallow1928a.root
+run 28929 # cmsqy60 6.13 ke  mean 7.75 (126%)  nrow 18  cp shallow1928a.root
 
 # bias 600  LED off  IB 25.9
 run 28930 # 
@@ -4471,7 +4473,7 @@ run 28948 #
 gain /home/pitzl/psi/dtb/tst400/c523i-chill-m15-trim35-gaincal.dat
 
 # bias 160  LED off  IB 40.6
-run 28951 # cp 28941: similar double junction, less charge
+run 28951 # cp 28941: similar double junction  less charge
 
 # bias 160  LED on  IB 47.1
 run 28952 # cp 28951: much smaller LED effect (still double junction)
@@ -4500,13 +4502,13 @@ geo geo_2017_04c.dat
 tilt 81.5
 
 # bias 50  LED off
-run 28959 # nice double junction, but lots of zeros pull the profile down
+run 28959 # nice double junction  but lots of zeros pull the profile down
 
 # bias 400  LED off
 run 28960 # only 3% linked long clusters
 
 # bias  60  LED off
-run 28961 # double junction, <1 ke>
+run 28961 # double junction  <1 ke>
 
 # bias  40  LED off
 run 28962 +
@@ -4531,38 +4533,38 @@ tilt 80.8
 geo geo_2017_04c.dat
 
 # bias 800 V  IB 81.9
-run 28967 # aligned (overwritten and re-done Sat 8.4.) cp 28926, 28929
+run 28967 # aligned (overwritten and re-done Sat 8.4.) cp 28926  28929
 
 # bias 160 V  IB 27.5
-run 28968 # cp 28912, 28941
+run 28968 # cp 28912  28941
 
 # bias 140 V  IB 25.8
-run 28969 # cp 28913, 28942
+run 28969 # cp 28913  28942
 
 # bias 120 V  IB 23.9
-run 28970 # cp 28914, 28943
+run 28970 # cp 28914  28943
 
 # bias 400 V  IB 43.5
-run 28971 # cp 28925, 28932
+run 28971 # cp 28925  28932
 
 # bias  50 V  IB 15.5
-run 28972 # cp 28918, 28948
+run 28972 # cp 28918  28948
 
 # bias  60 V  IB 16.9
-run 28973 # cp 28917, 28946
+run 28973 # cp 28917  28946
 
 # bias  80 V  IB 19.5
-run 28974 # cp 28916, 28945
+run 28974 # cp 28916  28945
 
 # bias 100 V  IB 21.6
-run 28975 # cp 28915, 28944
+run 28975 # cp 28915  28944
 
 # chiller -15 deg
 gain /home/pitzl/psi/dtb/tst400/c523i-chill-m15-trim35-gaincal.dat
 # strong LED at 4.0 V: ~16 uA photocurrent at 120 V
 
 # bias 120
-run 28976 # cp 28958 on, 28956 off
+run 28976 # cp 28958 on  28956 off
 
 # bias 140
 run 28977 # cp 
@@ -4658,7 +4660,7 @@ run 29007 # cp 28981
 tilt 15
 geo geo_2017_04d.dat
 
-# bias 800, strong LED on
+# bias 800  strong LED on
 run 29009 # eff 98.7 after 17 s
 
 tilt 18
@@ -4678,10 +4680,10 @@ run 29015 # ntr 4.68  eff 99.91  ry 13.20  col 1.097  row 1.793  Lan 13.58  edg 
 # bias 700
 run 29016 # ntr 4.69  eff 99.90  ry 13.53  col 1.095  row 1.785  Lan 13.48  edg 2.07
 
-# bias 650  PKAM, 29020 slightly better
+# bias 650  PKAM  29020 slightly better
 run 29017 # ntr 4.76  eff 91.59  ry 13.48  col 1.093  row 1.783  Lan 13.33  edg 2.08
 
-# bias 600  PKAM, 29085 is better
+# bias 600  PKAM  29085 is better
 run 29018 # ntr 4.73  eff 92.20  ry 13.71  col 1.092  row 1.775  Lan 13.15  edg 2.10
 
 # bias 650 again
@@ -4690,7 +4692,7 @@ run 29020 # ntr 4.72  eff 95.13  ry 13.52  col 1.090  row 1.776  Lan 13.31  edg 
 # bias 550
 run 29021 # ntr 4.81  eff 94.20  ry 13.66  col 1.089  row 1.758  Lan 13.01  edg 2.18
 
-# bias 500, 29087 has full eff
+# bias 500  29087 has full eff
 run 29022 # ntr 4.89  eff 97.50  ry 13.88  col 1.093  row 1.754  Lan 12.82  edg 2.17
 
 # bias 460 better: 29052
@@ -4778,7 +4780,7 @@ run 29052 # ntr 4.89  eff 99.24  ry 14.58  col 1.093  row 1.737  Lan 12.34  edg 
 # continue chip528i at tilt 19
 
 # bias 800
-# VwllPr, VwllSh 60 -> 10, less PKAM
+# VwllPr  VwllSh 60 -> 10  less PKAM
 # LED off
 run 29061 # eff 91%
 
@@ -4791,26 +4793,26 @@ run 29081 # eff 99.2%  less PKAM
 # gate delay 18 ns
 run 29082 # ntr 4.89  eff 99.03  ry 13.30  col 1.093  row 1.846  Lan 12.94  edg 2.47
 
-# bias 800, LED on: IB 44 -> 92 uA
+# bias 800  LED on: IB 44 -> 92 uA
 run 29083 # ntr 4.92  eff 99.36  ry 13.38  col 1.089  row 1.829  Lan 12.89  edg 2.31
                                                                       lower
 tilt 19
-# bias 650, LED on
+# bias 650  LED on
 run 29084 # ntr 5.01  eff 96.46  ry 13.59  col 1.085  row 1.764  Lan 12.48  edg 2.39
 
-# bias 600, LED on
+# bias 600  LED on
 run 29085 # ntr 5.00  eff 97.72  ry 13.78  col 1.087  row 1.759  Lan 12.37  edg 2.43
 
-# bias 550, LED on
+# bias 550  LED on
 run 29086 # ntr 5.10  eff 97.25  ry 13.84  col 1.084  row 1.748  Lan 12.15  edg 2.43
 
-# bias 500, LED on
+# bias 500  LED on
 run 29087 # ntr 5.04  eff 99.21  ry 14.01  col 1.087  row 1.736  Lan 11.97  edg 2.49
 
-# bias 480, LED on
+# bias 480  LED on
 run 29088 # ntr 5.06  eff 99.60  ry 14.20  col 1.084  row 1.726  Lan 11.84  edg 2.46
 
-# bias 650, LED on
+# bias 650  LED on
 run 29089 # 
 
 # flu bias cur led temp vers
@@ -4851,15 +4853,15 @@ gain /home/pitzl/psi/dtb/tst400/c511i-chill-m20-trim35-gaincal.dat
 
 tilt 27.7
 
-run 30022 # eff 99.3, loose sync at 300 s
+run 30022 # eff 99.3  loose sync at 300 s
 
-run 30023 # eff 98.7, drops at low y
+run 30023 # eff 98.7  drops at low y
 
-run 30025 # eff 97.4%, drops vs y and t
+run 30025 # eff 97.4%  drops vs y and t
 
 run 30028 # eff 93.8
 
-run 30034 # eff 86%, drops to 60% at low y
+run 30034 # eff 86%  drops to 60% at low y
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Fri 25.8.2017 afternoon: install 522i: 5E14
@@ -4878,7 +4880,7 @@ tilt 19
 
 run 30040 # eff 85%
 
-# vb 800, 50 uA
+# vb 800  50 uA
 
 run 30042 # eff 85#
 
@@ -4900,7 +4902,7 @@ run 30351 # ntr 2.82  eff 97.79  ry 11.20  col 1.119  row 1.919  Lan 15.77  edg 
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Wed 30.8.2017 continue 522i
-# gaincal at -20 deg, 600 V
+# gaincal at -20 deg  600 V
 #
 # bias 120
 # chiller -12 deg
@@ -4911,15 +4913,15 @@ run 30394 # ntr 2.63  eff 99.22  ry 15.46  col 1.121  row 1.710  Lan 10.18  edg 
 # over night
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Thu 31.8.2017 continue 522i at -12 deg, 120 V
+# Thu 31.8.2017 continue 522i at -12 deg  120 V
 
 run 30418 # lost sync
 
 run 30420 # ntr 2.99  eff 99.35  ry 17.83  col 1.104  row 1.557  Lan 8.35  edg 1.70
 
-# gaincal at -12 deg, 120 V
+# gaincal at -12 deg  120 V
 
-# try vertical incidence: failed: bias current unstable, trips: condensation?
+# try vertical incidence: failed: bias current unstable  trips: condensation?
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 31.8.2017 continue 522i
@@ -4961,7 +4963,7 @@ run 30487 # nice double junction
 
 # wait 22 min
 # VB 70
-run 30488 # nice double junction, at threshold
+run 30488 # nice double junction  at threshold
 
 # wait 32 min
 # VB 100
@@ -5056,8 +5058,8 @@ run 31057 #    k  run 192
 
 # takedata 1
 # scopes -d 31054
-run 31064 #  10k  run 199  9999 written, TLU 10004  padded manually, eff 92%
-run 31066 #  10k  run 201 10009 written, TLU 10017  padded manually, eff 88%
+run 31064 #  10k  run 199  9999 written  TLU 10004  padded manually  eff 92%
+run 31066 #  10k  run 201 10009 written  TLU 10017  padded manually  eff 88%
 
 # Fri 15.9.
 # continue r102 at tilt 0
@@ -5065,19 +5067,19 @@ run 31066 #  10k  run 201 10009 written, TLU 10017  padded manually, eff 88%
 
 run 31067 # 7.6 k  double event entries F and E
 
-# data format change: wev, text for empty events
+# data format change: wev  text for empty events
 
 run 31069 # run 204  6 k  no correlation
 
 # takedata 100
-run 31070 # 20525 TLU,  run 205 written 20599, deleting events extends correlation
+run 31070 # 20525 TLU   run 205 written 20599  deleting events extends correlation
 
 # takedata 1
-run 31072 # 44k TLU,  run 207 written 43970
+run 31072 # 44k TLU   run 207 written 43970
 
 tilt -20
 # takedata: don't write incomplete event
-run 31075 # 10k TLU,  run 213 written 9993
+run 31075 # 10k TLU   run 213 written 9993
 
 #-------------------------------------------------------------------------------
 # Sep 2017: R4S
@@ -5155,9 +5157,9 @@ tilt 20
 run 31150 # 160k  dy8cqi 5.7
 
 gain /home/pitzl/psi/r4s/B/r111-scancal-tb21-1005.dat
-tilt  0.5
+tilt  0.5 over night:
 run 31152 #  250k
-run 31153 # 2150k  eff 99.99  cmsdyvsev: -5 um to +3 um over 2M ev  10.9 ke at 0.039
+run 31153 # 2.15M  eff 99.99  cmsdyvsev: -5 um to +3 um over 2M ev  10.9 ke at 0.039
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 5.10.2017
@@ -5180,19 +5182,19 @@ run 31161 # 319k
 gain /home/pitzl/psi/r4s/A/r117-scancal-tb21-1006.dat # Q0 12.1
 
 tilt 20
-run 31163 # 160k  ry 7.3, 6.9 with DSP  eff 99.99
+run 31163 # 160k  ry 7.3  6.9 with DSP  eff 99.99
 
 tilt 19
-run 31164 # 160k  ry 6.4, 5.8 with DSP  eff 99.989  edge 1.0 ke with dph > 12 ADC
+run 31164 # 160k  ry 6.4  5.8 with DSP  eff 99.989  edge 1.0 ke with dph > 12 ADC
 
 tilt 18
-run 31166 # 160k  ry 6.5, 5.7 with DSP  eff 99.67  edit roi000538.txt  11.3 ke at 0.035
+run 31166 # 160k  ry 6.5  5.7 with DSP  eff 99.67  edit roi000538.txt  11.3 ke at 0.035
 #                 dy8 4.85 um
 # ex151_35 = 4.3 um and ex151_60 = 5.2 um => six 3.4 um
 
-tilt 0
-run 31167 # 10k
-run 31168 # 2592k  best Landau ever with dph>12  eff 99.99  11.0 ke at 0.035
+tilt 0 over night:
+
+run 31168 # 540  2.592M  best Landau ever with dph>12  eff 99.976   11.0 ke at 0.035  PH 226
 #                  cmsqxvsxm uniform to 0.5%
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -5210,9 +5212,9 @@ run 31172 # 160k  ry 6.3
 
 gain /home/pitzl/psi/r4s/B/r117-scancal-tb21-1008.dat
 
-tilt 18
-run 31175 # 3078k  dy8cqi 5.1  MOD resync 9.7 h  eff 99.99  11.1 ke at 0.037
-#                cmsdyvsev drops by 15 um over time in steps, linear correction
+tilt 18 over night
+run 31175 # 549  3.078M  dy8cqi 5.1  MOD resync 9.7 h  eff 99.99  11.1 ke at 0.037
+#                cmsdyvsev drops by 15 um over time in steps  linear correction
 
 #-------------------------------------------------------------------------------
 # Sun 8.10.2017
@@ -5239,7 +5241,7 @@ run 31182 # 1200k  tridxct 3.96 um weight nn
 
 geo geo_2017_10a.dat # 0 154  306  397  549  703
 GeV 5.6
-# ex151-45 = 4.7 um per arm, 3.3 um for six
+# ex151-45 = 4.7 um per arm  3.3 um for six
 
 chip 332
 gain /home/pitzl/psi/r4s/B/r332-scancal-tb21-1030.dat
@@ -5386,7 +5388,7 @@ run 31315 # 788  914k  eff 98.4  dead col  low Q  11.0 ke at 0.0274
 
 geo geo_2017_11d.dat #  0  154  306  /  445  597  751
 
-chip 144 = FDB 50x50 direct bonded p-spray Y3 maximum implant, rot90 PCB
+chip 144 = FDB 50x50 direct bonded p-spray Y3 maximum implant  rot90 PCB
 gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1104.dat
 
 # scintillator in the telescope? spoils resolution
@@ -5404,7 +5406,7 @@ run 31336 # 160k  run 822  sharp cmsqcvsx
 run 31337 # 160k  run 823
 
 # bias 70 V
-run 31338 # 160k  run 824, 59 Hz
+run 31338 # 160k  run 824  59 Hz
 
 # bias 60 V
 run 31339 # 160k  run 825
@@ -5413,18 +5415,18 @@ run 31339 # 160k  run 825
 run 31340 # 160k  run 826
 
 # bias 40 V
-run 31341 # 160k  run 827, track length still 30 col
+run 31341 # 160k  run 827  track length still 30 col
 
 # bias 20 V
-run 31342 # 160k  run 828, track length 23
+run 31342 # 160k  run 828  track length 23
 
 # bias 10 V
-run 31343 # 160k  run 829, track length 17
+run 31343 # 160k  run 829  track length 17
 
 # bias 30 V add
-run 31344 # 160k  run 830, track length 28
+run 31344 # 160k  run 830  track length 28
 
-# telescope alignment run, trigger scint 1
+# telescope alignment run  trigger scint 1
 # collimator shadows lower part of Mimosas
 # raise telescope platform by 4 mm
 tilt  0
@@ -5542,7 +5544,7 @@ run 31393 # 898 3426.2k  11.0 ke at 0.031  ph0 235  mean 13.6
 #-------------------------------------------------------------------------------
 # Tue 5.12.2017
 
-chip 144 = FDB 50x50 p-spray max implant, rot90
+chip 144 = FDB 50x50 p-spray max implant  rot90
 #gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1205.dat
 gain /home/pitzl/psi/r4s/A/c144-scancal-elab-2018-01-03-hold24.dat
 #gain /home/pitzl/psi/r4s/A/c144-scancal-elab-2018-01-03-hold20.dat
@@ -5604,7 +5606,7 @@ Wed 6.12.2017
 tilt 84
 # scint 2 (edge on) and 3 (vertical) on 4th telescope plane
 
-#gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1104.dat  old, not better
+#gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1104.dat  old  not better
 
 GeV 4.8
 geo geo_2017_12e.dat # 751 597 446 305 154 0
@@ -5666,7 +5668,7 @@ chip 144 = FDB 50x50 p-spray max implant on rot90 PCB
 
 gain /home/pitzl/psi/r4s/B/r144-scancal-tb21-1205.dat
 
-# for the night: go vertical, close telescope
+# for the night: go vertical  close telescope
 
 geo geo_2017_12f.dat # 694 540 389 305 154 0
 
@@ -5779,13 +5781,13 @@ run 31516  50      1072
 run 31518  50      1073
 
 # Vbias 80V; I = 254 uA ==> Vsen = 55V
-run 31519  50      1074, 4 re-syncs
+run 31519  50      1074  4 re-syncs
 
 # Vbias 80V; I = 250 uA ==> Vsens = 55V
-run 31520  50      1075, 6 re-syncs
+run 31520  50      1075  6 re-syncs
 
 # Vbias 90V; I = 320 uA ==> Vsens = 58V
-run 31521  50      1076, 742 re-syncs --> first 19k events seem OK
+run 31521  50      1076  742 re-syncs --> first 19k events seem OK
 run 31522  50      1077
 
 # Vbias 60V; I = 120 uA ==> Vsens = 48V
@@ -5808,7 +5810,7 @@ run 31530  50      1085
 run 31531  50      1086
 
 # Vbias 20V; I = 65 uA ==>Vsen = 13.5V
-run 31532  50      1087, 355 re-syncs, first 35k events seem OK
+run 31532  50      1087  355 re-syncs  first 35k events seem OK
 run 31533  50      1088
 
 # Vbias 10V; I = 44 uA ==>Vsen = 5.6V
@@ -5816,10 +5818,10 @@ run 31534  50      1089
 run 31535  50      1090
 
 # Vbias 70V; I = 180 uA ==> Vsen = 52V
-run 31536  100      1091, 5 re-syncs
-run 31537  100      1092, 15 re-syncs
-run 31538  100      1093, 12 re-syncs
-run 31539  200      1094, 22 re-syncs
+run 31536  100      1091  5 re-syncs
+run 31537  100      1092  15 re-syncs
+run 31538  100      1093  12 re-syncs
+run 31539  200      1094  22 re-syncs
 run 31540   37      1095  (set for 100k but roc crashed at 37k)
 run 31541  200      1096
 run 31542  200      1097
@@ -5835,12 +5837,12 @@ run 31548  100      1103
 
 # moved up 1 mm
 run 31549 # 1104  50k  
-run 31550  200     *1105  18 resyncs, seems OK
-run 31551  200      1106  21 resyncs, seems OK
-run 31552  194      1107 (set to 200k, roc crashed at 194k) 29 resyncs, OK
+run 31550  200     *1105  18 resyncs  seems OK
+run 31551  200      1106  21 resyncs  seems OK
+run 31552  194      1107 (set to 200k  roc crashed at 194k) 29 resyncs  OK
 
-run 31554  200      1109 228 re-sycs check run, eff 1% lower due to resyncs?
-run 31555  100      1110  15 re-syncs, seems OK
+run 31554  200      1109 228 re-sycs check run  eff 1% lower due to resyncs?
+run 31555  100      1110  15 re-syncs  seems OK
 run 31556  100      1111
 run 31557  200      1112
 
@@ -5854,9 +5856,9 @@ gain /home/pitzl/psi/r4s/B/r352-tb21-cooled-1215-scancal.dat
 
 tilt -12
 
-# Vbias = 70V, I = 92 uA, Vsens = 61V
+# Vbias = 70V  I = 92 uA  Vsens = 61V
 
-run 31562 # 1114, eff 99.8%, col 120 to 155 out of scintillator acceptance
+run 31562 # 1114  eff 99.8%  col 120 to 155 out of scintillator acceptance
 
 # moved in x from 5 mm to 3 mm
 
@@ -5869,7 +5871,7 @@ run 31567 # 200k  1118
 run 31568 #  95  1119 ROC PC crashed during run at event 95K  
 # recovered after power-cycling DTB PC
 run 31572 # 200 *1120  
-run 31573 # 200  1121 telescope gui crashed, but run ended OK  
+run 31573 # 200  1121 telescope gui crashed  but run ended OK  
 run 31574 # 200  1122  
 run 31575 # 200  1123  
                 
@@ -5877,31 +5879,31 @@ tilt 0
 run 31576 #  50  1124  alignment run  
 # moved down 1mm
 run 31577 #  50  1125 alignment run  
-run 31578 # 119  1126 HV went to zero at event 33500....suspicious run, stopped it; eff at 70V>98%, dropped to <10% at 0V  
+run 31578 # 119  1126 HV went to zero at event 33500....suspicious run  stopped it; eff at 70V>98%  dropped to <10% at 0V  
 
 # start of mini bias scan
-# Vbias=70, I = 89 uA, Vsens=61V
+# Vbias=70  I = 89 uA  Vsens=61V
 run 31580   50  1127  
 
-# Vbias=25, I = 65 uA, Vsens=19V
+# Vbias=25  I = 65 uA  Vsens=19V
 run 31581   50  1128  
 
-# Vbias=10, I = 40 uA, Vsens=6V
-run 31582   10  1129 DTB crashed? run stops, do not copy   
+# Vbias=10  I = 40 uA  Vsens=6V
+run 31582   10  1129 DTB crashed? run stops  do not copy   
 
-# Vbias=10, I = 40 uA, Vsens=6V
+# Vbias=10  I = 40 uA  Vsens=6V
 run 31583   50  1130  
 
-# Vbias=40, I = 76 uA, Vsens=32.4V
+# Vbias=40  I = 76 uA  Vsens=32.4V
 run 31584   50  1131  
 
-# Vbias=55, I = 83 uA, Vsens=46.7V
+# Vbias=55  I = 83 uA  Vsens=46.7V
 run 31585   50  1132  
 
-# Vbias=95, I = 97 uA, Vsens=85V
+# Vbias=95  I = 97 uA  Vsens=85V
 run 31586   50  1133  
                 
-# high stats at 70V, I= 88 uA, Vsens=62V
+# high stats at 70V  I= 88 uA  Vsens=62V
 run 31587  200  1134  
 run 31588  200  1135  
 run 31590  100  1136  
@@ -6107,7 +6109,7 @@ run 31659 # 1215  40k
 
 run 31661 # 1217  40k
 
-# hold 2, MOD delay 123, loose sync
+# hold 2  MOD delay 123  loose sync
 run 31662 # 1218  40k
 
 # hold 4
@@ -6309,7 +6311,7 @@ run 31735 # 1290  40k  eff
 # Sun 18.2.2018
 chip 133 # with Sylgard coating
 gain /home/pitzl/psi/r4s/B/c133i-scancal2-tb21-icy-2018-02-18.dat
-geo geo_2018_02f50.dat #  0 153  304  432  583  737 same, but for 50x50
+geo geo_2018_02f50.dat #  0 153  304  432  583  737 same  but for 50x50
 tilt 0.5
 # online dph > 4 rms (was 6)
 # sh800 pr600 ia121
@@ -6355,7 +6357,7 @@ run 31778 # 1333  40k  eff 99.92  q0 3.92
 run 31779 # 1334  40k  eff 99.94  q0 3.97
 
 # bias 600
-run 31780 # 1335  40k  eff 99.97, q0 3.98
+run 31780 # 1335  40k  eff 99.97  q0 3.98
 
 # bias 650
 run 31782 # 1337  40k  eff 99.96  q0 4.01 = 170 ADC
@@ -6454,7 +6456,7 @@ run 31812  160.2      1369
 run 31813  160.2      1370
 
 # bias 16V
-run 31814  160.2      1371, 1372, DTB crashed, restarted while keeping the telescope running
+run 31814  160.2      1371  1372  DTB crashed  restarted while keeping the telescope running
 
 # bias 12V
 run 31815  160.2      1373
@@ -6463,7 +6465,7 @@ run 31815  160.2      1373
 run 31816  160.2      1374
 
 # bias 4.3V
-run 31817  160.2      1375, HV=4V gives only 2.2V. Had to set HV=6V to get 4.3V. 
+run 31817  160.2      1375  HV=4V gives only 2.2V. Had to set HV=6V to get 4.3V. 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Fri 23.2.2018
@@ -6486,14 +6488,14 @@ chip 133 # 50x50 p-spray default irrad
 #gain /home/pitzl/psi/r4s/B/scm133i-scancal2-tb21-icy-2018-03-05-pr800-sh600-ia115-hold36.dat
 #gain /home/pitzl/psi/r4s/B/scm133i-scancal2-tb21-icy-2018-03-05-pr800-sh600-ia115-hold24.dat (peak)  q0 6.0
 #gaincal at bias 800
-gain /home/pitzl/psi/r4s/B/scm133i-scancal2-tb21-icy-pr800-sh600-ia115-2018-03-07-hold20.dat  q0 5.08, narrow
+gain /home/pitzl/psi/r4s/B/scm133i-scancal2-tb21-icy-pr800-sh600-ia115-2018-03-07-hold20.dat  q0 5.08  narrow
 tilt -20
 turn -18
 geo geo_2018_03a.dat #  0 153  304  521  673  826
 # bias 400
 # gain 1
 run 31869 # 1594  40k
-# 5 sigma, adjust y
+# 5 sigma  adjust y
 run 31870 # 1595  40k
 
 # bias 600 over night
@@ -6515,7 +6517,7 @@ run 31877 # 1603  40k  q0 5.8 ke
 # FW 1.1
 run 31878 # 1604  40k  q0 4.7 ke
 
-# back to FW 1.2, logging to uh2ulnmpixela:r4s_clientsw/B
+# back to FW 1.2  logging to uh2ulnmpixela:r4s_clientsw/B
 
 # cable delay 12 ns
 run 31879 # 1605  40k  q0 5.6 ke
@@ -6548,7 +6550,7 @@ run 31895 # 1616  40k  q0 3.8
 run 31896 # 1617  40k  q0 4.0
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# cable delay 0, adjust MOD
+# cable delay 0  adjust MOD
 
 # bias 800 dphcut 33
 run 31897 # 1618  40k  eff 100.0  q0 5.06
@@ -6847,7 +6849,7 @@ run 31999  90.2      1732
 
 # move 2mm to the right to recover angle out of beam because of rotation
 turn -23
-run 32000  10.2      1733, short test run to check posistion
+run 32000  10.2      1733  short test run to check posistion
 
 turn -24
 run 32001  90.2      1734
@@ -6864,7 +6866,7 @@ run 32005  40k      1738
 
 # over night: 109 edge
 turn -3.5
-run 32006  2673.6      1739, crash at 1:08, 4.8 GB
+run 32006  2673.6      1739  crash at 1:08  4.8 GB
               
 # x from +1 to +3 mm
 turn -27
@@ -6885,11 +6887,11 @@ run 32010  90.2      1743
 turn -14.5
 run 32011  90.2      1744
 
-# 200 V, 6 uA
+# 200 V  6 uA
 turn -13.5
 run 32012  90.2      1745
 
-# gain calibration for 109, hold 20, 24, 28, 32, 36 at Vbias 200 V
+# gain calibration for 109  hold 20  24  28  32  36 at Vbias 200 V
 
 #-------------------------------------------------------------------------------
 # 2018 April
@@ -6918,13 +6920,13 @@ run 32035 # 1915  40k
 run 32036 # 1916 160k  loose sync 122k  eff 99.996  q0 4.39  diffu 7.7
 
 # bias 700
-run 32037 # 1917 160k  loose sync 102k, 139k cured  eff 99.994  q0 4.32  diffu 9.2
+run 32037 # 1917 160k  loose sync 102k  139k cured  eff 99.994  q0 4.32  diffu 9.2
 
 # bias 600
 run 32038 # 1918 160k  eff 99.988  q0 4.21  diffu 9.0
 
 # bias 500
-run 32039 # 1919 160k  loose sync 32k, 36k cured  eff 99.956  q0 4.02  diffu 8.0
+run 32039 # 1919 160k  loose sync 32k  36k cured  eff 99.956  q0 4.02  diffu 8.0
 # 35002 A 35200 insert A at end of 200 block
 # 36002 A 36200
 
@@ -6964,13 +6966,13 @@ run 32049 # 1929 7000k  loose sync 19600 cured  eff 99.96  q0 4.99  dph 14.3  di
 # Thu 5.4.2018 continue 134i vertical
 
 # bias 700 V
-run 32050 # 1930 160k  loose sync 148600, cured  eff 99.70  q0 4.80  dph 14.6  diffu 6.3
+run 32050 # 1930 160k  loose sync 148600  cured  eff 99.70  q0 4.80  dph 14.6  diffu 6.3
 
 # bias 600 V
-run 32051 # 1931 160k  loose sync, cured  eff 99.26  q0 4.66  dph 15.1  diffu 6.7
+run 32051 # 1931 160k  loose sync  cured  eff 99.26  q0 4.66  dph 15.1  diffu 6.7
 
 # bias 500 V
-run 32052 # 1932 160k  loose sync, cured  eff 98.63  q0 4.46  dph 15.3
+run 32052 # 1932 160k  loose sync  cured  eff 98.63  q0 4.46  dph 15.3
 
 # bias 400 V  more noise = harder online cut
 run 32053 # 1933 160k  eff 97.52  q0 4.14  dph 15.6
@@ -7043,7 +7045,7 @@ gain /home/pitzl/psi/r4s/B/scm130-scancal2-cold-ia127-pr800-sh600-vb800-hold20.d
 
 geo geo_2018_04b.dat #  0 153  304  430  583  735  25x100
 
-# 4th Mimosa plane exchanged from Duranta: less epi, worse resolution
+# 4th Mimosa plane exchanged from Duranta: less epi  worse resolution
 
 # bias 800
 run 32093 # 1964  40k  
@@ -7109,7 +7111,7 @@ run 32116 # 1987  160k cured  eff 96.03  q0 2.49
 run 32117 # 1988  160k cured  eff 99.57  q0 3.59
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# install 137i = FDB 25x100 p-spray max implant rot90, corner defect
+# install 137i = FDB 25x100 p-spray max implant rot90  corner defect
 # same geo geo_2018_04b.dat #  0 153  304  430  583  735  25x100
 chip 137
 gain /home/pitzl/psi/r4s/B/scm137-scancal2-tb21-icy-pr800-sh600-ia127-vb800-hold20.dat
@@ -7208,7 +7210,7 @@ run 32149 # 2019  160k cured  eff 82.95  q0 1.73
 
 # bias 800 over night: 120i gain2 vertical
 run 32150 # 2020 6521k cured  eff 99.972  cmsnpxvsxmym: more diffusion
-# 31 GB, crash
+# 31 GB  crash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Mon 9.4.2018
@@ -7280,11 +7282,10 @@ turn 0.5
 
 geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
 
-# bias 120 gain_2: Tsunami in rows, look at cols
-run 32170 # 2042  40k
+# gain_2: Tsunami in rows: look at cols
 
-# adjust DUT x,y
-#                                                     fitgp0.C("cmsncolvsym",20,80)
+# bias 120 V
+#                                                                fitgp0.C("cmsncolvsym" 20 80)
 run 32171 # 2043  160k  q0 11.31  eff 99.98  dph 5.1  31.3 e/mV  diffu 6.15 um
 
 # bias 100 V
@@ -7361,7 +7362,7 @@ chip 108 # FTH 25x100 p-stop default on rot90
 gain /home/pitzl/psi/r4s/B/scm108-scancal2-tb21-pr900-sh670-ia125-hold24.dat
 
 # bias 120
-run 32194 # 2065 160k  eff 98.8 (even-odd col) see effvsy, effvsym  36.9 e/mV
+run 32194 # 2065 160k  eff 98.8 (even-odd col) see effvsy  effvsym  36.9 e/mV
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 109 # FTH 25x100 p-stop default on rot90
@@ -7406,31 +7407,31 @@ gain /home/pitzl/psi/r4s/B/scm146-scancal2-tb21-pr900-sh670-ia125-vb120-hold24.d
 run 32201 # 2072  160  eff 99.98  q0 11.25
 
 # bias 100
-run 32202 # 2073  160  eff 
+run 32202 # 2073   90  eff 
 
 # bias  80
-run 32203 # 2074  160  eff 
+run 32203 # 2074   90  eff 
 
 # bias  60
-run 32204 # 2075  160  eff 
+run 32204 # 2075   90  eff 
 
 # bias  50
-run 32205 # 2076  160  eff 99.98  ncol 1.129  q0 11.23
+run 32205 # 2076   90  eff 99.98  ncol 1.129  q0 11.23
 
 # bias  40
-run 32206 # 2077  160  eff 
+run 32206 # 2077   90  eff 
 
 # bias  30
-run 32207 # 2078  160  eff 
+run 32207 # 2078   90  eff 
 
 # bias  25
-run 32208 # 2079  160  eff 
+run 32208 # 2079   90  eff 
 
 # bias  20
-run 32209 # 2080  160  eff 99.96
+run 32209 # 2080   90  eff 99.96
 
 # bias  15
-run 32210 # 2081  160  eff 
+run 32210 # 2081   90  eff 
 
 # bias  10
 run 32211 # 2082  160  eff 99.98  ncol 1.098  q0 6.15
@@ -7456,50 +7457,50 @@ run 32216 # 2086 160  eff
 chip 155 # FDD 50x50 p-stop open rot90
 gain /home/pitzl/psi/r4s/B/scm155-scancal2-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
-# bias 120, IA 125 mA
+# bias 120  IA 125 mA
 run 32217 # 2087 160  eff   some noise
 run 32218 # 2088 160  eff 
 
 gain /home/pitzl/psi/r4s/B/scm155-scancal2-tb21-pr900-sh670-ia150-vb120-hold24.dat
 
-# bias 120, IA 150 mA
+# bias 120  IA 150 mA
 run 32219 # 2089 160  eff 99.984  eta -0.68
 
-# bias 100, IA 150 mA
+# bias 100  IA 150 mA
 run 32220 # 2090  90  eff 99.981
 
-# bias  80, IA 150 mA
+# bias  80  IA 150 mA
 run 32221 # 2091  90  eff 99.979
 
-# bias 100, IA 150 mA over night:
+# bias 100  IA 150 mA over night:
 run 32223 # 2093  7.856M  eff 99.985
 # scopes1
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 12.4.2018 continue 155 bias scan
 
-# bias  60, IA 150 mA
+# bias  60  IA 150 mA
 run 32228 # 2096 136  eff MOD and DUT out of sync
 
-# bias  50, IA 150 mA
+# bias  50  IA 150 mA
 run 32229 # 2097  90  eff 
 
-# bias  40, IA 150 mA
+# bias  40  IA 150 mA
 run 32230 # 2098  90  eff 
 
-# bias  30, IA 150 mA
+# bias  30  IA 150 mA
 run 32231 # 2099  90  eff 
 
-# bias  25, IA 150 mA
+# bias  25  IA 150 mA
 run 32232 # 2100  90  eff 
 
-# bias  20, IA 150 mA
+# bias  20  IA 150 mA
 run 32233 # 2101  90  eff 
 
-# bias  15, IA 150 mA
+# bias  15  IA 150 mA
 run 32234 # 2102  90  eff 
 
-# bias  10, IA 150 mA
+# bias  10  IA 150 mA
 run 32235 # 2103  90  eff mod out of sync
 
 # gaincal 150 mA
@@ -7549,38 +7550,38 @@ geo_2018_04e: 0  153  305   448  600  753  for 50x50
 
 tilt -84 # upsigny = -1
 
-# bias 120 V, ib 5 uA
+# bias 120 V  ib 5 uA
 run 32251  160k  2118  
 
-# bias 60 V, ib 12 uA
+# bias 60 V  ib 12 uA
 run 32252  2119  160k
 
-# bias 50 V, ib 12 uA
+# bias 50 V  ib 12 uA
 run 32253  2120  160k
 
-# bias 40 V, ib 10 uA
+# bias 40 V  ib 10 uA
 run 32254  2121  160k
 
-# bias 35 V, ib 9 uA
+# bias 35 V  ib 9 uA
 run 32255  2122  160k
 
-# bias 30 V, ib 3.5 uA
+# bias 30 V  ib 3.5 uA
 run 32256  2123  160k
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Fri 13.4.2018
 # continue 118 FTH 50x50 p-stop default on rot90 shallow
 
-# bias 25 V, ib 7.5 uA
+# bias 25 V  ib 7.5 uA
 run 32257  2124  160k
 
-# bias 20 V, ib 8.0 uA
+# bias 20 V  ib 8.0 uA
 run 32258  2125  160k
 
-# bias 15 V, ib 9.2 uA
+# bias 15 V  ib 9.2 uA
 run 32259  2126  160k
 
-# bias 10 V, ib 4.6 uA
+# bias 10 V  ib 4.6 uA
 run 32260  2127  160k  
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -7657,7 +7658,7 @@ run 32270 # 2137  160k  eta -0.05
 chip 155 # FDD 50x50 p-stop open rot90
 gain /home/pitzl/psi/r4s/B/scm155-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
-# bias 120, IA 125 mA gain_1
+# bias 120  IA 125 mA gain_1
 run 32271 # 2138  160k  eta 0.02
 # 16:57
 
@@ -7667,11 +7668,11 @@ run 32272 # 2139  10  eff
 run 32273 # 2140  160  eff 
 # 17:34
 
-# back to column-wise, gain_2
+# back to column-wise  gain_2
 
 gain /home/pitzl/psi/r4s/B/scm155-scancal2-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
-# bias 120, IA 125 mA gain_2
+# bias 120  IA 125 mA gain_2
 run 32275 # 2142  160k  eff 99.984  eta -0.65
 # 18:11
 
@@ -7735,7 +7736,7 @@ gain /home/pitzl/psi/r4s/B/scm193-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.d
 run 32284 # 2151  160k  eta -0.01  ph 239
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 139 = 50x50 FTH p-stop dot wiggle, rot90
+chip 139 = 50x50 FTH p-stop dot wiggle  rot90
 gain /home/pitzl/psi/r4s/B/scm139-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
@@ -7744,7 +7745,7 @@ geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
 run 32285 # 2152  160k  eta -0.03
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 142 = 50x50 FTH p-stop small dot, rot90
+chip 142 = 50x50 FTH p-stop small dot  rot90
 gain /home/pitzl/psi/r4s/B/scm142-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1
@@ -7760,7 +7761,7 @@ geo geo_2018_04d.dat #  0 153  305  395  547  700  25x100
 run 32288 # 2155  160k  eta -0.04
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 144 = 50x50 FDB p-spray max imp, rot90
+chip 144 = 50x50 FDB p-spray max imp  rot90
 gain /home/pitzl/psi/r4s/B/scm144-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
@@ -7782,7 +7783,7 @@ run 32289  # 2156  160k  eta -0.05  diffu 6.33  clean q
 #   ID       41.8 mA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 145 = 25x100 FDB p-spray dot, rot90 cut
+chip 145 = 25x100 FDB p-spray dot  rot90 cut
 gain /home/pitzl/psi/r4s/B/scm145-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 geo geo_2018_04d.dat #  0 153  305  395  547  700  25x100
@@ -7791,21 +7792,21 @@ geo geo_2018_04d.dat #  0 153  305  395  547  700  25x100
 run 32290 # 2157  160k  eta -0.04  low q pedestal
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 146 = 25x100 FDB p-spray default, rot90 cut
+chip 146 = 25x100 FDB p-spray default  rot90 cut
 gain /home/pitzl/psi/r4s/B/scm146-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1
 run 32291 # 2158  160k  eff 99.98  eta -0.05  clean q
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 148 = 25x100 FDB p-stop RD53 pads, rot90 cut
+chip 148 = 25x100 FDB p-stop RD53 pads  rot90 cut
 gain /home/pitzl/psi/r4s/B/scm148-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1
 run 32292 # 2159  160k  eta 0.00  clean q
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 149 = 50x50 FDB p-stop open, rot90 cut
+chip 149 = 50x50 FDB p-stop open  rot90 cut
 gain /home/pitzl/psi/r4s/B/scm149-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
@@ -7814,7 +7815,7 @@ geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
 run 32293 # 2160  160k  eta -0.03  clean q
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 150 = 25x100 FDB p-stop default, rot90 cut
+chip 150 = 25x100 FDB p-stop default  rot90 cut
 gain /home/pitzl/psi/r4s/B/scm150-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 geo geo_2018_04d.dat #  0 153  305  395  547  700  25x100
@@ -7823,7 +7824,7 @@ geo geo_2018_04d.dat #  0 153  305  395  547  700  25x100
 run 32294 # 2161  160k  eta 0.14  
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 151 = 50x50 FDB p-stop small dot, rot90 cut
+chip 151 = 50x50 FDB p-stop small dot  rot90 cut
 gain /home/pitzl/psi/r4s/B/scm151-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
@@ -7832,7 +7833,7 @@ geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
 run 32295 # 2162  160k  eta -0.55
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 152 = 50x50 FDD p-stop default, straight cut
+chip 152 = 50x50 FDD p-stop default  straight cut
 gain /home/pitzl/psi/r4s/B/scm152-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1
@@ -7857,7 +7858,7 @@ run 32299 # 2166  160k  eta -0.14
 run 32301 # 2168  160k  eta -0.70
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 172 = 50x50 FTH p-stop max imp, straight
+chip 172 = 50x50 FTH p-stop max imp  straight
 gain /home/pitzl/psi/r4s/B/scm172-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 # [ROC 172 settings]
 #   VA      2500 mV
@@ -7905,21 +7906,21 @@ gain /home/pitzl/psi/r4s/B/scm191-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.d
 run 32306 # 2173  160k  eff 99.999  eta -0.09
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 158 = 50x50 FDD p-stop small dot, straight cut
+chip 158 = 50x50 FDD p-stop small dot  straight cut
 gain /home/pitzl/psi/r4s/B/scm158-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
 run 32307 # 2174  160k  eff 99.5  eta -0.21  dead column  diffu 8.27
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 159 = 50x50 FDB p-stop dot, straight cut
+chip 159 = 50x50 FDB p-stop dot  straight cut
 gain /home/pitzl/psi/r4s/B/scm159-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
 run 32308 # 2175  160k  eff 98.8  eta -0.13
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 153 = 25x100 FDD p-stop small dot, rot90
+chip 153 = 25x100 FDD p-stop small dot  rot90
 gain /home/pitzl/psi/r4s/B/scm153-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 geo geo_2018_04d.dat #  0 153  305  395  547  700  25x100
@@ -7928,28 +7929,28 @@ geo geo_2018_04d.dat #  0 153  305  395  547  700  25x100
 run 32309 # 2176  160k  eff 99.8  eta -0.05  nrow 1.8
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 156 = 25x100 FDD p-stop dot, rot90
+chip 156 = 25x100 FDD p-stop dot  rot90
 gain /home/pitzl/psi/r4s/B/scm156-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
 run 32311 # 2178  160k  eff 99.6  eta -0.01  nrow 1.65
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 157 = 25x100 FDD p-stop default, rot90 cut
+chip 157 = 25x100 FDD p-stop default  rot90 cut
 gain /home/pitzl/psi/r4s/B/scm157-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
 run 32312 # 2179  160k  eff 99.98  eta -0.05  nrow 1.84
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 164 = 25x100 FDB p-stop small dot, rot90 cut
+chip 164 = 25x100 FDB p-stop small dot  rot90 cut
 gain /home/pitzl/psi/r4s/B/scm164-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # bias 120 gain_1 40 MHz
 run 32313 # 2180  160k  eff 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 160 = 50x50 FDB p-stop dot wiggle, straight cut
+chip 160 = 50x50 FDB p-stop dot wiggle  straight cut
 gain /home/pitzl/psi/r4s/B/scm160-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 geo geo_2018_04c.dat #  0 153  305  395  547  700  50x50
@@ -7972,16 +7973,16 @@ run 32330 # 2193   40
 # tilt 90
 run 32333 # 2196  160 
 
-# bias 700 V, 36 uA
+# bias 700 V  36 uA
 run 32334  160k  2197
 
-# bias 600 V, 33 uA
+# bias 600 V  33 uA
 run 32335  160k  2198
 
-# bias 500 V, 31 uA
+# bias 500 V  31 uA
 run 32336  160k  2199: 144 Hz
 
-# bias 400 V, 28 uA
+# bias 400 V  28 uA
 run 32337  160k  2200: 143 Hz
 
 # 800 V over night: 130i edge
@@ -7990,34 +7991,34 @@ run 32338  7.5M  2201: 142 Hz
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Tue 1.5.2018: continue 130i edge-on bias scan
 
-# bias 350 V,
+# bias 350 V 
 run 32339  160k  2202
 
-# bias 300 V, 25 uA
+# bias 300 V  25 uA
 run 32340  160k  2203
 
-# bias 275 V,
+# bias 275 V 
 run 32341  160k  2204
 
-# bias 250 V, 23 uA
+# bias 250 V  23 uA
 run 32342  160k  2205
 
-# bias 225 V, 22 uA
+# bias 225 V  22 uA
 run 32343  160k  2206
 
-# Bias 200 V, 21 uA
+# Bias 200 V  21 uA
 run 32344  160k  2207
 
-# Bias 175 V, 19 uA
+# Bias 175 V  19 uA
 run 32345  160k  2208
 
-# Bias 150 V, 18 uA
+# Bias 150 V  18 uA
 run 32346  160k  2209
 
-# Bias 125 V, 16 uA
+# Bias 125 V  16 uA
 run 32347  160k      2210
 
-# Bias 800 V, 39 uA
+# Bias 800 V  39 uA
 run 32348  160k      2211
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -8042,15 +8043,15 @@ geo geo_2018_05a.dat #  0 152  304  513  666  818  25x100
 gain /home/pitzl/psi/r4s/B/scm124-scancal1-chilled-2018-05-01-ia155-ib45-vb800-hold20.dat
 
 run 32364  40k  2232
-# adjust x, tilt
+# adjust x  tilt
 run 32365  40k  2233
 
 # bias 800 V over night: 124i edge
-run 32366  8.0M  2234   40 GB, bias trip 15'200 s
+run 32366  8.0M  2234   40 GB  bias trip 15'200 s
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Wed 2.5.2018
-# power cycle, restart              
+# power cycle  restart              
 
 # bias 700 V
 run 32367  160k  2235
@@ -8088,10 +8089,10 @@ run 32377  160k  2245
 # bias  50 V
 run 32378  160k  2246
 
-# bias 225 V, 22.5 uA
+# bias 225 V  22.5 uA
 run 32379  160k  2247
 
-# bias 800 V,  alignment check, 35 uA
+# bias 800 V   alignment check  35 uA
 run 32380  160k  2248
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -8104,7 +8105,7 @@ run 32382   40k  2252
 
 run 32383  160k  2253
 
-# move 2.5 mm down, tilt -3
+# move 2.5 mm down  tilt -3
 run 32384   40k  2254
 
 # move 2 mm up
@@ -8113,57 +8114,57 @@ run 32385   40k  2255
 # move 1 mm down
 run 32386   40k  2256
 
-# 800 V, 40 uA
+# 800 V  40 uA
 run 32387  160k  2257  q0 6.81  ph 117
 
-# 700 V, 37 uA
+# 700 V  37 uA
 run 32388  160k  2258
 
-# 600 V, 34.5 uA
+# 600 V  34.5 uA
 run 32389  160k  2259
 
-# 500 V, 32 uA
+# 500 V  32 uA
 run 32390  160k  2260  eff 99.85
 
-# 800 V, 40 uA over night: 124i vertical
-run 32392  8.2M  2261, clean end, 155 Hz, 21 GB
+# 800 V  40 uA over night: 124i vertical
+run 32392  8.2M  2261  clean end  155 Hz  21 GB
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 3.5.2018 continue 124i vertical
 
-# 400 V, 
+# 400 V  
 run 32393  160k  2262
 
-# 350 V, 
+# 350 V  
 run 32394  160k  2263
 
-# move telescope y 2 mm, DUT 0.5 mm x
-# 300 V, 
+# move telescope y 2 mm  DUT 0.5 mm x
+# 300 V  
 run 32395  160k  2264
 
-# lower telescope 2 mm, DUT 0.5 mm x
-# 250 V, 
+# lower telescope 2 mm  DUT 0.5 mm x
+# 250 V  
 run 32396  160k  2265
 
-# 225 V, 25 uA
+# 225 V  25 uA
 run 32397  160k  2266
 
-# 200 V, 24 uA
+# 200 V  24 uA
 run 32398  160k  2267
 
-# 175 V, 23 uA
+# 175 V  23 uA
 run 32399  160k  2268
 
-# 150 V, 21 uA
+# 150 V  21 uA
 run 32400  160k  2269
 
-# 125 V, 19 uA
+# 125 V  19 uA
 run 32401  160k  2270
 
-#100 V, 17 uA
+#100 V  17 uA
 run 32402  160k  2271
 
-#50  V, 12 uA
+#50  V  12 uA
 run 32403  160k  2272
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -8173,44 +8174,40 @@ geo geo_2018_05d.dat #  0 152  304  505  658  811  25x100
 
 gain /home/pitzl/psi/r4s/B/scm120-scancal1-chilled-2018-05-03-ia122-ib36-vb800-hold20.dat
 
-run 32405  40k  2285
-
-# shift 1 mm x
-
-# 800 V, 33 uA
+# 800 V  33 uA
 run 32406  160k  2286
 
-# 700 V, 30 uA
+# 700 V  30 uA
 run 32407  160k  2287
 
-# 600 V, 28 uA
+# 600 V  28 uA
 run 32408  160k  2288
 
-# 500 V, 26 uA
+# 500 V  26 uA
 run 32409  160k  2289
 
-# 400 V, 24 uA
+# 400 V  24 uA
 run 32410  160k  2290
 
-# 350 V, 23 uA
+# 350 V  23 uA
 run 32411  160k  2291
 
-# 300 V, 22 uA
+# 300 V  22 uA
 run 32412  160k  2292
 
-# 250 V, 21 uA
+# 250 V  21 uA
 run 32413  160k  2293
 
-# 200 V, 20 uA
+# 200 V  20 uA
 run 32414  160k  2294
 
-# 150 V, 18 uA
+# 150 V  18 uA
 run 32415  160k  2295
 
-# 100 V, 
+# 100 V  
 run 32416  160k  2296
 
-# 175 V, 
+# 175 V  
 run 32417  160k  2297
 
 # 800 V over night: 120i edge 125 mA
@@ -8228,7 +8225,7 @@ run 32420  160k  2300
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 116 edge on
 
-chip 116 = 25x100 FTH p-stop RD53 pads, rot90
+chip 116 = 25x100 FTH p-stop RD53 pads  rot90
 
 geo geo_2018_05d.dat #  0 152  304  505  658  811  25x100
 
@@ -8238,7 +8235,7 @@ gain /home/pitzl/psi/r4s/B/scm116-scancal1-chilled-2018-05-04-ia125-ib00-vb120-h
 # bias 120
 run 32422  40k  2308
 
-# adjust x, tilt
+# adjust x  tilt
 run 32423   40k  2309
 
 # bias 120
@@ -8271,14 +8268,11 @@ run 32432  160k  2318
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 150 edge on
 
-chip 150 = 25x100 FDB p-stop default, rot90 cut
+chip 150 = 25x100 FDB p-stop default  rot90 cut
 
 gain /home/pitzl/psi/r4s/B/scm150-scancal1-2018-05-04-ia132-ib00-vb120-hold24.dat
 
 # bias 120
-run 32435   40k  2324
-
-# extra tilt -1 deg
 run 32437  160k  2326  dph 2.8  q1 7.49
 
 # bias 100
@@ -8308,20 +8302,20 @@ run 32445  160k  2334
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # 157 edge on
 
-chip 157 = 25x100 FDD p-stop default, rot90 cut
+chip 157 = 25x100 FDD p-stop default  rot90 cut
 
 gain /home/pitzl/psi/r4s/B/scm157-scancal1-2018-05-04-ia131-ib00-vb120-hold24.dat
 
 # bias 120
 run 32447   40k  2338
-# adjust tilt, x
+# adjust tilt  x
 run 32448   40k  2339
 
 # bias 150 over night: 157 edge
 run 32449 7.56M  2340  11 GB  15 um drift in x  nrowvsy: deep hump FDD
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Sat 5.5.2018: continue 157 edge on
+# Sat 5.5.2018: continue FDD 157 edge on
 
 # bias 200
 run 32450  160k  2342
@@ -8329,7 +8323,7 @@ run 32450  160k  2342
 # 180 V
 run 32451  160k  2343 
 
-# 100 V, 0.25 uA
+# 100 V  0.25 uA
 run 32452  160k  2344
 
 # 250 V
@@ -8380,7 +8374,7 @@ run 32464 # 2356   40k
 run 32465 # 2357   40k
 
 # 60 V
-run 32466 # 2358  160k  q0 11.59
+run 32466 # 2358  160k  q0 11.59  phvsprev not negative
 
 # 50 V
 run 32467 # 2359  160k  q0 11.31
@@ -8456,7 +8450,7 @@ gain /home/pitzl/psi/r4s/B/scm133i-cal-2018-05-07-ia44-vb800-vcal400-hold36.dat
 gain /home/pitzl/psi/r4s/B/scm133i-scancal1-2018-05-08-ia49-ib78-vb800-hold36.dat
 
 # delay 0
-run 32501 # 2397   90k  ph 158
+run 32501 # 2397   90k  ph 158  phvsprev: negatve
 
 # delay  25 ns
 run 32502 # 2398   90k  ph 160.2  q0 6.5 ke  need hot channel masking for dutqvsdph
@@ -8496,7 +8490,7 @@ run 32510 # 2406   90k  ph 115.3  q0 5.2 ke
 gain /home/pitzl/psi/r4s/B/scm133i-cal-2018-05-07-ia44-vb800-vcal400-hold36.dat
 
 # bias 800 V; 38 uA
-run 32519  90.2  2415  ph 162.9  q0 6.36  eff 99.94
+run 32519  90.2  2415  ph 162.9  q0 6.36  eff 99.94  phvsprev: negatve
 
 # bias 700 V; 33 uA
 run 32520  90.2  2416  ph 157.2  q0 6.17  eff 99.94
@@ -8533,21 +8527,21 @@ run 32529  90.2  2425  ph  45.2  q0 2.02  eff 66.72
 gain /home/pitzl/psi/r4s/B/scm133i-scancal1-2018-05-08-ia128-vb800-hold20.dat
 run 32531  90.2  2426  ph 117.6  q0 4.88
 
-# back to IA 47 mA, delay 25
-# low IA, same IB (higher Temp):
+# back to IA 47 mA  delay 25
+# low IA  same IB (higher Temp):
 # chiller -14.9 -> ib 78 uA
 gain /home/pitzl/psi/r4s/B/scm133i-scancal1-2018-05-08-ia49-ib78-vb800-hold36.dat
 run 32532  160.2  2427  ph 147.6  q0 5.89
 
-# scanhold: faster shaping at higher T, IB
+# scanhold: faster shaping at higher T  IB
 # gaincal at IB 78 uA
 gain /home/pitzl/psi/r4s/B/scm133i-scancal1-2018-05-08-ia49-ib78-vb800-hold28.dat
 
 #delay 12
-run 32533  160.2  2428  ph 148.7  q0 5.79
+run 32533  160.2  2428  ph 148.7  q0 5.79  phvsprev: negatve
 
 #delay 0 (pre-peak?)
-run 32534  160.2  2429  ph 149.5  q0 5.83
+run 32534  160.2  2429  ph 149.5  q0 5.83  phvsprev: negatve
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Wed 9.5.2018
@@ -8559,7 +8553,7 @@ gain /home/pitzl/psi/r4s/B/scm134i-scancal1-2018-05-09-ia62-ib31-vb800-hold30.da
 
 # same geo_2018_05e.dat #  0  153  305  /  432  583  736  50x50
 
-tilt 0
+tilt 2 # start value
 
 # delay 0
 # bias 800
@@ -8575,17 +8569,18 @@ run 32558 # 2444  7.6M
 # continue 134i at IA 62 mA
 
 # bias 800
-run 32561 # 2447   90k  eff 97.5  too noisy, triangular Landau
+run 32561 # 2447   90k  eff 97.5  too noisy  triangular Landau
 
 # too ugly - give up
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# install 123i = 50x50 FTH p-stop open ring on straight, with Sylgard, quiet
+# install 123i = 50x50 FTH p-stop open ring on straight  with Sylgard  quiet
 
 chip 123
 # IA 30 mA
 gain /home/pitzl/psi/r4s/B/scm123-scancal1-cold-ia30-vb800-hold48.dat
 
+# vertical
 # same geo_2018_05e.dat #  0  153  305  /  432  583  736  50x50
 
 # bias 800
@@ -8630,7 +8625,7 @@ run 32574 # 2460   90k  eff 99.97  ph 127.4  q0 4.19
 # with TLU
 # bias 800 V over night
 # delay 75
-run 32578  9.0M  2462, magnet tripped sometime during the night
+run 32578  9.0M  2462  magnet tripped sometime during the night
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sat 12.5.2018
@@ -8645,11 +8640,6 @@ gain /home/pitzl/psi/r4s/B/scm120i-scancal1-icy-ia51-vb800-pr600-sh300-hold36.da
 geo geo_2018_05d.dat #  0 152  304  505  658  811  25x100
 
 # bias 800
-#tilt 1
-run 32582   40k  2505
-
-#tilt 0
-run 32583   40k  2506
 run 32584  160k  2507
 
 # bias 700
@@ -8681,15 +8671,15 @@ run 32593  160k  2516
 
 # bias 150
 run 32594  160k  2517  hangs
-# scoped -l 150200 32594
+# scoped -l 150200 32594 OK
 
 # bias 100
 run 32595  160k  2518  hangs
-# scoped -l 150200 32595
+# scoped -l 150200 32595 OK
 
 # bias 800
 run 32596  160k  2519
-# scoped -l 145054 32596
+# scoped -l 145054 32596 OK
 # scoped -l 145060 32596 hangs
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -8700,26 +8690,26 @@ geo geo_2018_05e25.dat #  0  153  305  /  432  583  736  25x100
 # bias 800
 run 32598   40k  2523
 
-# adjust y, chiller at -21 deg
+# adjust y  chiller at -21 deg
 run 32599   90k  2524  q0 6.79
 
-# chiller -23 deg, Peltier 3 W
+# chiller -23 deg  Peltier 3 W
 
 gain /home/pitzl/psi/r4s/B/scm120i-scancal1-icy-ia50-vb800-pr600-sh300-hold36-2018-05-13.dat
 
-# 800 V, 20 uA            ke    with hot   moyal
-run 32600   90k  2525  q0 6.87  eff 99.00  q0 7.18  ph 160
+# 800 V  20 uA            ke    with hot   moyal
+run 32600   90k  2525  q0 6.87  eff 99.00  q0 7.18  ph 160  phvsprev negative
 
-# 700 V, 18 uA
+# 700 V  18 uA
 run 32601   90k  2526  q0 6.63  eff 99.54
 
-# 600 V, 17 uA
+# 600 V  17 uA
 run 32602   90k  2527  q0 6.36  eff 99.77
 
-# 500 V, 16 uA
+# 500 V  16 uA
 run 32603   90k  2528  q0 6.01  eff 99.82
 
-# 400 V, 15 uA
+# 400 V  15 uA
 run 32604   90k  2529  q0 5.59  eff 99.844
 #                    dphcut 18  eff 99.882  q0 5.69
 #                    dphcut 21  eff 99.886  q0 5.64
@@ -8730,52 +8720,52 @@ run 32604   90k  2529  q0 5.59  eff 99.844
 #                    dphcut 36  eff 99.554  q0 5.56
 #                    dphcut 39  eff 99.388  q0 5.57
 
-# 350 V, 14 uA
+# 350 V  14 uA
 run 32605   90k  2530  q0 5.34  eff 99.86
 
-# 300 V, 14 uA
+# 300 V  14 uA
 run 32606   90k  2531  q0 5.01  eff 99.78  pxqrms 0.32
 
-# 250 V, 13 uA
+# 250 V  13 uA
 run 32607   90k  2532  q0 4.61  eff 99.68
 
-# 200 V, 12 uA
+# 200 V  12 uA
 run 32608   90k  2533  q0 3.95  eff 99.42
 
-# 175 V, 12 uA
+# 175 V  12 uA
 run 32609   90k  2534  q0 3.46  eff 99.11
 
-# 150 V, 11 uA
+# 150 V  11 uA
 run 32610   90k  2535  q0 2.91  eff 97.88
 
-# 100 V,  9 uA
+# 100 V   9 uA
 run 32611   90k  2536  q0 2.10  eff 91.80
 
-# 800 V, 20 uA over night: 120i vertical slow
+# 800 V  20 uA over night: 120i vertical slow
 run 32612 8.37M  2537  q0 6.94  eff 99.96
-# 167 Hz, 27 GB scopes1
+# 167 Hz  27 GB scopes1
 
 #-------------------------------------------------------------------------------
 # Jun 2018
 #-------------------------------------------------------------------------------
 # plan:
-# repeat some scans with gain_1, low IA
+# repeat some scans with gain_1  low IA
 
 # 1.
 # edge-on 144 FDB 50x50 p-spray max implant on rot90 PCB for Landau at 68 mA
 # p-scan done: no effect
-# turns for edges3, 4, 6, 8 done
+# turns for edges3  4  6  8 done
 
 # 2.
-# chip 148 = 25x100 FDB p-stop RD53 pads, rot90 cut
+# chip 148 = 25x100 FDB p-stop RD53 pads  rot90 cut
 # turn 14.0 = 25/100 = edges1
 # turn  7.1 = 25/200 = edges2  got 7.5 deg
 # turn  4.8 = 25/300 = edges3  got 5.1 deg
 # turn  3.6 = 25/400 = edges4  got 3.9 deg
-# p-scan done: no effect, no scattering
+# p-scan done: no effect  no scattering
 
 # 3.
-# empty telescope extrapolation 30, 40, 50, 60, 70, 80, 90 mm done
+# empty telescope extrapolation 30  40  50  60  70  80  90 mm done
 
 # 4.
 # edge-on 120i FTH 100x25 p-stop default on rot90 turn scan for resolution (best Q) done
@@ -8787,16 +8777,16 @@ run 32612 8.37M  2537  q0 6.94  eff 99.96
 # edge-on 172 or 176 50x50 p-stop max implant on straight: row-wise turn scan for resolution
 
 # 7.
-# chip 150 = 25x100 FDB p-stop default, rot90 cut turn scan for resolution
+# chip 150 = 25x100 FDB p-stop default  rot90 cut turn scan for resolution
 
 # (edge-on 147 FDB 50x50 p-stop default rot90 for Landau)
 
 # 8.
 # glue and bond:
 # fresh 25x100 on straight PCB for 25 um edge-on with row-wise readout
-# 180, 192
+# 180  192
 
-# tilt scan straight 122i or 123i (quiet, q 5.3 ke) or 126i or 133i for 50 um resolution
+# tilt scan straight 122i or 123i (quiet  q 5.3 ke) or 126i or 133i for 50 um resolution
 # tilt scan straight 128i for 25 um resolution
 
 # 9. Dreimaster:
@@ -8822,12 +8812,12 @@ run 32689   40
 run 32690  160
 
 #-------------------------------------------------------------------------------
-# Sep 2018
+# Sep 2018: 2nd p irrad
 #-------------------------------------------------------------------------------
 # Tue 11.9.2018
 # logging to uh2ulnmpixelc
 
-chip 174
+chip 174 = FTH 25x100 p-stop default on rot90 after 6.6E15p/cm2
 gain /home/pitzl/psi/r4s/C/174i-scancal-cold-ia125-v400-hold40.dat
 
 gain /home/pitzl/psi/r4s/C/174-scancal-tb21-cold-ia119-vb800-hold40.dat
@@ -8840,6 +8830,8 @@ tilt 2.5 # start values
 turn 2.5 # better too large than too small
 
 # update online code from pixela
+
+# bias174i.dat
 
 # bias 800
 run 33568  160k  2880  99.79  q0 3.95  ph 105
@@ -8864,7 +8856,7 @@ run 33575  160k  2887  78.03  q0 1.39
 
 # over night: 174i vertical
 # bias 800
-run 33576  4.8M  2888  99.759 q0 3.86  ph 105.7
+run 33576  4.8M  2888  99.76  q0 3.86  ph 105.7
 # scopes1
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -8907,14 +8899,14 @@ run 33589  160k  2905
 run 33590  160k  2906  
 
 # bias 800
-run 33591  160k  2907  copied
+run 33591  160k  2907  
 
 # over night: 174i edge
 run 33592  5.0M  2908  
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 13.9.2018
-# edge-on with turn, no telescope
+# edge-on with turn  no telescope
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Fri 14.9.2018
@@ -8964,7 +8956,7 @@ gain /home/pitzl/psi/r4s/C/174-scancal-tb21-cold-ia119-vb800-hold40.dat
 
 # IA 117 mA
 # bias 800
-run 33606  160k  2964  dx 7.9
+run 33606  160k  2964  99.6  dx 7.9
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 179 # FTH 25x100 p-stop max implant on rot90
@@ -8976,7 +8968,7 @@ turn 2.5
 geo geo_2018_09d.dat #  geo 0 153 305 415 568 721
 
 # bias 800
-run 33609  170k  2968+2969  99.97  4.23  ph 121.8
+run 33609  170k  2968+2969  99.97  4.23  ph 121.8  phvsprev weak negative
 
 # over night: 179i vertical
 # bias 800
@@ -8986,6 +8978,8 @@ run 33610  6.3M  2970  99.97  q0 4.30  ph 123.4
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sat 15.9.2018
 # continue 179i vertical
+
+# bias179i.dat
 
 # bias 750
 run 33611  160k  2971  99.96  q0 4.12  
@@ -9034,11 +9028,13 @@ run 33624  160k  2984  53.56  q0 1.12
 
 gain /home/pitzl/psi/r4s/C/179i-scancal-cold-ia50-vb800-hold44.dat
 
+# bias179s.dat
+
 # bias 800
 run 33626  160k  2985  lost sync
 
 # bias 800  q0 FWHM 86%  ph FWHM 61%
-run 33629  160k  2987  99.98  q0b 4.86  ph 159  dph 7.7 RMS
+run 33629  160k  2987  99.98  q0b 4.86  ph 159  dph 7.7 RMS  phvsprev weak negative
 
 # bias 700
 run 33630  160k  2988  99.98  q0 
@@ -9119,7 +9115,7 @@ tilt 8.5  # frozen tubes
 turn 2.5
 
 # bias 800  noisy
-run 33664  160k  3020  99.57  7.17  ph 167.4
+run 33664  160k  3020  99.57  7.17  ph 167.4  phvsprev strong negative
 
 # over night: 133i tilt 8  telescope stops building
 run 33665  1.8M  3021
@@ -9138,43 +9134,43 @@ run 33667  160k  3023
 # bias 650
 run 33668  160k  3024
 
-# bias 600 V, 11.5 uA
+# bias 600 V  11.5 uA
 33669  160.2      3025
 
-# bias 550 V, 10.8 uA
+# bias 550 V  10.8 uA
 33670  160.2      3026
 
-# bias 500 V, 10.3 uA
+# bias 500 V  10.3 uA
 33671  160.2      3027
 
-# bias 450 V, 9.9 uA
+# bias 450 V  9.9 uA
 33672  160.2      3028
 
-# bias 400 V, 9.5 uA
+# bias 400 V  9.5 uA
 33673  160.2      3029
 
-# bias 350 V, 9.2 uA
+# bias 350 V  9.2 uA
 33674  160.2      3030
 
-# bias 300 V, 8.7 uA
+# bias 300 V  8.7 uA
 33675  160.2      3031
 
-# bias 250 V, 8.2 uA
+# bias 250 V  8.2 uA
 33676  160.2      3032
 
-# bias 200 V, 7.5 uA
+# bias 200 V  7.5 uA
 33677  160.2      3033
 
-# bias 150 V, 6.5 uA
+# bias 150 V  6.5 uA
 33678  160.2      3034
 
-# bias 100 V, 5.3 uA
+# bias 100 V  5.3 uA
 33679  160.2      3035
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Tue 18.9.2018 annealed 174i
 
-chip 174
+chip 174 = FTH 25x100 p-stop default on rot90 after 6.6E15p/cm2
 
 gain /home/pitzl/psi/r4s/C/174i-scancal-tb21-cold-ia50-vb800-hold40.dat
 
@@ -9184,10 +9180,10 @@ tilt 2.5
 turn 2.5
 
 # bias 800
-run 33686  160k  3042  99.945  q0b 4.55  ph 149  dph 7.5
+run 33686  160k  3042  99.945  q0b 4.55  ph 149  dph 7.5  phvsprev strong negative
 
 # over night: 174i vertical
-run 33687  2.4M  3043  q0 
+run 33687  2.4M  3043  q0   process
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Wed 19.9.2018
@@ -9203,7 +9199,7 @@ tilt 2.5
 turn 2.5
 
 # bias 800
-run 33692  160k  3046  99.90  q0b 3.93  ph 124
+run 33692  160k  3046  99.90  q0b 3.93  ph 124  phvsprev strong negative
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Wed 19.9.2018
@@ -9219,13 +9215,13 @@ tilt 2.5
 turn 2.5
 
 # bias 800
-run 33695  250k  3049  99.978 q0b 5.32  ph 154.3
+run 33695  250k  3049  99.978 q0b 5.32  ph 154.3  phvsprev strong negative
 
-# take edge-on data: delay scan, without telescope
+# take edge-on data: delay scan  without telescope
 
-# back to vertical, with telescope
+# back to vertical  with telescope
 
-# bias 800, delay 0
+# bias 800  delay 0
 run 33698  160k  3069  99.97  q0 5.28  cmsdyvsx -0.0054
 # start from alignDUT_33695.dat
 # iter 1: cmsdyvsx few entries
@@ -9248,11 +9244,11 @@ run 33701  7.2M  3072  99.97  q0b 5.44  ph 159  dph 8.2
 # Erika on shift: study gain systematics
 # same geo_2018_09g
 
-# IA 125 mA, peaking at hold 24
+# IA 125 mA  peaking at hold 24
 
 gain /home/pitzl/psi/r4s/C/193i-scancal-cold-ia125-vb800-2018-09-20.dat
 
-# bias 800, delay 0
+# bias 800  delay 0
 run 33705  160k  3075  99.90  q0b 4.05  ph 101.3
 
 #gain /home/pitzl/psi/r4s/C/193i-scancal-cold-ia48-vb800-hold40-2018-09-19.dat
@@ -9270,11 +9266,11 @@ run 33706  160k  3076  99.90  q0 4.96  ph 148.7
 tilt 2.5
 turn 2.5
 
-chip 179
+chip 179 # FTH 25x100 p-stop max implant on rot90
 
 gain /home/pitzl/psi/r4s/C/179i-scancal-cold-ia128-vb800-sh450-hold40-2018-09-20.dat
 
-# bias 800  IA 125 mA  cp 33610: similar q0b, ph
+# bias 800  IA 125 mA  cp 33610: similar q0b  ph
 run 33708  160k  3078  99.95  q0b 4.36  ph 117  dph 7.2
 
 # IA 51 mA
@@ -9282,13 +9278,13 @@ run 33708  160k  3078  99.95  q0b 4.36  ph 117  dph 7.2
 #gain /home/pitzl/psi/r4s/C/179i-scancal-cold-ia50-vb800-hold44.dat  q0b 4.8
 gain /home/pitzl/psi/r4s/C/179i-scancal-cold-ia51-vb800-sh300-hold40-2018-09-20.dat
 
-# bias 800  IA 51 mA  cp 33629
-run 33709  160k  3079  99.95  q0b 4.41  ph 153  duta 192  -10% q0b, -4% ph
+# bias 800  IA 51 mA  cp 33629 
+run 33709  160k  3079  99.95  q0b 4.41  ph 153  duta 192  -10% q0b  -4% ph
 
 gain /home/pitzl/psi/r4s/C/179i-scancal-cold-ia51-vb800-sh300-hold40-2018-09-21.dat
 
 # over night: 179i vertical
-run 33712  7.65M 3081  99.95  q0b 5.24  ph 154.3
+run 33712  7.65M  3081  99.97 stable  q0b 5.24  ph 154.3  copied
 # scopes1
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -9309,6 +9305,10 @@ run 33737  160k  3103  99.88  q0 4.82
 
 # over night: 155i vertical
 run 33738  8.0M  3104  
+# tilt turn  cmsdyvsy  cmsdxvsx  cmsdxvsy  *1E3
+# 2.5  0.0   0.032761  0.201595  0.082983
+# 2.5  0.5   0.039290  0.152557  0.463445
+# 2.5  1.0   0.045457  0.025649  0.844829
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sat 22.9.2018
@@ -9358,7 +9358,7 @@ run 33750  160k  3117  99.    q0
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sat 22.9.2018
-# 173 = 50x50 straight p-stop default with 3.3E15p/cm2
+# 173 = FTH 50x50 straight p-stop default with 3.3E15p/cm2
 
 chip 173
 
@@ -9369,8 +9369,9 @@ run 33752   60k  3119  99.98  q0 5.72  ph 149
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sat 22.9.2018
+# same geo geo_2018_09f.dat #  0 152  304  405  557  710  50x50
 
-chip 175 = 50x50 straight p-stop max implant with 3.3E15p/cm2
+chip 175 = FTH 50x50 straight p-stop max implant with 3.3E15p/cm2
 
 gain /home/pitzl/psi/r4s/C/175i-scancal-cold-ia51-vb800-hold40-2018-09-22.dat
 
@@ -9380,6 +9381,11 @@ run 33757  160k  3123  99.    q0 5.6  ph 159
 # over 2 nights: 175i vertical 18GB
 GeV 5.6
 run 33758  16M  3124  99.63  q0 5.65  ph 159.4
+# turn  cmsdxvsy  cmsdxvsx *1E3
+# -2.0  2.9       -0.4
+# -1.0  1.9        0.0057
+#  0.0  1.0        0.2
+#  1.0  0.03      -0.06
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Mon 24.9.2018
@@ -9399,23 +9405,23 @@ turn 2.5
 # bias 800
 run 33761  160k  3128  99.06  q0 3.60  ph 105
 
-#bias 700 V, 20 uA
+#bias 700 V  20 uA
 run 33762  160.2  3129  
 
 #mv 0.7 mm down
-#bias 600 V, 17 uA
+#bias 600 V  17 uA
 run 33763  160.2  3130  97.65
 
-#bias 500 V, 15 uA
+#bias 500 V  15 uA
 run 33764  160.2  3131  96.2
 
-#bias 400 V, 13 uA
+#bias 400 V  13 uA
 run 33765  160.2  3132  93.0
 
-#bias 350 V, 13 uA
+#bias 350 V  13 uA
 run 33766  160.2  3133  
 
-#bias 300 V, 13 uA
+#bias 300 V  13 uA
 run 33767  160.2  3134  
 
 # UHH meeting
@@ -9428,10 +9434,10 @@ run 33769  160.2  3136
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Mon 24.9.2018
-# 115 edge-on
+# 115i edge-on
 
 geo geo_2018_09c.dat #  0 152  304  485  638  791  25x100
-tilt 0
+
 # bias 800
 run 33773  72k  3142
 
@@ -9471,13 +9477,13 @@ run 33783  160k  3152
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Tue 25.9.2018
-# 109 = FTH 150 R4S 100x25 P1 = p-stop RD53 pads on rot90 with 6.6E15p/cm2
+# 109i = FTH 150 R4S 100x25 P1 = p-stop RD53 pads on rot90 with 6.6E15p/cm2
 
 chip 109
 
 gain /home/pitzl/psi/r4s/C/109i-scancal-cold-ia133-vb800-hold40-2018-09-25.dat
 
-#edge-on, same geo 09c
+# 109i edge-on  same geo 09c
 
 # bias 800
 run 33787  160k  3155  
@@ -9504,59 +9510,62 @@ gain /home/pitzl/psi/r4s/C/193i-scancal-cold-ia48-vb800-hold40-2018-09-25.dat  2
 
 # same geo 09c
 
-# bias 800, 31 uA
+tilt 88
+
+# bias 800  31 uA
 run 33793  160k  3164
 
 # chiller -24 deg
 gain /home/pitzl/psi/r4s/C/193i-scancal-icy-ia45-vb800-hold-2018-09-26.dat
-# bias 800, 25 uA
+
+# bias 800  25 uA
 run 33794  160k  3165
 
 # over night: 193i edge-on
-run 33795  7.8M  3166  
+run 33795  7.83M  3166  
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Wed 26.9.2018
 # continue 193i edge-on
 
-# adjust shaper
+# adjust shaping
 gain /home/pitzl/psi/r4s/C/193i-scancal-icy-ia45-vb800-pr660-hold40-2018-09-26.dat
 
-# bias 800, 21 uA
-run 33797  160k  3167
+# bias 800  21 uA
+run 33797  160.2  3167
 
-# 700 V, 18 uA
-run 33798  160.2      3168 
+# 700 V  18 uA
+run 33798  160.2  3168 
 
-# 600 V, 16 uA
-run 33799  160.2      3169
+# 600 V  16 uA
+run 33799  160.2  3169
 
-# 500 V, 14 uA
-run 33800  160.2      3170
+# 500 V  14 uA
+run 33800  160.2  3170
 
-# 450 V, 13.6 uA
-run 33801  160.2      3171
+# 450 V  13.6 uA
+run 33801  160.2  3171
 
-# 400 V, 12.9 uA
-run 33802  160.2      3172
+# 400 V  12.9 uA
+run 33802  160.2  3172
 
-# 350 V, 12 uA
-run 33803  160.2      3173
+# 350 V  12 uA
+run 33803  160.2  3173
 
-# 300 V, 11.2 uA
-run 33804  160.2      3174
+# 300 V  11.2 uA
+run 33804  160.2  3174
 
-# 250 V, 10.2 uA
-run 33805  160.2      3175
+# 250 V  10.2 uA
+run 33805  160.2  3175
 
-# 200 V, 9.1 uA
-run 33806  160.2      3176
+# 200 V  9.1 uA
+run 33806  160.2  3176
 
-# 150 V, 7.8 uA
-run 33807  160.2      3177
+# 150 V  7.8 uA
+run 33807  160.2  3177
 
-# 800 V, 21.7
-run 33808  160.2      3178
+# 800 V  21.7
+run 33808  160.2  3178
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Wed 26.9.2018
@@ -9569,13 +9578,18 @@ turn 2.5
 
 gain /home/pitzl/psi/r4s/C/193i-scancal-icy-ia45-vb800-pr660-hold40-2018-09-27.dat
 
-# bias 800, 16 uA
+# bias 800  16 uA
 run 33811  160k  3181  99.976  q0 7.14  ph 151.5
 
 # over night: 193i vertical
-# 800 V, 13.8 uA
-run 33812  9.0M  3182  99.963  q0 7.19  ph 153
+# 800 V  13.8 uA
+run 33812  9.0M  3182  99.963  q0 7.19  ph 153  copied 12 GB
 # scopes1
+# tilt cmsdyvsy cmsdyvsx *1E3
+#  0.0 0.378389 -0.264658
+#  0.5 0.38826  -0.165494
+# -0.5 0.385565 -0.164806
+# -1.5 0.044    -0.717097
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 27.9.2018 continue
@@ -9585,24 +9599,24 @@ run 33812  9.0M  3182  99.963  q0 7.19  ph 153
 # take gaincal
 
 # systematics with best chiller cooling:
-# increase rgpr to 800, rgsh to 300, trigger at top
+# increase rgpr to 800  rgsh to 300  trigger at top
 
 gain /home/pitzl/psi/r4s/C/193i-scancal-icy-ia45-vb800-pr800-hold40-2018-09-27.dat  uniform green  153/200
-# bias 800, 13 uA
+# bias 800  13 uA
 run 33814  160k  3184  99.9675  q0b 7.43 !!  ph 157  dph 7.9
 
 # increase IB with Peltier
 gain /home/pitzl/psi/r4s/C/193i-scancal-icy-ia45-vb800-ib20-pr800-hold40-2018-09-27.dat  red region  171/200
-# bias 800, 19 uA
+# bias 800  19 uA
 run 33818  160k  3187          q0 6.19  ph 148
 run 33819  490k  3188  99.965  q0 6 55  ph 156
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 27.9.2018
 
-chip 174
+chip 174 = FTH 25x100 p-stop default on rot90 after 6.6E15p/cm2
 
-# vertical, same geo 09g
+# vertical  same geo 09g
 
 # IA 40 mA
 # delay 50 ns
@@ -9612,6 +9626,8 @@ gain /home/pitzl/psi/r4s/C/174i-scancal-icy-ia45-vb800-ib20-pr800-2018-09-27.dat
 
 # bias 800
 run 33820  160k  3189  99.95  q0 7.11  ph 155
+
+# bias174i-ph.dat
 
 # bias 700
 run 33821  160k  3190  99.94  q0 6.42  ph 144
@@ -9681,7 +9697,7 @@ run 33838  490k  3208  99.396 q0 5.43  ph 116.5
 # Fri 28.9.2018
 # 120i = FTH 25x100 p-stop default rot90 with 3.3E15p/cm2
 # vertical
-# chiller -24, Peltier 4A, hold 50, delay 50 ns
+# chiller -24  Peltier 4A  hold 50  delay 50 ns
 # same geo 09g
 
 tilt 2.5 # start values
@@ -9747,45 +9763,57 @@ gain /home/pitzl/psi/r4s/C/120i-scancal-icy-ia44-vb800-ib09-hold40-2018-09-28.da
 
 geo geo_2018_09h.dat #  0 153  305  500  653  806  25x100
 
-# bias 800, 8 uA  cp 32584  colq 4.44
+# bias 800  8 uA  cp 32584  colq 4.44
 run 33864  250k  3237  colq 7.59
+
+# bias scan edge-on
+
+#700 V, 7.2 uA  33865  160.2  3238  COPY
+#600 V, 6.6 uA  33866  160.2  3239
+#500 V, 6.1 uA  33867  160.2  3240
+#400 V, 5.7 uA  33868  160.2  3241
+#300 V, 5.2 uA  33869  160.2  3242
+#200 V, 4.7 uA  33870  160.2  3243
+#150 V, 4.3 uA  33871  160.2  3244
+#100 V, 3.6 uA  33872  160.2  3245  COPY
 
 # reduce Peltier power:
 
-# bias 800, 11 uA
+# bias 800  11 uA
 run 33873   90k  3246  colq 7.58
 
-# bias 800, 15 uA
+# bias 800  15 uA
 run 33874   90k  3247  colq 7.46
 
-# bias 800, 20 uA
+# bias 800  20 uA
 run 33875   90k  3248  colq 7.25
 
-# bias 800, 25 uA
+# bias 800  25 uA
 run 33876   90k  3249  colq 7.09
 
 # Sat over night: edge-on 120i
-# 800 V, 7.5 uA, IA = 43.4 mA
-run 33877  960k  3250  
+
+# 800 V  7.5 uA  IA = 43.4 mA
+run 33877         3250  end at 19:22  2.3 GB
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sun 30.9.2018
 # 120i edge-on
 
-# bias 800, 44 mA, 7 uA
+# bias 800  44 mA  7 uA
 run 33880   90k  3253  colq 7.83
 
-# bias 800, 50 mA, 8 uA
+# bias 800  50 mA  8 uA
 run 33881   90k  3254  colq 7.55
 
-# bias 800, 55 mA, 8 uA
+# bias 800  55 mA  8 uA
 run 33882   90k  3255  colq 7.35
 
-# bias 800, 60 mA, 8 uA
+# bias 800  60 mA  8 uA
 run 33883   90k  3256  colq 7.12
 
 gain /home/pitzl/psi/r4s/C/120i-scancal-icy-ia51-vb800-ib13-hold40-2018-09-30.dat  154/200 ADC/mV
-# bias 800, 50 mA, 13 uA
+# bias 800  50 mA  13 uA
 run 33884   90k  3257  colq 6.06
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -9794,16 +9822,18 @@ run 33884   90k  3257  colq 6.06
 # Wed 174i edge: run 33592  5.0M  2908
 # Thu 174i edge turn: 2945  6.9M
 # Fri 179i:   run 33610  6.3M  2970  99.97  q0 4.45
-# Sat 179ilow: run 33636   16M  2994     q0  
+# Sat 179ilow: run 33636   16M  2994
 # Mon 133i ann: run 33665  1.8M  3021
-# Tue 174ilow: run 33687  2.4M  3043  q0
-# Wed 193ilow: run 33701  7.2M  3072  99.97  q0b 
+# Tue 174ilow: run 33687  2.4M  3043
+# Wed 193ilow: run 33701  7.2M  3072  99.97
 # Thu 179ilow: run 33712  7.65M 3081  99.95  q0b 4.41
 # Fri 155ilow: run 33738  8.0M  3104
 # Sat 175ilow: run 33758  16M  3124
-# Wed 193ilow icy edge-on: run 33795  7.8M  3182  
-# Wed 193ilow icy: run 33812  9.0M  3182  
-# Thu 174ilow icy: run 33827  8.2M  3196  
+# Wed 193ilow icy edge-on: run 33795  7.8M  3182
+# Wed 193ilow icy: run 33812  9.0M  3182
+# Thu 174ilow icy: run 33827  8.2M  3196
+# Fri 120ilowe icy: run 33842  1.6M  3212
+# Sat 120ilow icy edge-on run 33877  6.5M  3250
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sat 29.9.2018
@@ -9826,7 +9856,7 @@ run 33884   90k  3257  colq 6.06
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # plan:
-# fresh at 50 mA, chilled (more gain)
+# fresh at 50 mA  chilled (more gain)
 # get more than 228 ADC ph
 
 --------------------------------------------------------------------------------
@@ -9948,7 +9978,7 @@ run 34252  160k  3267  ph 262
 
 # hadd scopes34248-52.root scopes34248.root scopes34250.root scopes34251.root scopes34252.root
 
-# chiller off, Peltier 1.6V 3 A
+# chiller off  Peltier 1.6V 3 A
 # over night: 192 vertical
 
 run 34253 6125k  3268  Mod lost sync 4140s
@@ -9958,15 +9988,15 @@ run 34253 6125k  3268  Mod lost sync 4140s
 # Tue 23.10.2018
 # continue fresh 192 vertical
 
-# Peltier off, chiller off
+# Peltier off  chiller off
 
 run 34254  160k  3269  ph 271.5
 
-# Peltier off, chiller off
+# Peltier off  chiller off
 
 run 34255  160k  3270  ph 273
 
-# Peltier off, chiller off
+# Peltier off  chiller off
 
 run 34256  160k  3271  ph 273
 
@@ -9988,7 +10018,7 @@ run 34256  160k  3271  ph 273
 # [Run 2151 takedata 200]
 
 #------------------------------------------------------
-# Peltier off, chiller off
+# Peltier off  chiller off
 # IA 125 mA
 
 # rgpr 900
@@ -10008,46 +10038,42 @@ run 34258  160k  3273  ph 263
 # IA 125 mA
 # rgpr 900
 # rgsh 670
-# N2 flow off, without insulating box
+# N2 flow off  without insulating box
 
 gain /home/pitzl/psi/r4s/C/192-scancal-hall-ia125-pr900-sh670-hold40.dat
 
 run 34260  160k  3275  ph 253
 
-# IA 50 mA, trigger at the top
+# IA 50 mA  trigger at the top
 
 run 34261  160k  3276  ph 265
 
-# light on, noisy 24 uA
+# light on  noisy 24 uA
 
 run 34262  160k  3277  ph 238
 
-# light on, noisy 38 uA
+# light on  noisy 38 uA
 
 run 34263  160k  3278  ph 226
 
-# light on, noisy 10 uA
+# light on  noisy 10 uA
 
 run 34264  160k  3279  ph 253
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 144 = 50x50 FDB p-spray max imp, rot90
+chip 144 = 50x50 FDB p-spray max imp  rot90
 
 geo geo_2018_10b.dat  # 0  155  305  415  568  722  50x50
 
 gain /home/pitzl/psi/r4s/B/scm144-scancal1-tb21-pr900-sh670-ia125-vb120-hold24.dat
 
 # IA 126 mA
-# timing like in April: peak 24, trigger 40
+# timing like in April: peak 24  trigger 40
 
-run 34269  # 3282   10k  no sync
+run 34270  # 3283  160k  ph 218  like in April
 
-# adjust x 2 mm
-
-run 34270  # 3283  160k  ph 218, like in April
-
-# IA 50 mA, trigger at the top
-
+# IA 50 mA  trigger at the top
+gain /home/pitzl/psi/r4s/C/144-scancal-ia50-hold40.dat
 run 34271  # 3284  160k  ph 255
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -10058,73 +10084,81 @@ gain /home/pitzl/psi/r4s/C/227-scancal-hall-ia50-pr900-sh670_hold40_23102018.dat
 
 geo geo_2018_10c.dat  # 0  155  305  415  568  722  25x100
 
-# IA 50 mA, trigger on top
-# bias 120, 5.7 uA
+# IA 50 mA  trigger on top
+# bias 120  5.7 uA
 
 run 34272  10      3285
 
 # over night
-run 34273  5616k  3286  33 GB  ph 240
+run 34273  5616k  3286  98.60  33 GB  ph 240
+# scopes1
 
 #-------------------------------------------------------------------------------
 # Wed 24.10.2018
 
-# IA 50 mA, trigger on top (or just before top?)
-
-chip 108
+# IA 50 mA  trigger on top (or just before top?)
 
 chip 108 = FTH150P R4S 100x25 P1 p-stop default
 
 geo geo_2018_10d.dat  # 0  153  304  385  538  691  25x100
 
-run 34276  10.1  3288
+gain /home/pitzl/psi/r4s/C/108-scancal-ia50-hold40.dat
 
 run 34277  90.2  3289  ph 257
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 110 = FTH150P R4S 100x25 P2 = p-stop bias dot              
 # IB 1.9 uA
+gain /home/pitzl/psi/r4s/C/110-scancal-ia50-hold40.dat
 run 34278  90.2  3290  ph 230
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 111 = FTH150P R4S 50x50 P2 = open p-stop
+gain /home/pitzl/psi/r4s/C/111-scancal-ia50-hold40.dat
 geo geo_2018_10e.dat  # 0  153  304  385  538  691  50x50
 run 34279  90.2  3291  ph 257
 # IB 0.5 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 139 = FTH150P R4S 50x50 P4 = p-stop bias dot wiggle
+gain /home/pitzl/psi/r4s/C/139-scancal-ia50-hold40.dat
 run 34280  90.2  3292  ph 273
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 142 = FTH150P R4S 50x50 P9 = p-stop small dot
+gain /home/pitzl/psi/r4s/C/142-scancal-ia50-hold40.dat
 run 34281  90.2  3293  ph 257
-# IB 0.7 uA, weird shoulders in dph
+# IB 0.7 uA  weird shoulders in dph
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 143 = FDB150Y R4S 50x50 Y4 = p-spray bias dot
+gain /home/pitzl/psi/r4s/C/143-scancal-ia50-hold40.dat
 run 34282  90.2  3294  ph 251
 # IB 0.1 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 145 = FDB150Y R4S 100x25 Y4 = p-spray bias dot
+gain /home/pitzl/psi/r4s/C/145-scancal-ia50-hold40.dat
 geo geo_2018_10d.dat  # 0  153  304  385  538  691  25x100
 run 34283  90.2  3295  ph 240
 # IB 0.2 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 146 = FDB150Y R4S 100x25 Y2 p-spray default
+gain /home/pitzl/psi/r4s/C/146-scancal-ia50-hold40.dat
 run 34284  90.2  3296  ph 254
 # IB 0.1 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 147 = FDB150P R4S 50x50 P1 =  p-stop default
+chip 147 = FDB150P R4S 50x50 P1 = p-stop default on rot90
+gain /home/pitzl/psi/r4s/C/147-scancal-ia50-hold40.dat
 geo geo_2018_10e.dat  # 0  153  304  385  538  691  50x50
 run 34285  90.2  3297  ph 262
-IB 0.1 uA
+# IB 0.1 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 149 = FDB150P R4S 50x50 P2 p-stop open
+chip 149 = FDB150P R4S 50x50 P2 p-stop open on rot90
+gain /home/pitzl/psi/r4s/C/149-scancal-ia50-hold40.dat
 run 34290  90.2  3302  ph 243
 # IB 0.1 uA
 
@@ -10133,63 +10167,71 @@ run 34291  2017.6  3303  hangs 15 GB  COPY
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Thu 25.10.2018
-# continue fresh Landau peak calibration
+# continue fresh for pulse height calibration
 # Tobias Kramer
 
 chip 148 = FDB150P R4S 100x25 P4 p-stop RD53 pads
+gain /home/pitzl/psi/r4s/C/148-scancal-ia50-hold40.dat
 
 geo geo_2018_10d.dat  # 0  153  304  385  538  691  25x100
 
 # 0.1 uA
-run 34294  90.2      3305  ph 205
+run 34294  90.2  3305  99.99  ph 205  ke 0.0433
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 150 = FDB150P R4S 100x25 P1 p-stop default
-run 34295  90.2      3306  ph 234
+gain /home/pitzl/psi/r4s/C/150-scancal-ia50-hold40.dat
+run 34295  90.2  3306  ph 234  99.98  ke 0.0394
 0.1 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 151 = FDB150P R4S 50x50 P9 p-stop small dot
+chip 151 = FDB150P R4S 50x50 P9 p-stop small dot on rot90
+gain /home/pitzl/psi/r4s/C/151-scancal-ia50-hold40.dat
 geo geo_2018_10e.dat  # 0  153  304  385  538  691  50x50
-run 34296  90.2  3307  ph 240
+run 34296  90.2  3307  99.23  ph 240  ke 0.0399
 # 0.1  uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 163 = FDB150Y R4S 100x25 Y6 p-sray RD53 pads
+chip 163 = FDB150Y R4S 100x25 Y6 p-spray RD53 pads
+gain /home/pitzl/psi/r4s/C/163-scancal-ia50-hold40.dat
 geo geo_2018_10d.dat  # 0  153  304  385  538  691  25x100
 run 34297  90.2  3308  ph 264
 # 0.1 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 164 = FTH150P R4S 100x25 P8 p-stop small dot
+gain /home/pitzl/psi/r4s/C/164-scancal-ia50-hold40.dat
 run 34298  90.2  3309  ph 262
 # 0.7 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# change from rot90 to straight: x 11 -> 16 mm, y 189 -> 190 mm
+# change from rot90 to straight: x 11 -> 16 mm  y 189 -> 190 mm
 
 chip 159 = FDB150P R4S 50x50 P3 p-stop bias dot
+gain /home/pitzl/psi/r4s/C/159-scancal-ia50-hold40.dat
 geo geo_2018_10e.dat  # 0  153  304  385  538  691  50x50
-run 34299  10.2  3310
-run 34300  10.2  3311
 run 34301  90.2  3312  ph 248
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 160 = FDB150P R4S 50x50 P4 p-stop bias dot wiggle
+gain /home/pitzl/psi/r4s/C/160-scancal-ia50-hold40.dat
 run 34302  90.2  3313  ph 235
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chip 176 = 50x50 FTH p-stop max imp, straight
+chip 176 = FTH 50x50 p-stop max imp  straight
+gain /home/pitzl/psi/r4s/C/176-scancal-ia50-hold40.dat
 run 34303  90.2  3314  ph 277
 # 0.4 uA
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 180 = FTH150P R4S 100x25 P8 = p-stop small dot
+gain /home/pitzl/psi/r4s/C/180-scancal-ia50-hold40.dat
 geo geo_2018_10d.dat  # 0  153  304  385  538  691  25x100
 run 34304  90.2  3315  ph 267
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chip 102 = FTH150P R4S 50x50 P3 = p-stop bias dot
+gain /home/pitzl/psi/r4s/C/102-scancal-ia50-hold40.dat
 geo geo_2018_10e.dat  # 0  153  304  385  538  691  50x50
 run 34305  90.2  3316  ph 254
 # 0.6 uA
@@ -10198,18 +10240,22 @@ run 34305  90.2  3316  ph 254
 # KIT 50x50:
 
 chip 225 = FDB150P R4S 50x50 P1 default
+gain /home/pitzl/psi/r4s/C/225-scancal-ia50-hold40.dat
 run 34306  90.2  3317  ph 40% variation in x
 # 0.6 uA
 
 chip 226 = FDB150P R4S 50x50 P1 default
+gain /home/pitzl/psi/r4s/C/226-scancal-ia50-hold40.dat
 run 34307  90.2  3318  ph 290
 # 0.3 uA
 
 chip 229 = FDB150P R4S 50x50 P2 open p-stop
+gain /home/pitzl/psi/r4s/C/229-scancal-ia50-hold40.dat
 run 34308  90.2  3319
 # 0.3 uA
-							
+
 chip 230 = FDB150P R4S 50x50 P2 open p-stop
+gain /home/pitzl/psi/r4s/C/230-scancal-ia50-hold40.dat
 run 34310  250.2  3321  lunch
 # 0.4 uA
 # scopes -r 0 34310
@@ -10221,83 +10267,87 @@ gain /home/pitzl/psi/r4s/C/120i-scancal-icy-ia44-vb800-ib09-hold40-2018-09-28.da
 
 geo geo_2018_10c.dat  # 0  155  305  415  568  722  25x100
 
-# chiller -24 deg, valves open
+# chiller -24 deg  valves open
 # Peltier 4A 1.6 V
 # IA 27 mA
-# 800 V, 8 uA
+# 800 V  8 uA
 
 # delay 0 with tele = hold 40
 run 34315  90.2  3325  ph 213
 
-# 800 V, 8 uA, delay 25 = hold 44
+# 800 V  8 uA  delay 25 = hold 44
 run 34316  90.2  3326  ph 219
 
-# 800 V, 8 uA, delay 50 = hold 48
+# 800 V  8 uA  delay 50 = hold 48
 run 34317  90.2  3327  ph 223
 
-# 800 V, 8 uA, delay 75 = hold 52
+# 800 V  8 uA  delay 75 = hold 52
 run 34320  90.2  3329  no sync
 
-# 800 V, 8 uA, delay 100 = hold 56
+# 800 V  8 uA  delay 100 = hold 56
 run 34321  90.2  3330  ph 224  Mod looses sync at 60s
 
-# 800 V, 8 uA, delay 125 = hold 60
+# 800 V  8 uA  delay 125 = hold 60
 run 34322  90.2  3331  ph 225  q0 11.6 ke  duta: 211 ADC / 300 mV
 
-# 800 V, 8 uA, delay 150 = hold 64
+# 800 V  8 uA  delay 150 = hold 64
 run 34323  90.2  3332  ph 221
 
 # IA 44 mA
-# 800 V, 8 uA
+# 800 V  8 uA
 
 # delay 0
 run 34324  90.2  3333  ph 216   Mod looses sync at 120s
 
-# 800 V, 8 uA, delay 25
+# 800 V  8 uA  delay 25
 run 34325  90.2  3334  ph 214
 
-800 V, 8 uA, delay 50
+800 V  8 uA  delay 50
 run 34326  90.2  3335  ph 213  Mod looses sync at 2s
 
-800 V, 8 uA, delay 75
+800 V  8 uA  delay 75
 run 34327  90.2  3336  ph 209
 
-# IA 27.3 mA, delay 75, 7.5 uA over night
+# IA 27.3 mA  delay 75  7.5 uA over night
 run 34328  4680.2  3337 clean run end
 # scopes1 34328
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Fri 26.10.2018
 # continue 120i vertical
-# settings as in May: VA 2600, VD 2800, vdig 2500, vana 2160 to achieve same IA
-# chiller -20, Peltier 2A
+# settings as in May: VA 2600  VD 2800  vdig 2500  vana 2160 to achieve same IA
+# chiller -20  Peltier 2A
 
-# bias 800 V, IA 50 mA, ib 18.5uA, delay 0
+# bias 800 V  IA 50 mA  ib 18.5uA  delay 0
 run 34330  90.2  3338  ph 186
 
-# bias 800 V, IA 50 mA, ib 18.5 uA, delay 25
+# bias 800 V  IA 50 mA  ib 18.5 uA  delay 25
 run 34331  90.2  3339  ph 178
 
-# bias 800 V, IA 50 mA, ib 18.5 uA, delay 50
+# bias 800 V  IA 50 mA  ib 18.5 uA  delay 50
 run 34332  90.2  3340  ph 169
 
-# bias 800 V, IA 50 mA, ib 18.5 uA, delay 75
+# bias 800 V  IA 50 mA  ib 18.5 uA  delay 75
 run 34333  90.2  3341  ph 161  MOD out of sync
 
-# bias 800 V, IA 50 mA, ib 18.5 uA, delay 100
+# bias 800 V  IA 50 mA  ib 18.5 uA  delay 100
 run 34334  90.2  3342  ph 149
 
-#back to yesterday's shaping VgPr 800, Vgsh 360,vana 2160, VD 3000, VA 2600
-# bias 800 V, IA 50 mA, ib 18.5uA, delay 0
+#back to yesterday's shaping VgPr 800  Vgsh 360 vana 2160  VD 3000  VA 2600
+# bias 800 V  IA 50 mA  ib 18.5uA  delay 0
 run 34335  90.2  3343  ph 198
 
-# bias 200 V, IA 50 mA, ib 11.3 uA, delay 0  cp 32608
+# bias 200 V  IA 50 mA  ib 11.3 uA  delay 0  cp 32608
 run 34337  90.2  3344  ph 89 as in May
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sat 27.10.2018 afternoon
 
 chip 102 = FTH150P R4S 50x50 P3 = p-stop bias dot
+
+# representative ph
+# low IA
+# chiller and peltier
 
 gain /home/pitzl/psi/r4s/C/102-scancal-icy-ia27-pr800-sh670-hold60.dat
 
@@ -10316,7 +10366,7 @@ run 34347  40.2  3399
 run 34348  40.2  3400
 
 # over night
-run 34349  2537  3401  Mod lost sync 450s
+run 34349  2.537M  3401  Mod lost sync 450s
 # scopes1 -l 2537064 34349
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -10335,20 +10385,432 @@ run 34352 999.2  3404  99.37  ph 355  q0 11.4 ke with 0.0356 ke/mV (like warm)
 
 #-------------------------------------------------------------------------------
 # to do: Nov 2018
-# more work, more measurements, more analysis, more thinking
+# more work  more measurements  more analysis  more thinking
 # 
 # elab: s50 gaincal for all fresh
 # elab: measure sensor temperature vs chiller and Peltier on 137i
 # plot: ph vs T for 144
 # thnk: test pulse gaincal follows gain vs T for fresh 102
 # calc: Q0 = 11.25 ke peak in 150 um Si fresh
-# meas: mean ke = 0.0367 ke/mV Vcal for fresh, warm and cold
+# meas: mean ke = 0.0367 ke/mV Vcal for fresh  warm and cold
 # calc: V0 = 11.25/0.0367 = 306 mV
 # calc: duta = 327 ADC / 300 mV for fresh 102 cold
 # calc: duta = 211 ADC / 300 mV for irrad 120 cold => gain and/or test pulse drops
-# thnk: three factors: sensor, preamp, pulser
-# thnk: sensor Q = Q(F,B): fluence, bias
-# thnk: preamp A = A(T,F,t): temp, fluence, timing
+# thnk: three factors: sensor  preamp  pulser
+# thnk: sensor Q = Q(F B): fluence  bias
+# thnk: preamp A = A(T F t): temp  fluence  timing
 # thnk: pulser V = V(F) ?
-# thnk: too many variables, too few constraints => ill-posed problem, cannot solve
+# thnk: too many variables  too few constraints => ill-posed problem  cannot solve
 #
+
+#-------------------------------------------------------------------------------
+# Mon 26.11.2018
+
+chip 196 = FDB150P R4S 100x25 P1 p-stop default rot90 after 8E15 n/cm2
+
+geo geo_2018_11a.dat  # 0  152  305  418  566  723  100x25
+
+# vertical
+
+tilt 2.5 # start values
+turn 2.5
+
+GeV 5.2
+
+# bias 800 V
+
+gain /home/pitzl/psi/r4s/C/c196i-scancal-icy-ia40-vb800-hold40-2018-11-26.dat
+
+run 34406  40.2  3409
+
+#shift x 1 mm
+run 34407  40.2  3410  ph 172
+
+#del 50 ns
+run 34408  40.2  3411  ph 166
+
+#del 100 ns
+run 34409  40.2  3412  ph 150
+
+# over night:
+# delay 0
+run 34411  6.5M  3414  99.98
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Tue 27.11.2018
+# continue 196 vertical: bias scan
+
+# bias 700 V
+run 34418  250k  3421  99.98  ph 165
+
+# bias 600 V
+run 34419  250k  3422  99.985  ph 152
+
+# bias 500 V
+run 34420  250k  3423  99.967  ph 133
+
+# bias 400 V
+run 34421  250k  3424  99.936  ph 111
+
+# bias 300 V
+run 34422  250k  3425  99.669  ph 89
+
+# bias 200 V
+run 34423  250k  3426  98.556  ph 66
+
+# bias 150 V
+run 34424  250k  3427  96.325  ph 54  effvsym: drop to 85%
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# edge-on 196i = FDB150P R4S 100x25 P1 p-stop default rot90 after 8E15 n/cm2
+
+geo geo_2018_11b.dat  # 0  152  305  513  661  818  100x25
+
+# 800 V  23.4 uA
+run 34428   90k  3441  
+run 34429  360k  3442  time 87s clang  89s g++  xps: 52s
+
+# 600 V  19 uA
+run 34430  360k  3443  
+
+# 500, 17 uA
+run 34431  360  3444
+
+# 400, 14 uA
+run 34432  360  3445
+
+# 300, 11 uA
+run 34433  360  3446
+
+# 250, 9.5 uA
+run 34434  360  3447
+
+# 200, 8.0 uA
+run 34435  360  3448
+
+# 150, 6.5 uA
+run 34436  360  3449
+
+# over night: VB 800, 23uA
+run 34437  3.9M  3450
+
+#-------------------------------------------------------------------------------
+# Wed 28.11.2018
+
+chip 194 = FDB150P R4S 100x25 P1 p-stop default rot90 with 4E15 n/cm2
+
+# edge-on
+
+geo geo_2018_11b.dat  # 0  152  305  513  661  818  100x25
+
+gain /home/pitzl/psi/r4s/C/194i-scancal-icy-ia36-vb800-hold40-2018-11-28.dat
+
+# bias 600
+run 34443  360  3454
+
+# bias 500
+run 34444  360  3455
+
+# bias 400
+run 34445  360  3456
+
+# 300V, 6.3 uA
+run 34446  360.2  3457
+
+# 250V, 5.5 uA
+run 34447  360.2  3458
+
+# 200V, 4.7 uA
+run 34449  360.2  3460
+
+# 150V, 3.9 uA
+run 34450  360.2  3461
+
+# 100V, 3.0 uA
+run 34451  360.2  3462
+
+#  50V, 2.0 uA
+run 34452  360.2  3463
+
+# over night 800V, 11.4 uA
+run 34453  4320.2  3464, clean end at 8:26
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Thu 29.11.2018
+
+chip 194 = FDB150P R4S 100x25 P1 p-stop default rot90 with 4E15 n/cm2
+
+# vertical
+
+geo geo_2018_11c.dat = 0  152  305  DUT  406  553 MOD 711 for 100x25
+
+# bias 800, 10.2 uA
+run 34457   40  3470
+
+# adjust x and y by 0.5 and 1.5 mm
+run 34458  160  3471  99.97  ph 237
+
+# 700V, 9.3 uA
+run  34459  160.2  3472
+
+# 600V, 8.4 uA
+run 34460  160.2  3473
+
+# 500V, 7.6 uA
+run 34461  160.2  3474
+
+# 400V, 6.6 uA
+run 34462  160.2  3475
+
+# 350V, 6.0 uA
+run 34463  160.2  3476
+
+# 300V, 5.5 uA
+run 34464  160.2  3477
+
+# 250V, 4.8 uA
+run 34465  160.2  3478  99.96  ph 108
+
+# 200V, 4.1 uA
+run 34466  160.2  3479  99.93  ph 91
+
+# 150V, 3.4 uA
+run 34467  160.2  3480  99.78  ph 72
+
+# 100V, 2.6 uA
+run 34468  160.2  3481  98.94  ph 54
+
+# 80V, 2.3 uA
+run 34469  160.2  3482  97.98  ph 46.3
+
+# 60V, 1.9 uA
+run 34470  160.2  3483  95.74  ph 38.3
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+chip 198 = FDB150P R4S 50x50 P1 p-stop default straight    8E15 n
+
+tilt 18 for resolution
+
+geo geo_2018_11d.dat = 0  152  305  DUT  434  582 MOD 740  50x50
+
+# bias 800
+
+run 34472  40.2  3485
+
+# over night:
+run 34475  7.5M  3488  ph 177.5  dy 8.3 => sy 5.3 um
+# scopes1
+# sixdyc 12.8 => track 6.4 um
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Fri 30.11.2018
+# continue 198i tilted bias scan
+
+# 700, 21.5 uA
+run 34477  250.2  3490  99.995  ph 166
+
+# 600, 19.2 uA
+run 34478  250.2  3491  99.994  ph 151
+
+# 500, 16.6 uA
+run 34479  250.2  3492  99.992  ph 131
+
+# 400, 13.8 uA
+run 34480  250.2  3493  99.73  ph 108
+
+# 300, 11.0 uA
+run 34483  250.2  3496  99.60  ph 87
+
+# 250, 9.6 uA
+run 34484  250.2  3497  99.00  ph 77
+
+# 200, 8.1 uA
+run 34485  250.2  3498  97.51  ph 64
+
+# 150, 6.6 uA
+run 34486  250.2  3499  93.99  ph 53
+
+# 100, 4.9 uA
+run 34487  250.2  3500  85.37
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 198i vertical
+
+geo geo_2018_11e.dat = 0  152  305  DUT  406  553 MOD 711 for 50x50
+
+tilt 2.5 # start
+
+# 800 V, 23.4 uA
+run 34490  250.2  3504  99.9975
+
+# 600 V, 18.5 uA
+run 34491  250.2  3505  99.994
+
+# adjust x and y
+# 400 V, 13.3 uA
+run 34492  250.2  3506  99.93  ph 111  cmsdxvsev: 20 um  
+
+# 300 V, 10.6 uA
+run 34493  250.2  3507  99.49  ph 89
+
+# 250 V, 9.1 uA
+run 34494  250.2  3508  98.81  ph 78
+
+# 200 V, 7.7 uA
+run 34495  250.2  3509  97.34
+
+# 150 V, 6.2 uA
+run 34496  250.2  3510  93.90  ph 54
+
+# 100 V, 4.6 uA
+run 34497  250.2  3511
+
+# over night 198i vertical  800V
+run 34498  7.34M  3512
+# 10 GB
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sat 1.12.2018
+
+# take I-V for 198i: linear to 22 uA at 800 V
+# (straight PCB: worse cooling contact)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+chip 206 = FDB150Y R4S 100x25 Y3 p-spray max imp rot90    8E15 n
+
+# chiller -25 (Lauda TiL limit now -30)
+# Peltier 4A, 1.5V
+# vertical
+
+geo geo_2018_11c.dat = 0  152  305  DUT  406  553 MOD 711 for 100x25
+
+# 30 min per run
+
+# bias 800, 14.1 uA
+run 34500  250.2  3516  99.986  ph 186
+
+# bias 700, 12.7 uA
+run 34501  250.2  3517  99.9885
+
+# bias 600, 11.5 uA
+run 34502  250.2  3518  99.88 MOD lost sync at 600s
+
+# bias 500, 10.0 uA
+run 34503  250.2  3519  99.985
+
+# bias 400, 8.4 uA
+run 34504  250.2  3520  99.978
+
+# bias 300, 6.8 uA
+run 34505  250.2  3521  99.924
+
+# bias 600, 11.4 uA repeat
+run 34506  250.2  3522  99.987
+
+# bias 250, 5.9 uA
+run 34507  250.2  3523  99.846
+
+# bias 200, 5.0 uA
+run 34508  250.2  3524  99.604  ph 69
+
+# bias 150, 4.0
+run 34509  250.2  3525  98.889  ph 56
+
+# bias 100, 3.0 uA
+run 34510  250.2  3526  94.97   ph 42
+
+# over night: 206i vertical  800 V, 14.0 uA
+run 34511  8.0M   3527
+
+#-------------------------------------------------------------------------------
+# Sun 2.12.2018
+# edge-on with rot: edges2.cc
+
+#-------------------------------------------------------------------------------
+# Mon 3.12.2018
+# RD53A, see eudaq17
+
+#-------------------------------------------------------------------------------
+# 2019
+#-------------------------------------------------------------------------------
+# Mon 4.2.2019
+
+# chiller -25 (Lauda TiL limit now -30)
+# Peltier 4A, 1.5V
+
+chip 197 = FDB150P R4S 100x25 P7 p-stop max imp rot90 with 16E15 n/cm2
+
+gain /home/pitzl/psi/r4s/C/c197i-scancal-icy-ia38-vb800-hold40-2019-05-02.dat
+
+geo geo_2019_02a.dat  # 
+
+# vertical
+
+tilt 2.5 # start values
+turn 2.5
+
+GeV 5.2
+
+# bias 800 V, 28 uA
+
+run 35213  # 3568   40.2
+
+run 35214  # 3569   40.2  99.93
+
+run 35215  # 3570  160.2  99.88, PH 113
+
+# bias 700, 24.3 uA
+
+run 35216  # 3571  160.2  99.93
+
+# bias 600, 20.6 uA
+
+run 35217  # 3572  160.2  99.93
+
+# bias 500, 17.3 uA
+
+run 35218  # 3573  160.2  99.18
+
+# bias 450, 15.6 uA
+
+run 35219  # 3574  160.2  98.71
+
+# bias 400, 14.0 uA
+
+run 35220  # 3575  160.2  97.93
+
+# bias 350, 12.6 uA
+
+run 35221  # 3576  160.2  96.97
+
+# bias 300, 11.1 uA
+
+run 35222  # 3577  160.2  94.85
+
+# bias 250,  9.7 uA
+
+run 35223  # 3578  160.2  91.02
+
+# bias 200,  8.2 uA
+
+run 35224  # 3579  160.2  83.81
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# edge-on 197i
+geo geo_2019_02b.dat  # 
+
+chip 197 = FDB150P R4S 100x25 P7 p-stop max imp rot90 with 16E15 n/cm2
+
+# chiller -25, Peltier 4A, 1.4V
+
+# edge-on crossed finger scint trigger
+
+# module in front: scopedf.cc
+
+# bias 700
+
+run 35226 # 3592  360.2
+
+# 600 V, 20.7 uA
+
+run 35227 # 3593  360.2  quad: 3 events remaining
