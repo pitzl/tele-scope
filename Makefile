@@ -12,15 +12,28 @@ CXXFLAGS = -O2 -Wall -Wextra $(ROOTCFLAGS) -I/home/pitzl/eudaq/main/include -I/h
 
 # export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/pitzl/GBL/V01-17-00/cpp/lib/
 
-tele: tele.cc
-	g++ tele.cc $(CXXFLAGS) -fopenmp -o tele \
+# 2019: tried clang++
+# May 2019: ROOT crashes at Histo.Write(), back to g++
+
+scopes1: scopes1.cc
+	g++ $(CXXFLAGS) scopes1.cc -o scopes1 \
 	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
-	@echo 'done: tele'
+	@echo 'done: scopes1'
 
 scopes: scopes.cc
 	g++ $(CXXFLAGS) scopes.cc -o scopes \
 	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
 	@echo 'done: scopes'
+
+scopex: scopex.cc
+	g++ $(CXXFLAGS) scopex.cc -o scopex \
+	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
+	@echo 'done: scopex'
+
+tele: tele.cc
+	g++ tele.cc $(CXXFLAGS) -fopenmp -o tele \
+	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
+	@echo 'done: tele'
 
 scoped: scoped.cc
 	g++ $(CXXFLAGS) scoped.cc -o scoped \
@@ -41,11 +54,6 @@ scopesh: scopesh.cc
 	g++ $(CXXFLAGS) scopesh.cc -o scopesh \
 	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
 	@echo 'done: scopesh'
-
-scopes1: scopes1.cc
-	g++ $(CXXFLAGS) scopes1.cc -o scopes1 \
-	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
-	@echo 'done: scopes1'
 
 scoper: scoper.cc
 	g++ $(CXXFLAGS) scoper.cc -o scoper \
@@ -101,3 +109,8 @@ scope: scope.cc
 	g++ $(CXXFLAGS) scope.cc -o scope \
 	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
 	@echo 'done: scope'
+
+scopes2017: scopes2017.cc
+	g++ $(CXXFLAGS) scopes2017.cc -o scopes2017 \
+	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
+	@echo 'done: scopes2017'
