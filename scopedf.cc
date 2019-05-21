@@ -637,6 +637,7 @@ int main( int argc, char* argv[] )
   if( chip0 == 211 ) rot90 = 1; // FDD 0.6E15 n
   if( chip0 == 216 ) rot90 = 1; // FDD 8E15 n
 
+  if( chip0 == 223 ) rot90 = 1;
   if( chip0 == 227 ) rot90 = 1;
 
   if( !rot90 ) {
@@ -910,6 +911,7 @@ int main( int argc, char* argv[] )
   if( run == 35331 ) isync = 60000;
   if( run == 35336 ) isync = 10200;
   if( run == 35342 ) isync = 88600;
+  if( run == 35362 ) isync = 28400;
 
   int MODaligniteration = 0;
   double MODalignx = 0.0;
