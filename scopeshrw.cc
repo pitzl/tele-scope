@@ -2,7 +2,9 @@
 // Daniel Pitzl, DESY, Sep 2017
 // telescope analysis with eudaq and ROC4Sens shallow
 
-// make scopesh
+// row-wise readout
+
+// make scopeshrw
 // needs runs.dat
 // needs align_24500.dat from tele
 
@@ -30,26 +32,11 @@
 using namespace std;
 using namespace eudaq;
 
-class pixelr { // row-wise ordered for common mode
- public:
-  int col;
-  int row;
-  double ph;
-  double q;
-  int ord;
-  bool big;
-  bool operator < (const pixelr & pxObj ) const // row-wise ordering
-  {
-    return row < pxObj.row;
-  }
-};
-
 class pixel {
  public:
   int col;
   int row;
   double ph;
-  double q;
   int ord;
   bool big;
   bool operator < (const pixel & pxObj ) const // col-wise ordering
@@ -63,7 +50,7 @@ struct cluster {
   int size;
   int ncol, nrow;
   double col, row;
-  double charge;
+  double ph;
   bool big;
 };
 
@@ -128,7 +115,7 @@ vector < cluster > getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
     c.size = c.vpix.size();
     c.col = 0;
     c.row = 0;
-    double sumQ = 0;
+    double sumph = 0;
     c.big = 0;
     int minx = 9999;
     int maxx = 0;
@@ -136,12 +123,10 @@ vector < cluster > getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
     int maxy = 0;
 
     for( vector<pixel>::iterator p = c.vpix.begin();  p != c.vpix.end();  ++p ) {
-      double Qpix = p->q; // calibrated [Vcal]
-      if( Qpix < 0 ) Qpix = 1; // DP 1.7.2012
-      //Qpix = 3; // [ke] for shallow angle
-      sumQ += Qpix;
-      c.col += (*p).col*Qpix;
-      c.row += (*p).row*Qpix;
+      double phpix = p->ph; // [ADC]
+      sumph += phpix;
+      c.col += (*p).col*phpix;
+      c.row += (*p).row*phpix;
       if( p->big ) c.big = 1;
       if( p->col > maxx ) maxx = p->col;
       if( p->col < minx ) minx = p->col;
@@ -151,17 +136,17 @@ vector < cluster > getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
 
     //cout << "(cluster with " << c.vpix.size() << " pixels)" << endl;
 
-    if( sumQ > 0 ) {
-      c.col /= sumQ;
-      c.row /= sumQ;
+    if( sumph > 0 ) {
+      c.col /= sumph;
+      c.row /= sumph;
     }
     else {
       c.col = (*c.vpix.begin()).col;
       c.row = (*c.vpix.begin()).row;
-      cout << "GetClus: cluster with non-positive charge" << endl;
+      cout << "GetClus: cluster with non-positive ph" << endl;
     }
 
-    c.charge = sumQ;
+    c.ph = sumph;
     c.ncol = maxx-minx+1;
     c.nrow = maxy-miny+1;
 
@@ -217,7 +202,6 @@ int main( int argc, char* argv[] )
   double DUTtilt0 = 19.3;
   double pbeam = 4.8;
   int chip0 = 110;
-  string gainFileName( "gain.dat" );
 
   ifstream runsFile( "runs.dat" );
 
@@ -236,7 +220,6 @@ int main( int argc, char* argv[] )
     string GEO( "geo" );
     string GeV( "GeV" );
     string CHIP( "chip" );
-    string GAIN( "gain" );
     string TILT( "tilt" );
     bool found = 0;
 
@@ -267,11 +250,6 @@ int main( int argc, char* argv[] )
 	continue;
       }
 
-      if( tag == GAIN ) {
-	tokenizer >> gainFileName;
-	continue;
-      }
-
       if( tag == GEO ) {
 	tokenizer >> geoFileName;
 	continue;
@@ -298,7 +276,6 @@ int main( int argc, char* argv[] )
 	<< "  geo file " << geoFileName << endl
 	<< "  nominal DUT tilt " << DUTtilt0 << " deg" << endl
 	<< "  DUT chip " << chip0 << endl
-	<< "  DUT gain file " << gainFileName << endl
 	<< endl;
     else {
       cout << "run " << run << " not found in runs.dat" << endl;
@@ -581,8 +558,6 @@ int main( int argc, char* argv[] )
   const double log10 = log(10);
   const double wt = atan(1.0) / 45.0; // pi/180 deg
 
-  const double qwid = 1.2; // [ke] for Moyal
-
   bool rot90 = 0; // straight
   if( chip0 == 106 ) rot90 = 1;
   if( chip0 == 107 ) rot90 = 1;
@@ -641,6 +616,11 @@ int main( int argc, char* argv[] )
   if( chip0 == 216 ) rot90 = 1; // FDD 8E15 n
 
   if( chip0 == 227 ) rot90 = 1; // KIT
+
+  if( rot90 ) {
+    cout << "DUT 90 degree rotated" << endl;
+    return 90;
+  }
 
   bool fifty = 0;
   if( chip0 == 102 ) fifty = 1;
@@ -701,11 +681,6 @@ int main( int argc, char* argv[] )
 
   double upsignx =  1; // w.r.t. telescope
   double upsigny =  1;
-
-  if( rot90 ) {
-    upsignx = -1;
-    upsigny =  1;
-  }
 
   if( chip0 == 118 ) upsigny = -1;
 
@@ -788,11 +763,8 @@ int main( int argc, char* argv[] )
 
   iDUTalignFile.close();
 
-  if( DUTaligniteration <= 1 )
+  if( DUTaligniteration == 0 )
     DUTtilt = DUTtilt0; // from runs.dat
-
-  if( rot90 )
-    cout << "DUT 90 degree rotated" << endl;
 
   // normal vector on DUT surface:
   // N = ( 0, 0, -1 ) on DUT, towards -z
@@ -813,46 +785,33 @@ int main( int argc, char* argv[] )
 
   const double norm = cos( DUTturn*wt ) * cos( DUTtilt*wt ); // length of Nz
 
-  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // DUT gain:
+  double xcut = 0.1;
+  if( run == 31336 )
+    xcut = 0.25; // skewed?
+  if( chip0 == 118 )
+    xcut = 0.05;
 
-  double p0[155][160]; // Fermi
-  double p1[155][160];
-  double p2[155][160];
-  double p3[155][160];
+  double ycut = 0.2;
+  if( fabs(DUTtilt) > 60 )
+    ycut = 0.5;
 
-  ifstream gainFile( gainFileName );
+  int rowcut = 0.3 * fabs( tan(DUTtilt*wt) ) * 0.15 / ptchy[iDUT];
+  if( rowcut < 1 ) rowcut = 1;
 
-  if( ! gainFile ) {
-    cout << "gain file " << gainFileName << " not found" << endl;
-    return 1;
-  }
-  else {
-    cout << endl << "using DUT gain file " << gainFileName << endl;
+  double dphcut = 12; // fresh
 
-    while( ! gainFile.eof() ) {
+  if( chip0 >= 119 && chip0 <= 138 )
+    dphcut = 25; // irrad1
 
-      int icol;
-      int irow;
-      gainFile >> icol;
-      gainFile >> irow;
-      gainFile >> p0[icol][irow];
-      gainFile >> p1[icol][irow];
-      gainFile >> p2[icol][irow];
-      gainFile >> p3[icol][irow];
-
-    } // while
-
-  } // gainFile
-
-  double ke = 0.039; // Landau peak at 11 ke
+  if( chip0 == 198 )
+    dphcut = 20; // irrad dp2 8
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // (re-)create root file:
 
   ostringstream rootFileName; // output string stream
 
-  rootFileName << "scopesh" << run << ".root";
+  rootFileName << "scopeshrw" << run << ".root";
 
   TFile histoFile( rootFileName.str(  ).c_str(  ), "RECREATE" );
 
@@ -931,9 +890,13 @@ int main( int argc, char* argv[] )
 
   } // planes
 
+  TProfile dutphvsprev( "dutphvsprev", "Tsunami;previous PH [ADC];<PH> [ADC]", 120, -100, 500 );
+  TProfile dutdphvsprev( "dutdphvsprev", "Tsunami;previous #DeltaPH [ADC];<#DeltaPH> [ADC]", 120, -100, 500 );
   TH1I dutphHisto( "dutph", "DUT PH;ADC-PED [ADC];pixels", 500, -100, 900 );
   TH1I dutdphHisto( "dutdph", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
   TH1I dutdph0Histo( "dutdph0", "DUT #DeltaPH;#DeltaPH [ADC];pixels", 500, -100, 900 );
+  TH1I dutdpiHisto( "dutdpi", "DUT -#DeltaPH;-#DeltaPH [ADC];pixels", 1000, -200, 800 );
+  TH1I dutdp2Histo( "dutdp2", "DUT #DeltaPH_{2};#DeltaPH_{2} [ADC];pixels", 1000, -200, 800 );
 
   TProfile dutnpxvst2( "dutnpxvst2",
 	      "DUT pixels vs time;time [s];DUT pixels per event",
@@ -960,9 +923,9 @@ int main( int argc, char* argv[] )
 		    "DUT pixel row;pixel row;pixels",
 		    ny[iDUT], -0.5, ny[iDUT]-0.5 );
 
-  TH1I dutq0Histo( "dutq0",
+  TH1I dutph0Histo( "dutph0",
 		   "normal fiducial cluster charge;normal fiducial cluster charge [ke];fiducial clusters",
-		   160, 0, 80 );
+		   240, 0, 1200 );
 
   TH1I dutnpxHisto( "dutnpx",
 		     "DUT cluster size;cluster size [pixels];clusters",
@@ -1069,25 +1032,12 @@ int main( int argc, char* argv[] )
   // DUT pixel vs triplets:
 
   TH1I z3Histo( "z3",
-		       "z3 should be zero;z3 [mm];triplets",
-		       100, -0.01, 0.01 );
+		"z3 should be zero;z3 [mm];triplets",
+		100, -0.01, 0.01 );
 
-  TH1I cmssxaHisto( "cmssxa",
-			   "DUT + Telescope x;cluster + triplet #Sigmax [mm];clusters",
-			   440, -11, 11 );
-  TH1I cmsdxaHisto( "cmsdxa",
-			   "DUT - Telescope x;cluster - triplet #Deltax [mm];clusters",
-			   440, -11, 11 );
-
-  TH1I cmssyaHisto( "cmssya",
-			   "DUT + Telescope y;cluster + triplet #Sigmay [mm];clusters",
-			   198, -99, 99 ); // shallow needs wide range
-  TH1I cmsdyaHisto( "cmsdya",
-			   "DUT - Telescope y;cluster - triplet #Deltay [mm];clusters",
-			   160, -40, 40 );
-  TH1I cmsycHisto( "cmsyc",
-		   "x-linked triplet at DUT y;triplet y at DUT [mm];x-linked triplets",
-		   120, -6, 6 );
+  TH1I cmsdxpxHisto( "cmsdxpx",
+		     "DUT pixel - Telescope dx;pixel - triplet #Deltax [mm];pixels",
+		     200, -1, 1 );
 
   TH2I * cmsxvsx = new TH2I( "cmsxvsx",
 			     "DUT vs Telescope x;track x [mm];DUT x [mm];track-cluster combinations",
@@ -1096,24 +1046,18 @@ int main( int argc, char* argv[] )
 			     "DUT vs Telescope y;track y [mm];DUT y [mm];track-cluster combinations",
 			     160, -4, 4, 160, -4, 4 );
 
+  TH1I cmssxaHisto( "cmssxa",
+		    "DUT + Telescope x;cluster + triplet #Sigmax [mm];clusters",
+		    440, -11, 11 );
+  TH1I cmsdxaHisto( "cmsdxa",
+		    "DUT - Telescope x;cluster - triplet #Deltax [mm];clusters",
+		    440, -11, 11 );
   TH1I cmsdxHisto( "cmsdx",
-			   "DUT - Telescope x;cluster - triplet #Deltax [mm];clusters",
-			   200, -0.5, 0.5 );
-  TH1I cmsdyHisto( "cmsdy",
-			   "DUT - Telescope y;cluster - triplet #Deltay [mm];clusters",
-			   200, -10, 10 );
-
-  TH2I * cmsdxvsev1 = new TH2I( "cmsdxvsev1",
-				"DUT - Telescope x;event;#Deltax [mm]",
-				100, 0, 50000, 100, -5, 5 );
-  TH2I * cmsdxvsev2 = new TH2I( "cmsdxvsev2",
-				"DUT - Telescope x;event;#Deltax [mm]",
-				1000, 0, 1000*1000, 50, -5, 5 );
-
+		   "DUT - Telescope x;cluster - triplet #Deltax [mm];clusters",
+		   200, -0.5, 0.5 );
   TH1I cmsdxcHisto( "cmsdxc",
-			   "DUT - Telescope x, cut dy;cluster - triplet #Deltax [mm];clusters",
-			   200, -0.5, 0.5 );
-
+		    "DUT - Telescope x, cut dy;cluster - triplet #Deltax [mm];clusters",
+		    200, -0.5, 0.5 );
   TProfile cmsdxvsx( "cmsdxvsx",
 		     "#Deltax vs x;x track [mm];<cluster - triplet #Deltax> [mm]",
 		     50, -3.75, 3.75, -0.5, 0.5 );
@@ -1123,40 +1067,34 @@ int main( int argc, char* argv[] )
   TProfile cmsdxvstx( "cmsdxvstx",
 		      "#Deltax vs #theta_{x};x track slope [rad];<cluster - triplet #Deltax> [mm]",
 		      80, -0.004, 0.004, -0.5, 0.5 );
+  TH2I * cmsdxvsev1 = new TH2I( "cmsdxvsev1",
+				"DUT - Telescope x;event;#Deltax [mm]",
+				100, 0, 50000, 100, -5, 5 );
+  TH2I * cmsdxvsev2 = new TH2I( "cmsdxvsev2",
+				"DUT - Telescope x;event;#Deltax [mm]",
+				1000, 0, 1000*1000, 50, -5, 5 );
 
+  TH1I cmsycHisto( "cmsyc",
+		   "x-linked triplet at DUT y;triplet y at DUT [mm];x-linked triplets",
+		   120, -6, 6 );
+  TH1I cmssyaHisto( "cmssya",
+		    "DUT + Telescope y;cluster + triplet #Sigmay [mm];clusters",
+		    198, -99, 99 ); // shallow needs wide range
+  TH1I cmsdyaHisto( "cmsdya",
+		    "DUT - Telescope y;cluster - triplet #Deltay [mm];clusters",
+		    198, -99, 99 ); // shallow needs wide range
   TH1I cmsdycHisto( "cmsdyc",
 		    "#Deltay cut x;cluster - triplet #Deltay [mm];fiducial clusters",
-		     200, -10, 10 );
-
+		     200, -2, 2 );
   TProfile cmsdyvsx( "cmsdyvsx",
 		     "DUT #Deltay vs x;x track [mm];<cluster - triplet #Deltay> [mm]",
 		     50, -3.75, 3.75, -1, 1 );
-  TProfile cmsdyvsxn( "cmsdyvsxn",
-		      "DUT #Deltay vs x, long;x track [mm];<cluster - triplet #Deltay> [mm]",
-		      50, -3.75, 3.75, -1, 1 );
   TProfile cmsdyvsy( "cmsdyvsy",
 		     "DUT #Deltay vs y;y track [mm];<cluster - triplet #Deltay> [mm]",
 		     80, -8, 8, -1, 1 );
   TProfile cmsdyvsty( "cmsdyvsty",
 		      "DUT #Deltay vs #theta_{y};y track slope [rad];<cluster - triplet #Deltay> [mm]",
 		      80, -0.002, 0.002, -1, 1 );
-
-  TH1I cmsqc3Histo( "cmsqc3",
-		   "column charge;column charge [ke];x-linked columns",
-		   100, 0, 20 );
-  TH1I cmsqc4Histo( "cmsqc4",
-		   "column charge;column charge [ke];x-linked columns",
-		   100, 0, 20 );
-  TProfile cmsqcvsd( "cmsqcvsd",
-		     "DUT charge vs depth;depth [#mum];<column charge> [ke]",
-		     150/ptchx[iDUT]*fabs( tan(DUTtilt*wt) ), 0, 150, 0, 50 );
-  TH2I * cmsqcvsxHisto = new
-    TH2I( "cmsqcvsx",
-	  "column charge vs x;x track [mm];column charge [ke];x-linked columns",
-	  76, -3.8, 3.8, 50, 0, 10 );
-  TProfile cmsqcvsy( "cmsqcvsy",
-		     "column charge vs y;y track [mm];<column charge> [ke]",
-		     76, -3.8, 3.8, 0, 50 );
 
   TH1I trixAlkHisto( "trixAlk",
 		    "linked triplet at DUT x;triplet x at DUT [mm];linked triplets",
@@ -1173,9 +1111,6 @@ int main( int argc, char* argv[] )
 		    nx[iDUT], -0.5, nx[iDUT]-0.5 );
   TH1I cmsrowHisto( "cmsrow",
 		    "DUT linked rows;DUT linked cluster row;linked clusters",
-		    ny[iDUT], -0.5, ny[iDUT]-0.5 );
-  TH1I cmsrowcHisto( "cmsrowc",
-		    "x-DUT linked long rows;DUT x- linked long cluster row;x-linked long clusters",
 		    ny[iDUT], -0.5, ny[iDUT]-0.5 );
 
   TH1I cmscolminHisto( "cmscolmin",
@@ -1200,23 +1135,7 @@ int main( int argc, char* argv[] )
   TH1I cmsnrowHisto( "cmsnrow",
 		     "linked DUT cluster size;cluster size [rows];linked fiducial clusters",
 		     80, 0.5, 80.5 );
-  TH1I cmsnrowcHisto( "cmsnrowc",
-		     "x-linked DUT cluster size;cluster size [rows];x-linked clusters",
-		     80, 0.5, 80.5 );
 
-  TProfile cmsncolvsxm( "cmsncolvsxm",
-			"DUT cluster size vs xmod;x track mod 0.3 [mm];<cluster size> [columns]",
-			100, 0, 0.2, 0, 20 );
-  TProfile cmsnrowvsxm( "cmsnrowvsxm",
-			"DUT cluster size vs xmod;x track mod 0.3 [mm];<cluster size> [rows]",
-			100, 0, 0.2, 0, 80 );
-
-  TProfile cmsncolvsym( "cmsncolvsym",
-			"DUT cluster size vs ymod;y track mod 0.2 [mm];<cluster size> [columns]",
-			100, 0, 0.2, 0, 20 );
-  TProfile cmsnrowvsym( "cmsnrowvsym",
-			"DUT cluster size vs ymod;y track mod 0.2 [mm];<cluster size> [rows]",
-			100, 0, 0.2, 0, 80 );
   TProfile cmsnrowvsy( "cmsnrowvsy",
 		       "DUT cluster length vs y;y track [mm];<cluster length> [rows]",
 		       100, -5, 5 );
@@ -1232,47 +1151,24 @@ int main( int argc, char* argv[] )
 	      "DUT cluster size vs xmod ymod;x track mod 0.3 [mm];y track mod 0.2 [mm];<cluster size> [pixels]",
 		40, 0, 0.2, 40, 0, 0.2, 0, 20 );
 
-  TH1I cmsq0Histo( "cmsq0",
-		   "normal fiducial cluster charge;normal cluster charge [ke];linked fiducial clusters",
-		   160, 0, 80 );
-  TProfile cmsqxvsx( "cmsqxvsx",
-		     "DUT cluster charge vs x;x track [mm];<cluster charge> [ke]",
-		     50, -3.75, 3.75, 0, 0.015 ); // cutoff at 5 ke
-  TProfile cmsqxvsy( "cmsqxvsy",
-		     "DUT cluster charge vs y;y track [mm];<cluster charge> [ke]",
-		     76, -3.8, 3.8, 0, 0.015 );
-  TProfile2D * cmsqxvsxy = new
-		      TProfile2D( "cmsqxvsxy",
-				  "DUT cluster charge vs xy;x track [mm];y track [mm];<cluster charge> [ke]",
-				  50, -3.75, 3.75, 76, -3.8, 3.8, 0, 0.015 );
-  TProfile cmsqxvsxm( "cmsqxvsxm",
-		      "DUT cluster charge vs xmod;x track mod 0.3 [mm];<cluster charge> [ke]",
-		      100, 0, 0.2, 0, 0.015 );
-  TProfile cmsqxvsym( "cmsqxvsym",
-		      "DUT cluster charge vs ymod;y track mod 0.2 [mm];<cluster charge> [ke]",
-		      100, 0, 0.2, 0, 0.015 );
-  TProfile cmsqxvsymn( "cmsqxvsymn",
-		       "DUT cluster charge vs ymod no dot;y track mod 0.2 [mm];<no dot cluster charge> [ke]",
-		       100, 0, 0.2, 0, 0.015 );
-  TProfile2D * cmsqxvsxmym = new
-    TProfile2D( "cmsqxvsxmym",
-	      "DUT cluster charge vs xmod ymod;x track mod 0.3 [mm];y track mod 0.2 [mm];<cluster charge> [ke]",
-		40, 0, 0.2, 40, 0, 0.2, 0, 0.015 );
+  TH1I cmsph0Histo( "cmsph0",
+		   "normal fiducial cluster charge;normal cluster charge [ADC];linked fiducial clusters",
+		   240, 0, 1200 );
 
-  TH1I cmspxqHisto( "cmspxq",
-		    "DUT pixel charge linked;pixel charge [ke];linked pixels",
-		    100, 0, 25 );
-  TH1I cmspxqlHisto( "cmspxql",
-		    "DUT pixel charge long linked;pixel charge [ke];pixels in long linked clusters",
-		    100, 0, 25 );
+  TH1I cmspxphHisto( "cmspxph",
+		    "DUT pixel charge linked;pixel charge [ADC];linked pixels",
+		    200, 0, 400 );
+  TH1I cmspxphlHisto( "cmspxphl",
+		    "DUT pixel charge long linked;pixel charge [ADC];pixels in long linked clusters",
+		    200, 0, 400 );
 
   TH1I npxrdHisto = TH1I( "npxrd",
-			  "pixels in track road;pixels in track road;tracks",
-			  80, 0.5, 80.5 );
+			   "pixels in track road;pixels in track road;tracks",
+			   120, 0.5, 120.5 );
+  TH1I nrwrdHisto = TH1I( "nrwrd",
+			   "rows in track road;rows in track road;tracks",
+			   60, 0.5, 60.5 );
 
-  TH1I npxrdqHisto = TH1I( "npxrdq",
-			  "charged pixels in track road;charged pixels in track road;tracks",
-			  80, 0.5, 80.5 );
   TH1I dcol0Histo = TH1I( "dcol0",
 			  "cluster-road 1st pixel;1st cluster-road [pixels];roads",
 			  41, -20.5, 20.5 );
@@ -1283,14 +1179,14 @@ int main( int argc, char* argv[] )
 			   "columns in track road;pixel columns in track road;roads",
 			   80, 0.5, 80.5 );
 
-  TH1I dutpxqmidHisto =
-    TH1I( "dutpxqmid",
-	  "DUT pixel charge middle;pixel charge [ke];middle pixels",
-	  100, 0, 25 );
-  TH1I dutpxqedgHisto =
-    TH1I( "dutpxqedg",
-	  "DUT pixel charge edge;pixel charge [ke];edge pixels",
-	  100, 0, 25 );
+  TH1I dutpxphmidHisto =
+    TH1I( "dutpxphmid",
+	  "DUT pixel charge middle;pixel charge [ADC];middle pixels",
+	  200, 0, 400 );
+  TH1I dutpxphedgHisto =
+    TH1I( "dutpxphedg",
+	  "DUT pixel charge edge;pixel charge [ADC];edge pixels",
+	  200, 0, 400 );
 
  TH1I yrd0Histo = TH1I( "yrd0",
 			"track road entry;track road entry [mm];x-linked tracks",
@@ -1307,135 +1203,122 @@ int main( int argc, char* argv[] )
 	  "DUT entry dy;track entry - last pixel #Deltay [mm];tracks",
 	 160, -2, 2 );
 
-  TH1I cmsdyrowHisto =
-    TH1I( "cmsdyrow",
-	  "DUT row dy;#Deltay [mm];rows",
-	 160, -2, 2 );
-  TH1I cmsdyrowcHisto =
-    TH1I( "cmsdyrowc",
+  TH1I npxrdphHisto = TH1I( "npxrdph",
+			  "charged pixels in track road;charged pixels in track road;tracks",
+			  80, 0.5, 80.5 );
+
+  TH1I rowpHisto =
+    TH1I( "rowp",
+	  "DUT y charge;y charge [ADC];y bins in track road",
+	  200, 0, 400 );
+  TH1I rowp1Histo =
+    TH1I( "rowp1",
+	  "DUT 1st y charge;y charge [ADC];1st y bin in track road",
+	  200, 0, 400 );
+  TH1I rowp2Histo =
+    TH1I( "rowp2",
+	  "DUT 2nd y charge;y charge [ADC];2nd y bin in track road",
+	  200, 0, 400 );
+  TH1I rowp8Histo =
+    TH1I( "rowp8",
+	  "DUT last-1 y charge;y charge [ADC];lst-1 y bin in track road",
+	  200, 0, 400 );
+  TH1I rowp9Histo =
+    TH1I( "rowp9",
+	  "DUT last y charge;y charge [ADC];lst y bin in track road",
+	  200, 0, 400 );
+  TH1I rowpmHisto =
+    TH1I( "rowpm",
+	  "DUT mid y charge;y charge [ADC];mid y bin in track road",
+	  200, 0, 400 );
+
+  TH1I rowdyHisto =
+    TH1I( "rowdy",
 	  "DUT row dy;#Deltay [mm];rows",
 	 160, -2, 2 );
 
-  TH1I cmsdHisto =
-    TH1I( "cmsd",
+  TH1I rowdHisto =
+    TH1I( "rowd",
 	  "track depth;track depth [#mum];pixels in track road",
 	  100, -100, 100 );
-  TH1I cmsdqHisto =
-    TH1I( "cmsdq",
+  TH1I rowdphHisto =
+    TH1I( "rowdph",
 	  "track depth charged;track depth [#mum];charged pixels in track road",
 	  100, -100, 100 );
 
-  TH1I cmsqyHisto =
-    TH1I( "cmsqy",
-	  "DUT y charge;y charge [ke];y bins in track road",
-	  100, 0, 25 );
-  TH1I cmsqy1Histo =
-    TH1I( "cmsqy1",
-	  "DUT 1st y charge;y charge [ke];1st y bin in track road",
-	  100, 0, 25 );
-  TH1I cmsqy2Histo =
-    TH1I( "cmsqy2",
-	  "DUT 2nd y charge;y charge [ke];2nd y bin in track road",
-	  100, 0, 25 );
-  TH1I cmsqy8Histo =
-    TH1I( "cmsqy8",
-	  "DUT last-1 y charge;y charge [ke];lst-1 y bin in track road",
-	  100, 0, 25 );
-  TH1I cmsqy9Histo =
-    TH1I( "cmsqy9",
-	  "DUT last y charge;y charge [ke];lst y bin in track road",
-	  100, 0, 25 );
-  TH1I cmsqymHisto =
-    TH1I( "cmsqym",
-	  "DUT mid y charge;y charge [ke];mid y bin in track road",
-	  100, 0, 25 );
+  TProfile rowpvsdy =
+    TProfile( "rowpvsdy",
+	      "DUT charge vs track y;dy [#mum];<charge> [ADC]",
+	      240, -1200, 1200 );
+  TProfile rowpvsd =
+    TProfile( "rowpvsd",
+	      "DUT charge vs track depth;track depth [#mum];<pixel charge> [ADC]",
+	      40, -100, 100 );
+  TProfile rowpvsdxp =
+    TProfile( "rowpvsdxp",
+	      "DUT charge vs track depth, x > 0;track depth [#mum];<pixel charge> [ADC]",
+	      40, -100, 100 );
+  TProfile rowpvsdxm =
+    TProfile( "rowpvsdxm",
+	      "DUT charge vs track depth, x < 0;track depth [#mum];<pixel charge> [ADC]",
+	      40, -100, 100 );
+  TProfile rowp1vsd =
+    TProfile( "rowp1vsd",
+	      "DUT charge > 0 vs track depth;track depth [#mum];<pixel charge> [ADC]",
+	      40, -100, 100 );
 
-  TProfile cmsqyvsy =
-    TProfile( "cmsqyvsy",
-	      "DUT charge vs track y;dy [mm];<charge> [ke]",
-	      80, -2, 2, 0, 99 );
-  TProfile cmsqyvsd =
-    TProfile( "cmsqyvsd",
-	      "DUT charge vs track depth;track depth [#mum];<pixel charge> [ke]",
-	      40, -100, 100, 0, 50 );
-  TProfile cmsqyvsdxp =
-    TProfile( "cmsqyvsdxp",
-	      "DUT charge vs track depth, x > 0;track depth [#mum];<pixel charge> [ke]",
-	      40, -100, 100, 0, 50 );
-  TProfile cmsqyvsdxm =
-    TProfile( "cmsqyvsdxm",
-	      "DUT charge vs track depth, x < 0;track depth [#mum];<pixel charge> [ke]",
-	      40, -100, 100, 0, 50 );
-  TProfile cmsqy1vsd =
-    TProfile( "cmsqy1vsd",
-	      "DUT charge > 0 vs track depth;track depth [#mum];<pixel charge> [ke]",
-	      40, -100, 100, 0, 99 );
+  TH2I * rowpdHisto = new
+    TH2I( "rowpd",
+	  "DUT charge vs track depth;track depth [#mum];pixel charge [ADC];entries",
+	  40, -100, 100, 100, 0, 200 );
 
-  TH2I * cmsqydHisto = new
-    TH2I( "cmsqyd",
-	  "DUT charge vs track depth;track depth [#mum];pixel charge [ke];entries",
-	  40, -100, 100, 249, 0.2, 50 );
-  TH1I cmsqyposHisto =
-    TH1I( "cmsqypos",
-	  "DUT charge per pixel row above mid plane;pixel charge [ke];pixels in track road above mid",
-	  100, 0, 25 );
-  TH1I cmsqynegHisto =
-    TH1I( "cmsqyneg",
-	  "DUT charge per pixel row below mid plane;pixel charge [ke];pixels in track road below mid",
-	  100, 0, 25 );
-
-  TH1I cmsqyp60Histo =
-    TH1I( "cmsqyex",
-	  "DUT pixel charge, d > 60 #mum;pixel charge [ke];d > 60 #mum pixels",
-	  100, 0.25, 25.25 );
-  TH1I cmsqyp30Histo =
-    TH1I( "cmsqy90",
-	  "DUT pixel charge, d 30 60 #mum;pixel charge [ke];d 30 60 #mum pixels",
-	  100, 0.25, 25.25 );
-  TH1I cmsqyp00Histo =
-    TH1I( "cmsqy60",
-	  "DUT pixel charge, d 0 30 #mum;pixel charge [ke];d 0 30 #mum pixels",
-	  100, 0.25, 25.25 );
-  TH1I cmsqym30Histo =
-    TH1I( "cmsqy30",
-	  "DUT pixel charge, d -30 0 #mum;pixel charge [ke];d -30 0 #mum pixels",
-	  100, 0.25, 25.25 );
-  TH1I cmsqym60Histo =
-    TH1I( "cmsqy00",
-	  "DUT pixel charge, d -60 -30 #mum;pixel charge [ke];d -60 -30 #mum pixels",
-	  100, 0.25, 25.25 );
-
-  TProfile cmsqyvsrm =
-    TProfile( "cmsqyvsrm",
-	      "DUT pixel charge vs rmod;x track mod 0.2 [mm];<pixel charge> [ke]",
-	      100, 0, 0.2, 0, 99 );
-  TProfile cmsqy0vsrm =
-    TProfile( "cmsqy0vsrm",
-	      "DUT deep pixel charge vs rmod;x track mod 0.2 [mm];<pixel charge d < -50 #mum> [ke]",
-	      100, 0, 0.2, 0, 99 );      
+  TH1I rowpp60Histo =
+    TH1I( "rowpp60",
+	  "DUT pixel charge, d > 60 #mum;pixel charge [ADC];d > 60 #mum pixels",
+	  200, 0, 400 );
+  TH1I rowpp40Histo =
+    TH1I( "rowpp40",
+	  "DUT pixel charge, 40 < d < 60 #mum;pixel charge [ADC];40 < d 60 #mum pixels",
+	  200, 0, 400 );
+  TH1I rowpp20Histo =
+    TH1I( "rowpp20",
+	  "DUT pixel charge, 20 < d < 40 #mum;pixel charge [ADC];20 < d < 40 #mum pixels",
+	  200, 0, 400 );
+  TH1I rowpp00Histo =
+    TH1I( "rowpp00",
+	  "DUT pixel charge, 0 < d < 20 #mum;pixel charge [ADC];0 < d < 20 #mum pixels",
+	  200, 0, 400 );
+  TH1I rowpm20Histo =
+    TH1I( "rowpm20",
+	  "DUT pixel charge, -20 < d < 0 #mum;pixel charge [ADC];-20 < d < 0 #mum pixels",
+	  200, 0, 400 );
+  TH1I rowpm40Histo =
+    TH1I( "rowpm40",
+	  "DUT pixel charge, -40 < d < -20 #mum;pixel charge [ADC];-40 < d < -20 #mum pixels",
+	  200, 0, 400 );
+  TH1I rowpm60Histo =
+    TH1I( "rowpm60",
+	  "DUT pixel charge, -60 < d < -40 #mum;pixel charge [ADC];-60 < d < -40 #mum pixels",
+	  200, 0, 400 );
+  TH1I rowpm80Histo =
+    TH1I( "rowpm80",
+	  "DUT pixel charge, d < -60 #mum;pixel charge [ADC];d < -60 #mum pixels",
+	  200, 0, 400 );
 
   TProfile2D * roipvsdxdy = new
     TProfile2D( "roipvsdxdy",
 		"pixel signals at track;pixel - x track [#mum];pixel - y track [#mum];<pixel signal> [ADC]",
-		50, -250, 250, 100, -500, 500 );
+		50, -250, 250, 200, -1200, 800 );
 
-  TH1I cmsrowqHisto( "cmsrowq", "DUT row charge;row charge [ke];rows", 100, -5, 15 );
-  TH1I cmsmaxqHisto( "cmsmaxq", "DUT max row charge;max row charge [ke];rows", 100, -5, 15 );
-  TH1I cmsrow0Histo( "cmsrow0", "DUT 1st row;1st row;roads", 160, -0.5, 159.5 );
-  TH1I cmsrow9Histo( "cmsrow9", "DUT lst row;lst row;roads", 160, -0.5, 159.5 );
-  TH1I cmsrowsHisto( "cmsrows", "DUT filled rows;filled rows;roads", 50, 0.5, 50.5 );
-  TH1I cmsrowszHisto( "cmsrowsz", "DUT row size;row size [cols];rows", 21, -0.5, 20.5 );
+  TProfile roirowpvsdy( "roirowpvsdy",
+			"pixel signals at track;pixel - y track [#mum];<pixel signal> [ADC]",
+			240, -1200, 1200 );
 
-  TProfile cmscol0qvsdy( "cmscol0qvsdy",
-	      "col 0 charge vs y;y-y0 [rows];col 0 <charge> [ke]", 21, -0.5, 20.5, 0, 99 );
-  TProfile cmscol1qvsdy( "cmscol1qvsdy",
-	      "col 1 charge vs y;y-y0 [rows];col 1 <charge> [ke]", 21, -0.5, 20.5, 0, 99 );
-  TProfile cmscol2qvsdy( "cmscol2qvsdy",
-	      "col 2 charge vs y;y-y0 [rows];col 2 <charge> [ke]", 21, -0.5, 20.5, 0, 99 );
-  TProfile cmscol3qvsdy( "cmscol3qvsdy",
-	      "col 3 charge vs y;y-y0 [rows];col 3 <charge> [ke]", 21, -0.5, 20.5, 0, 99 );
-  TProfile cmscol4qvsdy( "cmscol4qvsdy",
-	      "col 4 charge vs y;y-y0 [rows];col 4 <charge> [ke]", 21, -0.5, 20.5, 0, 99 );
+  TH1I roirowpHisto( "roirowp", "DUT row charge;row charge [ADC];rows", 200, -100, 700 );
+  TH1I roinrowHisto( "roinrow", "DUT filled rows;filled rows;roads", 50, 0.5, 50.5 );
+  TH1I roirow0Histo( "roirow0", "DUT 1st row;1st row;roads", 160, -0.5, 159.5 );
+  TH1I roirow9Histo( "roirow9", "DUT lst row;lst row;roads", 160, -0.5, 159.5 );
+  TH1I roirowszHisto( "roirowsz", "DUT row size;row size [cols];rows", 21, -0.5, 20.5 );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // event loop:
@@ -1484,7 +1367,6 @@ int main( int argc, char* argv[] )
   uint64_t tlutime0 = 0;
   const double fTLU = 384E6; // 384 MHz TLU clock
   uint64_t prevtlutime = 0;
-  double prevtludt = 0;
 
   const double fDTB = 39.917E6; // 40 MHz DTB clock
   uint64_t prevdtbtime = 0;
@@ -1535,8 +1417,6 @@ int main( int argc, char* argv[] )
     if( chip0 == 114 && run == 31095 && iev == 145447 ) tludt = 0.001; // see cmsdxvsev2 and use ldbt
     if( chip0 == 114 && run == 31095 && iev == 146442 ) tludt = 0.001;
     if( chip0 == 114 && run == 31095 && iev == 147437 ) tludt = 0.001;
-    //if( tludt > 0.5 && prevtludt > 0.5 ) tludt = 0.001;
-    prevtludt = tludt;
 
     if( iev < 10 )
       cout << "scopesh processing  " << run << "." << iev << "  taken " << evsec << endl;
@@ -1591,8 +1471,6 @@ int main( int argc, char* argv[] )
 	  continue;
 	}
 
-	double q = ph;
-
 	hcol[ipl].Fill( ix+0.5 );
 	hrow[ipl].Fill( iy+0.5 );
 	hmap[ipl]->Fill( ix+0.5, iy+0.5 );
@@ -1603,7 +1481,6 @@ int main( int argc, char* argv[] )
 	px.col = ix; // col
 	px.row = iy; // row
 	px.ph = ph;
-	px.q = q;
 	px.ord = pb.size(); // readout order
 	px.big = 0;
 	pb.push_back(px);
@@ -1754,7 +1631,7 @@ int main( int argc, char* argv[] )
 	hrow[iDUT].Fill( row+0.5 );
 	dutphHisto.Fill( ph );
 
-	pixel px { col, row, ph, ph, ipx, 0 };
+	pixel px { col, row, ph, ipx, 0 };
 	vpx.push_back(px);
 	++ipx;
 
@@ -1767,52 +1644,55 @@ int main( int argc, char* argv[] )
 
       // columns-wise common mode correction:
 
-      set <pixelr> compx[155]; // per column, sorted along row
+      set <pixel> compx[160]; // per row, sorted along col
 
       for( unsigned ipx = 0; ipx < vpx.size(); ++ipx ) {
-	int col = vpx[ipx].col;
-	pixelr px { col, vpx[ipx].row, vpx[ipx].ph, vpx[ipx].q, vpx[ipx].ord, 0 };
-	compx[col].insert(px); // sorted along row
+	int row = vpx[ipx].row;
+	pixel px { vpx[ipx].col, row, vpx[ipx].ph, vpx[ipx].ord, 0 };
+	compx[row].insert(px); // sorted along row
       }
 
-      // needed: row-wise common mode for row-wise readout May 2019
+      for( unsigned row = 0; row < 160; ++row ) {
 
-      for( unsigned col = 0; col < 155; ++col ) {
+	if( compx[row].size() < 2 ) continue;
 
-	if( compx[col].size() < 2 ) continue;
+	auto px1 = compx[row].begin();
+	auto px7 = compx[row].end(); --px7; // last
 
-	auto px1 = compx[col].begin();
-	auto px7 = compx[col].end(); --px7; // last
-
-	int row1 = px1->row;
-	int row7 = px7->row;
+	int col1 = px1->col;
+	int col7 = px7->col;
 	double ph1 = px1->ph;
 	double ph7 = px7->ph;
 
-	auto px4 = px1; ++px4;
+	auto px4 = px1;
+	double phprev = px4->ph;
+	double dphprev = 0;
+	++px4;
 	for( ; px4 != px7; ++px4 ) { // between 1 and 7, exclusively
 
 	  int col4 = px4->col;
 	  int row4 = px4->row;
 	  double ph4 = px4->ph;
 
+	  if( chip0 == -198 )
+	    ph4 -= 0.13*phprev; // Tsunami or delta rays
+
 	  double dph;
-	  if( row4 - row1 < row7 - row4 )
+	  if( col4 - col1 < col7 - col4 )
 	    dph = ph4 - ph1;
 	  else
 	    dph = ph4 - ph7;
 
+	  dutphHisto.Fill( ph4 );
+	  dutphvsprev.Fill( phprev, ph4 ); // Tsunami
 	  dutdphHisto.Fill( dph );
-	  if( row4 > 10 && row4 < 150 ) dutdph0Histo.Fill( dph ); // skip noisy regions
+	  dutdpiHisto.Fill( -dph );
+	  dutdphvsprev.Fill( dphprev, dph );
+	  if( col4 > 20 ) dutdph0Histo.Fill( dph ); // skip noisy regions
 
-	  // r4scal.C
+	  dph = ph4 - 0.5*(ph1+ph7); // 20.11.2018 less noise
 
-	  double U = ( dph - p3[col4][row4] ) / p2[col4][row4];
-
-	  if( U >= 1 )
-	    U = 0.9999999; // avoid overflow
-
-	  double vcal = p0[col4][row4] - p1[col4][row4] * log( (1-U)/U ); // inverse Fermi
+	  dutdp2Histo.Fill( dph );
 
 	  pixel px;
 
@@ -1828,18 +1708,10 @@ int main( int argc, char* argv[] )
 	      px.row = 2*row4 + 1;
 	  }
 	  px.ph = dph;
-	  px.q = ke*vcal; // should become Vcal
 	  px.ord = pb.size(); // readout order
 	  px.big = 0;
 
 	  rowpx[row4].insert(px); // sorted along col
-
-	  double dphcut = 12; // 31619 dy8cq 4.77
-
-	  if( chip0 == 122 ) dphcut = 30; // irrad, gain_2
-	  if( chip0 == 123 ) dphcut = 25; // irrad, gain_2, dph 10
-	  if( chip0 == 133 ) dphcut = 30; // irrad, gain_2
-	  if( run >= 31635 && run <= 32266 ) dphcut = 24; // gain_2 2018
 
 	  if( dph > dphcut ) {
 
@@ -1898,15 +1770,15 @@ int main( int argc, char* argv[] )
       int rowmin = 999;
       int rowmax = -1;
 
-      double qsum = 0;
+      double phsum = 0;
       double sumcol = 0;
       double sumrow = 0;
 
-      double qcol[nx[iDUT]];
-      for( int icol = 0; icol < nx[iDUT]; ++icol ) qcol[icol] = 0;
+      double phcol[nx[iDUT]];
+      for( int icol = 0; icol < nx[iDUT]; ++icol ) phcol[icol] = 0;
 
-      double qrow[ny[iDUT]];
-      for( int irow = 0; irow < ny[iDUT]; ++irow ) qrow[irow] = 0;
+      double phrow[ny[iDUT]];
+      for( int irow = 0; irow < ny[iDUT]; ++irow ) phrow[irow] = 0;
 
       for( vector<pixel>::iterator px = c->vpix.begin(); px != c->vpix.end(); ++px ) {
 
@@ -1922,15 +1794,15 @@ int main( int argc, char* argv[] )
 	if( irow < rowmin ) rowmin = irow;
 	if( irow > rowmax ) rowmax = irow;
 
-	double q = px->q; // corrected
-	if( q < 0 ) continue;
+	double ph = px->ph; // corrected
+	if( ph < 0 ) continue;
 
-	qsum += q;
-	qcol[icol] += q; // project cluster onto cols
-	qrow[irow] += q; // project cluster onto rows
+	phsum += ph;
+	phcol[icol] += ph; // project cluster onto cols
+	phrow[irow] += ph; // project cluster onto rows
 
-	sumcol += icol*q;
-	sumrow += irow*q;
+	sumcol += icol*ph;
+	sumrow += irow*ph;
 
       } // pix
 
@@ -1939,7 +1811,7 @@ int main( int argc, char* argv[] )
 
       if( colmin > 0 && colmax < nx[iDUT]-2 &&
 	  rowmin > 0 && rowmax < ny[iDUT]-1 ) {
-	dutq0Histo.Fill( qsum * norm );
+	dutph0Histo.Fill( phsum * norm );
 	dutnpxHisto.Fill( c->size );
 	dutncolHisto.Fill( ncol );
 	dutnrowHisto.Fill( nrow );
@@ -2096,27 +1968,6 @@ int main( int argc, char* argv[] )
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // triplets:
 
-    double xcut = 0.1;
-    if( run == 31336 )
-      xcut = 0.25; // skewed?
-    if( chip0 == 118 )
-      xcut = 0.05;
-
-    double ycut = 0.2;
-    if( fabs(DUTtilt) > 60 )
-      ycut = 8;
-
-    int rowcut = 30; // run 31110
-    if( run >= 31111 ) rowcut = 20;
-    if( chip0 == 123 ) rowcut = 6; // 2018 10 pixel roads
-
-    int lngcut = 11; // 2017: 30 pixel roads
-    if( chip0 == 118 ) lngcut = 3; // 2018 10 pixel roads
-    if( chip0 == 123 ) lngcut = 3; // 2018 10 pixel roads
-    if( chip0 == 133 ) lngcut = 1; // 2018 search
-    if( chip0 == 176 ) lngcut = 4; // 2019
-    if( DUTaligniteration <= 4 ) lngcut = 0; // align
-
     for( unsigned int iA = 0; iA < triplets.size(); ++iA ) { // iA = upstream
 
       double xmA = triplets[iA].xm;
@@ -2203,104 +2054,57 @@ int main( int argc, char* argv[] )
       double xmod = fmod( 9.000 + x4, 0.2 ); // [0,0.2] mm
       double ymod = fmod( 9.000 + y4, 0.2 ); // [0,0.2] mm
 
-      double rmod = fmod( 9.000 + y4, 0.2 ); // [0,0.2] mm
-      if( rot90 ) {
-     	rmod = fmod( 9.000 + x4, 0.2 ); // [0,0.2] mm
-      }
-
       // define track road through pixels: (shallow tilt, no turn)
       // better: intersect at DUTz +- 0.5*DUTthickness
 
       double yrd9 = y4 + 0.5*DUTthickness * fabs( tan( DUTtilt*wt ) );
       double yrd0 = y4 - 0.5*DUTthickness * fabs( tan( DUTtilt*wt ) );
 
-      double qrd[155][160]; // charge
+      double prd[155][160]; // charge
       double drd[155][160]; // depth
+
+      for( int irow = 0; irow < 160; ++irow ) // x
+	for( int icol = 0; icol < 155; ++icol ) // x
+	  prd[icol][irow] = -1; // flag: pixel is outside track road
+
       int npxrd = 0;
       int rdrowmin = 159;
       int rdrowmax =  0;
       int rdcolmin = 154;
       int rdcolmax =  0;
 
-      for( int irow = 0; irow < 160; ++irow ) // x
-	for( int icol = 0; icol < 155; ++icol ) // x
-	  qrd[icol][irow] = -1; // flag: pixel is outside track road
+      for( int icol = 0; icol < 155; ++icol ) { // x
 
-      if( rot90 ) {
+	double xpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
 
-	for( int irow = 0; irow < 160; ++irow ) { // x
+	if( fabs( x4 - xpix ) > 1.5 * ptchx[iDUT] ) continue; // 3-col road
 
-	  double xpix = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // pixel center
+	for( int irow = 0; irow < 160; ++irow ) { // y
 
-	  if( fabs( x4 - xpix ) > 1.1 * ptchy[iDUT] ) continue; // 2-row road
-	  //if( fabs( x4 - xpix ) > 1.6 * ptchy[iDUT] ) continue; // 3-row road
-	  //if( fabs( x4 - xpix ) > 4.1 * ptchy[iDUT] ) continue; // 5-row road, if poor x align
+	  double ypix = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // [mm]
 
-	  for( int icol = 0; icol < 155; ++icol ) { // y
+	  drd[icol][irow] = ( y4 - ypix ) / fabs( tan( DUTtilt*wt ) ); // depth, 0 = mid
 
-	    double ypix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // [mm]
+	  if( ypix > yrd9 + 1.5 * ptchy[iDUT] ) continue; // with smearing
+	  if( ypix < yrd0 - 1.5 * ptchy[iDUT] ) continue;
+	  if( ypix > yrd9 + 0.5 * ptchy[iDUT] ) continue; // tighter
+	  if( ypix < yrd0 - 0.5 * ptchy[iDUT] ) continue;
 
-	    drd[icol][irow] = ( y4 - ypix ) / fabs( tan( DUTtilt*wt ) ); // depth, 0 = mid
+	  ++npxrd;
 
-	    // |   |   |   |   |
+	  prd[icol][irow] = 0; // pixel is inside track road
 
-	    if( ypix > yrd9 + 1.5 * ptchx[iDUT] ) continue; // with smearing
-	    if( ypix < yrd0 - 1.5 * ptchx[iDUT] ) continue;
-	    if( ypix > yrd9 + 0.5 * ptchx[iDUT] ) continue; // tighter
-	    if( ypix < yrd0 - 0.5 * ptchx[iDUT] ) continue;
-
-	    ++npxrd;
-
-	    qrd[icol][irow] = 0; // pixel is inside track road
-
-	    if( irow < rdrowmin ) rdrowmin = irow;
-	    if( irow > rdrowmax ) rdrowmax = irow;
-	    if( icol < rdcolmin ) rdcolmin = icol;
-	    if( icol > rdcolmax ) rdcolmax = icol;
-
-	  } // col
+	  if( irow < rdrowmin ) rdrowmin = irow;
+	  if( irow > rdrowmax ) rdrowmax = irow;
+	  if( icol < rdcolmin ) rdcolmin = icol;
+	  if( icol > rdcolmax ) rdcolmax = icol;
 
 	} // row
 
-      } // rot90
-
-      else {
-
-	for( int icol = 0; icol < 155; ++icol ) { // x
-
-	  double xpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
-
-	  if( fabs( x4 - xpix ) > 1.1 * ptchx[iDUT] ) continue; // 2-col road
-
-	  for( int irow = 0; irow < 160; ++irow ) { // y
-
-	    double ypix = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // [mm]
-
-	    drd[icol][irow] = ( y4 - ypix ) / fabs( tan( DUTtilt*wt ) ); // depth, 0 = mid
-
-	    // |   |   |   |   |
-
-	    if( ypix > yrd9 + 1.5 * ptchy[iDUT] ) continue; // with smearing
-	    if( ypix < yrd0 - 1.5 * ptchy[iDUT] ) continue;
-	    if( ypix > yrd9 + 0.5 * ptchy[iDUT] ) continue; // tighter
-	    if( ypix < yrd0 - 0.5 * ptchy[iDUT] ) continue;
-
-	    ++npxrd;
-
-	    qrd[icol][irow] = 0; // pixel is inside track road
-
-	    if( irow < rdrowmin ) rdrowmin = irow;
-	    if( irow > rdrowmax ) rdrowmax = irow;
-	    if( icol < rdcolmin ) rdcolmin = icol;
-	    if( icol > rdcolmax ) rdcolmax = icol;
-
-	  } // row
-
-	} // col
-
-      } // not rot90
+      } // col
 
       npxrdHisto.Fill( npxrd );
+      nrwrdHisto.Fill( rdrowmax-rdrowmin+1 );
 
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // DUT pixel clusters:
@@ -2315,19 +2119,18 @@ int main( int argc, char* argv[] )
 	double ccol = c->col;
 	double crow = c->row;
 
-	double Q0 = c->charge * norm; // cluster charge normalized to vertical incidence
-	double Qx = exp(-Q0/qwid);
+	double P0 = c->ph * norm; // cluster charge normalized to vertical incidence
 
 	int colmin = 999;
 	int colmax = -1;
 	int rowmin = 999;
 	int rowmax = -1;
 
-	double qcol[nx[iDUT]];
-	for( int icol = 0; icol < nx[iDUT]; ++icol ) qcol[icol] = 0;
+	double phcol[nx[iDUT]];
+	for( int icol = 0; icol < nx[iDUT]; ++icol ) phcol[icol] = 0;
 
-	double qrow[ny[iDUT]];
-	for( int irow = 0; irow < ny[iDUT]; ++irow ) qrow[irow] = 0;
+	double phrow[ny[iDUT]];
+	for( int irow = 0; irow < ny[iDUT]; ++irow ) phrow[irow] = 0;
 
 	for( vector<pixel>::iterator px = c->vpix.begin(); px != c->vpix.end(); ++px ) {
 
@@ -2344,24 +2147,22 @@ int main( int argc, char* argv[] )
 	  if( irow < rowmin ) rowmin = irow;
 	  if( irow > rowmax ) rowmax = irow;
 
-	  double q = px->q; // [ke] corrected
-	  if( q < 0 ) continue;
+	  double ph = px->ph; // [ADC]
+	  if( ph < 0 ) continue;
 
-	  if( qrd[icol][irow] > -0.5 ) qrd[icol][irow] += q; // road
+	  if( prd[icol][irow] > -0.5 )
+	    prd[icol][irow] += ph; // road
 
-	  qcol[icol] += q; // project cluster onto cols
-	  qrow[irow] += q; // project cluster onto rows
+	  phcol[icol] += ph; // project cluster onto cols
+	  phrow[irow] += ph; // project cluster onto rows
 
 	  // match to road in x:
 
-	  if( rot90 ) {
-	    double xpix = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT];
-	    if( fabs( x4 - xpix ) > 2.1 * ptchy[iDUT] ) continue;
-	  }
-	  else {
-	    double xpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
-	    if( fabs( x4 - xpix ) > 2.1 * ptchx[iDUT] ) continue;
-	  }
+	  double xpix = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
+	  double dx = xpix - x4;
+	  cmsdxpxHisto.Fill( dx );
+
+	  if( fabs( dx ) > 1.5 * ptchx[iDUT] ) continue;
 
 	  if( irow < pxrowmin ) pxrowmin = irow;
 	  if( irow > pxrowmax ) pxrowmax = irow;
@@ -2370,43 +2171,20 @@ int main( int argc, char* argv[] )
 
 	} // pix
 
-	bool fiducial = 1;
-	if( colmin < 1 ) fiducial = 0;
-	if( rowmin < 1 ) fiducial = 0;
-	if( colmax >= nx[iDUT]-2 ) fiducial = 0; // nx 156, col to 154
-	if( rowmax >  ny[iDUT]-2 ) fiducial = 0; // ny 160, row to 159
-
-	if( DUTaligniteration <= 4 )
-	  fiducial = 1;
-
-	if( ! fiducial ) continue;
-
 	int ncol = colmax - colmin + 1;
 	int nrow = rowmax - rowmin + 1;
 	int nlng = nrow;
-	if( rot90 ) nlng = ncol;
 
-	if( nlng < lngcut ) continue; // only long clusters
+	if( DUTaligniteration > 1 && nlng < rowcut ) continue;
 
-	if( rot90 )
-	  ccol = 0.5 * ( colmin + colmax ); // mid from head and tail, overwrite!
-	else
-	  crow = 0.5 * ( rowmin + rowmax ); // mid from head and tail, overwrite!
-
-	bool lq = 1; // Landau peak
-	if( ( Q0 < 5 || Q0 > 18 ) ) lq = 0; // r102
+	//crow = 0.5 * ( rowmin + rowmax ); // mid from head and tail, overwrite!
 
 	// DUT - triplet:
 
 	double cmsx = ( ccol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // -3.9..3.9 mm
 	double cmsy = ( crow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // -4..4 mm
 
-	if( rot90 ) {
-	  cmsx = ( crow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // -4..4 mm
-	  cmsy = ( ccol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // -3.9..3.9 mm
-	}
-
-	cmsxvsx->Fill( x4, cmsx );
+	cmsxvsx->Fill( x4, cmsx ); // correlation
 	cmsyvsy->Fill( y4, cmsy );
 
 	// residuals for pre-alignment:
@@ -2416,18 +2194,9 @@ int main( int argc, char* argv[] )
 
 	double cmsdx = cmsx - x4; // triplet extrapol
 
-	if( fabs(cmsdx) < xcut ) {
-	  cmsycHisto.Fill( yc );
-	  cmssyaHisto.Fill( cmsy + y3 );
-	  cmsdyaHisto.Fill( cmsy - y3 );
-	}
-
-	double cmsdy = cmsy - y4;
-
 	cmsdxHisto.Fill( cmsdx );
-	cmsdyHisto.Fill( cmsdy );
-	cmsdxvsev1->Fill( iev, cmsdx ); // sync stability
-	cmsdxvsev2->Fill( iev, cmsdx ); // sync stability
+
+	double cmsdy = cmsy - y4; // with proper upsigny
 
 	if( fabs(cmsdy) < ycut ) {
 
@@ -2435,6 +2204,8 @@ int main( int argc, char* argv[] )
 	  cmsdxvsx.Fill( x4, cmsdx ); // align: same sign
 	  cmsdxvsy.Fill( y4, cmsdx ); // align: opposite sign
 	  cmsdxvstx.Fill( sxA, cmsdx );
+	  cmsdxvsev1->Fill( iev, cmsdx ); // sync stability
+	  cmsdxvsev2->Fill( iev, cmsdx ); // sync stability
 
 	  if( fabs( cmsdx ) < 0.02 )
 	    if( ldbt )
@@ -2442,64 +2213,15 @@ int main( int argc, char* argv[] )
 
 	} // ycut
 
-	// for dy:
+	if( fabs(cmsdx) < xcut ) {
 
-	if( fabs(cmsdx) < xcut )
-	  cmsnrowcHisto.Fill( nrow );
-
-	if( fabs(cmsdx) < xcut
-	    //&& nrow > rowcut
-	    ) {
-
-	  cmsrowcHisto.Fill( crow );
-	  cmsrowminHisto.Fill( rowmin );
-	  cmsrowmaxHisto.Fill( rowmax );
-	  cmscolminHisto.Fill( colmin );
-	  cmscolmaxHisto.Fill( colmax );
-	  yrd0Histo.Fill( yrd0 );
-	  yrd9Histo.Fill( yrd9 );
-
-	  double cmsymax = ( rowmax + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // -4..4 mm
-	  if( rot90 )
-	    cmsymax = ( colmax + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // -3.9..3.9 mm
-
- 	  if( yrd0 > -3.9 && yrd9 < 3.9 ) {
-	    cmsdyexHisto.Fill( cmsymax-yrd9 );
-	    cmsdyinHisto.Fill( cmsymax-yrd0 );
-	  }
-
+	  cmsycHisto.Fill( yc );
+	  cmssyaHisto.Fill( cmsy + y3 );
+	  cmsdyaHisto.Fill( cmsy - y3 );
 	  cmsdycHisto.Fill( cmsdy );
 	  cmsdyvsx.Fill( x4, cmsdy );
-	  if( ncol > 28 && ncol < 33 ) // 31336
-	    cmsdyvsxn.Fill( x4, cmsdy );
 	  cmsdyvsy.Fill( y4, cmsdy );
 	  cmsdyvsty.Fill( syA, cmsdy );
-
-	  // cluster road:
-
-	  if( rot90 ) {
-
-	    if( colmin > 0 && colmax < nx[iDUT]-1 && nrow <= 2 ) {
-
-	      for( int icol = colmin; icol <= colmax; ++icol ) {
-		double dyc = ( 0.5+colmax-icol ) * ptchx[iDUT]; // [mm]
-		double d = dyc / fabs( tan( DUTtilt*wt ) ); // [mm] depth
-		cmsqcvsd.Fill( d*1E3, qcol[icol] );
-	      }
-
-	      for( int icol = colmin+1; icol < colmax; ++icol ) {
-		cmsqcvsy.Fill( y4, qcol[icol] ); // plateau only +- 3 mm
-		if( fabs( y4 ) < 3 ) {
-		  cmsqcvsxHisto->Fill( x4, qcol[icol] );
-		  cmsqc3Histo.Fill( qcol[icol] );
-		}
-		else
-		  cmsqc4Histo.Fill( qcol[icol] );
-	      }
-
-	    } // colmin
-
-	  } // rot90
 
 	} // dx
 
@@ -2513,15 +2235,23 @@ int main( int argc, char* argv[] )
 	  cmscolHisto.Fill( ccol ); // map
 	  cmsrowHisto.Fill( crow );
 
+	  cmsrowminHisto.Fill( rowmin );
+	  cmsrowmaxHisto.Fill( rowmax );
+	  cmscolminHisto.Fill( colmin );
+	  cmscolmaxHisto.Fill( colmax );
+	  yrd0Histo.Fill( yrd0 );
+	  yrd9Histo.Fill( yrd9 );
+
+	  double cmsymax = ( rowmax + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // -4..4 mm
+
+ 	  if( yrd0 > -3.8 && yrd9 < 3.8 ) {
+	    cmsdyexHisto.Fill( cmsymax-yrd9 ); // should be zero
+	    cmsdyinHisto.Fill( cmsymax-yrd0 ); // should be track length
+	  }
+
 	  cmsnpxHisto.Fill( c->size );
 	  cmsncolHisto.Fill( ncol );
 	  cmsnrowHisto.Fill( nrow );
-
-	  cmsncolvsxm.Fill( xmod, ncol );
-	  cmsnrowvsxm.Fill( xmod, nrow );
-
-	  cmsncolvsym.Fill( ymod, ncol ); // within pixel
-	  cmsnrowvsym.Fill( ymod, nrow ); // within pixel
 
 	  cmsnrowvsy.Fill( y4, nrow );
 	  cmsnrowvsy0.Fill( yrd0, nrow );
@@ -2529,29 +2259,14 @@ int main( int argc, char* argv[] )
 
 	  cmsnpxvsxmym->Fill( xmod, ymod, c->size ); // cluster size map
 
-	  cmsq0Histo.Fill( Q0 ); // Landau
-
-	  // cluster charge profiles, exponential weighting Qx:
-
-	  cmsqxvsx.Fill( x4, Qx );
-	  cmsqxvsy.Fill( y4, Qx );
-	  cmsqxvsxy->Fill( x4, y4, Qx );
-	  cmsqxvsxm.Fill( xmod, Qx ); // Q within pixel
-	  cmsqxvsym.Fill( ymod, Qx ); // Q within pixel
-	  cmsqxvsxmym->Fill( xmod, ymod, Qx ); // cluster charge profile
+	  cmsph0Histo.Fill( P0 ); // Landau
 
 	  for( vector<pixel>::iterator px = c->vpix.begin(); px != c->vpix.end(); ++px ) {
 
-	    cmspxqHisto.Fill( px->q );
+	    cmspxphHisto.Fill( px->ph );
 
-	    if( rot90 ) {
-	      if( ncol > rowcut )
-		cmspxqlHisto.Fill( px->q );
-	    }
-	    else {
-	      if( nrow > rowcut )
-		cmspxqlHisto.Fill( px->q );
-	    }
+	    if( nrow > rowcut )
+	      cmspxphlHisto.Fill( px->ph );
 
 	  } // pix
 
@@ -2563,312 +2278,166 @@ int main( int argc, char* argv[] )
       // look at road:
 
       if( liso &&
- 	  yrd0 > -3.9 && // fiducial contained road
- 	  yrd9 < 3.9 ) {
+ 	  yrd0 > -3.8 && // fiducial contained road
+ 	  yrd9 <  3.8 ) {
 
 	// telescope has out-of-time pile-up: require some match
 
-	int npxrdq = 0;
+	int npxrdph = 0;
 	for( int irow = rdrowmin; irow <= rdrowmax; ++irow )
 	  for( int icol = rdcolmin; icol <= rdcolmax; ++icol )
-	    if( qrd[icol][irow] > 0.1 )
-	      ++npxrdq;
+	    if( prd[icol][irow] > 0.1 )
+	      ++npxrdph;
 
- 	if( rot90 ) { // col is y
+	if( rdcolmin > 0 && rdcolmax < 154 ) // fiducial road in x
+	  npxrdphHisto.Fill( npxrdph );
 
- 	  if( rdrowmin > 0 && rdrowmax < 159 ) { // fiducial road in x
+	if( rdcolmin > 0 &&
+	    rdcolmax < 154 && // fiducial road in x
+	    npxrdph > rowcut ) {
 
- 	    npxrdqHisto.Fill( npxrdq );
+	  bool ldbrd = 0;
 
-	    if( npxrd > 0 && npxrdq == 0 && iev < 999 )
-	      cout
-		<< "  ev " << iev
-		<< ": empty road"
-		<< " row " << rdrowmin
-		<< " to " << rdrowmax
-		<< ", col " << rdcolmin
-		<< " to " << rdcolmax
-		<< endl;
-	  }
+	  for( int irow = rdrowmin; irow <= rdrowmax; ++irow ) { // y
 
- 	  if( rdrowmin > 0 &&
- 	      rdrowmax < 159 && // fiducial road in x
- 	      npxrdq > lngcut ) {
+	    double yrow = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // [mm]
+	    double dy = y4 - yrow;
 
-	    if( iev < 999 ) {
-	      cout
-		<< "  ev " << iev
-		<< ": filld road"
-		<< " row " << rdrowmin
-		<< " to " << rdrowmax
-		<< ", col " << rdcolmin
-		<< " to " << rdcolmax
-		<< " active " << npxrdq
-		<< ", col " << pxcolmin
-		<< " to " << pxcolmax
-		<< " clus";
-	      for( unsigned icl = 0; icl < cl[iDUT].size(); ++icl )
-		cout << " " << cl[iDUT][icl].size;
-	      cout << endl;
+	    double P = 0;
+	    double D = drd[rdcolmin][irow]; // depth
+
+	    for( int icol = rdcolmin; icol <= rdcolmax; ++icol ) { // x
+
+	      if( prd[icol][irow] < -0.5 ) continue; // pixel is outside track road
+
+	      P += prd[icol][irow];
+	      D  = drd[icol][irow];
+
+	    } // cols in this row
+
+	    rowpHisto.Fill( P );
+
+	    if(      irow <= rdrowmin ) // 1st
+	      rowp1Histo.Fill( P );
+	    else if( irow <= rdrowmin+1 ) // 2nd
+	      rowp2Histo.Fill( P );
+	    else if( irow >= rdrowmax ) // lst
+	      rowp9Histo.Fill( P );
+	    else if( irow >= rdrowmax-1 )
+	      rowp8Histo.Fill( P );
+	    else {
+	      rowpmHisto.Fill( P ); // mid
+	      if( P < 0.1 )
+		ldbrd = 0; // switch on for empty in-road debug
 	    }
 
-	    dcol0Histo.Fill( rdcolmin - pxcolmin );
-	    dcol9Histo.Fill( rdcolmax - pxcolmax );
-	    ncolrdHisto.Fill( pxcolmax-pxcolmin+1 );
+	    if( P > 0.1 )
+	      rowdyHisto.Fill( dy );
 
-	    for( int icol = rdcolmin; icol <= rdcolmax; ++icol ) { // y
+	    rowdHisto.Fill( D*1E3 );
+	    if( P > 0.1 )
+	      rowdphHisto.Fill( D*1E3 );
 
- 	      double ycol = ( icol + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT]; // [mm]
- 	      double dy = y4 - ycol;
+	    rowpvsdy.Fill( dy*1E3, P );
 
- 	      double Qy = 0;
- 	      double Dp = drd[icol][rdrowmin]; // depth
+	    rowpvsd.Fill( D*1E3, P );
+	    if( P > 0.1 )
+	      rowp1vsd.Fill( D*1E3, P );
 
- 	      for( int irow = rdrowmin; irow <= rdrowmax; ++irow ) {
+	    rowpdHisto->Fill( D*1E3, P ); // 2D
 
- 		if( qrd[icol][irow] < -0.5 ) continue; // pixel is outside track road
+	    if(      D > 0.060 )
+	      rowpp60Histo.Fill( P );
+	    else if( D > 0.040 )
+	      rowpp40Histo.Fill( P );
+	    else if( D > 0.020 )
+	      rowpp20Histo.Fill( P );
+	    else if( D > 0.000 )
+	      rowpp00Histo.Fill( P );
+	    else if( D >-0.020 )
+	      rowpm20Histo.Fill( P );
+	    else if( D >-0.040 )
+	      rowpm40Histo.Fill( P );
+	    else if( D >-0.060 )
+	      rowpm60Histo.Fill( P );
+	    else
+	      rowpm80Histo.Fill( P );
 
- 		Qy += qrd[icol][irow];
- 		Dp = drd[icol][irow];
+	  } // loop irow
 
- 	      } // rows in this col
+	  if( ldbrd ) {
+	    cout << iev << endl
+		 << "  road at x " << x4
+		 << " from col " << rdcolmin
+		 << " to " << rdcolmax
+		 << ", y " << y4
+		 << " from row " << rdrowmin
+		 << " to " << rdrowmax
+		 << ", area " << npxrd
+		 << endl;
+	    for( int irow = rdrowmin; irow <= rdrowmax; ++irow ) {
+	      cout << "  " << irow;
+	      for( int icol = rdcolmin; icol <= rdcolmax; ++icol )
+		cout << "  " << fixed << setprecision(1) << prd[icol][irow];
+	      cout << setprecision(6) << endl;
+	    }
 
- 	      if( Qy > 0.1 ) {
- 		cmsdyrowHisto.Fill( dy );
- 		if( yrd0 > -3.9 && yrd9 < 3.9 )
- 		  cmsdyrowcHisto.Fill( dy ); // not sharper
- 	      }
- 	      cmsdHisto.Fill( Dp*1E3 );
- 	      if( Qy > 0.1 )
- 		cmsdqHisto.Fill( Dp*1E3 );
+	  } // ldb
 
- 	      cmsqyHisto.Fill( Qy );
+	  // rowpix without dph cut:
 
- 	      if(      icol <= rdcolmin )
- 		cmsqy1Histo.Fill( Qy );
- 	      else if( icol <= rdcolmin+1 )
- 		cmsqy2Histo.Fill( Qy );
- 	      else if( icol >= rdcolmax )
- 		cmsqy9Histo.Fill( Qy );
- 	      else if( icol >= rdcolmax-1 )
- 		cmsqy8Histo.Fill( Qy );
- 	      else
- 		cmsqymHisto.Fill( Qy );
+	  int nrow = 0;
+	  int row0 = 160;
+	  int row9 = -1;
 
- 	      cmsqyvsy.Fill( dy, Qy );
+	  for( int row = 0; row < 160; ++row ) { // y
 
- 	      cmsqyvsd.Fill( Dp*1E3, Qy );
+	    if( rowpx[row].size() < 5 ) continue; // expect roicol or zero
 
-	      if( x4 > 0 )
-		cmsqyvsdxp.Fill( Dp*1E3, Qy );
-	      else
-		cmsqyvsdxm.Fill( Dp*1E3, Qy );
+	    double rowp = 0;
 
- 	      if( Qy > 0.1 )
- 		cmsqy1vsd.Fill( Dp*1E3, Qy );
+	    double ypix = ( row + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // [mm]
+	    double dy = ypix - y4;
 
- 	      cmsqydHisto->Fill( Dp*1E3, Qy ); // 2D
+	    for( auto px = rowpx[row].begin(); px != rowpx[row].end(); ++px ) {
 
- 	      if( Dp > 0 )
- 		cmsqyposHisto.Fill( Qy );
- 	      else
- 		cmsqynegHisto.Fill( Qy );
+	      double xpix = ( px->col + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
 
- 	      if(      Dp > 0.060 )
- 		cmsqyp60Histo.Fill( Qy );
- 	      else if( Dp > 0.030 )
- 		cmsqyp30Histo.Fill( Qy );
- 	      else if( Dp > 0.000 )
- 		cmsqyp00Histo.Fill( Qy );
- 	      else if( Dp >-0.030 )
- 		cmsqym30Histo.Fill( Qy );
- 	      else if( Dp >-0.060 )
- 		cmsqym60Histo.Fill( Qy );
+	      double dx = xpix - x4;
 
- 	      cmsqyvsrm.Fill( rmod, Qy ); // Q within pixel
- 	      if( Dp < -0.050 )
- 		cmsqy0vsrm.Fill( rmod, Qy ); // Q within pixel
+	      double P = px->ph;
 
- 	    } // loop road y
+	      roipvsdxdy->Fill( dx*1E3, dy*1E3, P );
 
- 	  } // fid x
+	      if( fabs( x4 - xpix ) > 1.5 * ptchx[iDUT] ) continue;
 
- 	} // rot90
+	      rowp += P;
 
- 	else { // row is y
+	    } // px
 
- 	  if( rdcolmin > 0 && rdcolmax < 154 ) // fiducial road in x
- 	    npxrdqHisto.Fill( npxrdq );
+	    roirowpvsdy.Fill( dy*1E3, rowp );
 
- 	  if( rdcolmin > 0 &&
- 	      rdcolmax < 154 && // fiducial road in x
- 	      npxrdq > lngcut ) {
+	    if( ypix > yrd0 && // inside road
+		ypix < yrd9 ) {
 
- 	    bool ldbrd = 0;
+	      roirowpHisto.Fill( rowp );
 
- 	    for( int irow = rdrowmin; irow <= rdrowmax; ++irow ) { // y
-
- 	      double yrow = ( irow + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // [mm]
- 	      double dy = y4 - yrow;
-
- 	      double Qy = 0;
- 	      double Dp = drd[rdcolmin][irow]; // depth
-
- 	      for( int icol = rdcolmin; icol <= rdcolmax; ++icol ) { // x
-
- 		if( qrd[icol][irow] < -0.5 ) continue; // pixel is outside track road
-
- 		Qy += qrd[icol][irow];
- 		Dp = drd[icol][irow];
-
- 	      } // cols in this row
-
- 	      if( Qy > 0.1 )
- 		cmsdyrowHisto.Fill( dy );
- 	      cmsdHisto.Fill( Dp*1E3 );
- 	      if( Qy > 0.1 )
- 		cmsdqHisto.Fill( Dp*1E3 );
-
- 	      cmsqyHisto.Fill( Qy );
-
- 	      if(      irow <= rdrowmin ) // 1st
- 		cmsqy1Histo.Fill( Qy );
- 	      else if( irow <= rdrowmin+1 ) // 2nd
- 		cmsqy2Histo.Fill( Qy );
- 	      else if( irow >= rdrowmax ) // lst
- 		cmsqy9Histo.Fill( Qy );
- 	      else if( irow >= rdrowmax-1 )
- 		cmsqy8Histo.Fill( Qy );
- 	      else {
- 		cmsqymHisto.Fill( Qy ); // mid
- 		if( Qy < 0.1 )
- 		  ldbrd = 0; // switch on for empty in-road debug
- 	      }
-
- 	      cmsqyvsy.Fill( dy, Qy );
-
- 	      cmsqyvsd.Fill( Dp*1E3, Qy );
- 	      if( Qy > 0.1 )
- 		cmsqy1vsd.Fill( Dp*1E3, Qy );
-
- 	      cmsqydHisto->Fill( Dp*1E3, Qy ); // 2D
-
- 	      if( Dp > 0 )
- 		cmsqyposHisto.Fill( Qy );
- 	      else
- 		cmsqynegHisto.Fill( Qy );
-
- 	      if(      Dp > 0.060 )
- 		cmsqyp60Histo.Fill( Qy );
- 	      else if( Dp > 0.030 )
- 		cmsqyp30Histo.Fill( Qy );
- 	      else if( Dp > 0.000 )
- 		cmsqyp00Histo.Fill( Qy );
- 	      else if( Dp >-0.030 )
- 		cmsqym30Histo.Fill( Qy );
- 	      else if( Dp >-0.060 )
- 		cmsqym60Histo.Fill( Qy );
-
- 	    } // loop irow
-
- 	    if( ldbrd ) {
- 	      cout << iev << endl
- 		   << "  road at x " << x4
- 		   << " from col " << rdcolmin
- 		   << " to " << rdcolmax
- 		   << ", y " << y4
- 		   << " from row " << rdrowmin
- 		   << " to " << rdrowmax
- 		   << ", area " << npxrd
- 		   << endl;
- 	      for( int irow = rdrowmin; irow <= rdrowmax; ++irow ) {
- 		cout << "  " << irow;
- 		for( int icol = rdcolmin; icol <= rdcolmax; ++icol )
- 		  cout << "  " << fixed << setprecision(1) << qrd[icol][irow];
- 		cout << setprecision(6) << endl;
- 	      }
-
- 	    } // ldb
-
-	    // rowpix without dph cut:
-
-	    int rows = 0;
-	    int row0 = 160;
-	    int row9 = -1;
-
- 	    for( int row = 0; row < 160; ++row ) { // y
-
-	      if( rowpx[row].size() < 5 ) continue; // expect roicol or zero
-
-	      double rowq = 0;
-	      double maxq = -999;
-
-	      for( auto px = rowpx[row].begin(); px != rowpx[row].end(); ++px ) {
-
-		double xpix = ( px->col + 0.5 - nx[iDUT]/2 ) * ptchx[iDUT];
-		double ypix = ( px->row + 0.5 - ny[iDUT]/2 ) * ptchy[iDUT]; // [mm]
-
-		double dx = xpix - x4;
-		double dy = ypix - y4;
-
-		roipvsdxdy->Fill( dx*1E3, dy*1E3, px->ph );
-
-		if( fabs( x4 - xpix ) > 2.5 * ptchx[iDUT] ) continue;
-
-		double q = px->q;
-		rowq += q;
-		if( q > maxq ) maxq = q;
-
-	      } // px
-
-	      cmsrowqHisto.Fill( rowq );
-	      cmsmaxqHisto.Fill( maxq );
-	      if( rowq > 1 ) {
-		++rows;
+	      if( rowp > 1 ) {
+		++nrow;
 		row9 = row;
 		if( row < row0 ) row0 = row;
-		cmsrowszHisto.Fill( rowpx[row].size() ); // 5 or more
+		roirowszHisto.Fill( rowpx[row].size() ); // 5 or more
 	      }
 
-	    } // rows
+	    } // track road
 
-	    cmsrowsHisto.Fill( rows );
-	    cmsrow0Histo.Fill( row0 );
-	    cmsrow9Histo.Fill( row9 );
+	  } // rows
 
-	    if( row0 > 1 && row9 < 158 ) { // contained
+	  roinrowHisto.Fill( nrow ); // length of ROI
+	  roirow0Histo.Fill( row0 );
+	  roirow9Histo.Fill( row9 );
 
-	      for( int row = row0; row <= row9; ++row ) { // y
-
-		if( rowpx[row].size() < 5 ) continue; // hole?
-		if( rowpx[row].size() > 6 ) continue; // delta ray
-
-		int dy = row - row0;
-
-		auto px0 = rowpx[row].begin();
-		cmscol0qvsdy.Fill( dy, px0->q );
-		++px0;
-		cmscol1qvsdy.Fill( dy, px0->q );
-
-		auto px9 = rowpx[row].end();
-		--px9;
-		cmscol4qvsdy.Fill( dy, px9->q );
-		--px9;
-		cmscol3qvsdy.Fill( dy, px9->q );
-
-		++px0;
-		double qmid = 0;
-		for( ; px0 != px9; ++px0 )
-		  qmid += px0->q;
-		cmscol2qvsdy.Fill( dy, qmid );
-
-	      } // rows
-
-	    } // contained
-
- 	  } // fid x
-
- 	} // not rot90
+	} // in-time
 
       } // fid road
 
@@ -2890,10 +2459,7 @@ int main( int argc, char* argv[] )
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // DUT alignment:
 
-  double newDUTalignx = DUTalignx;
-  double newDUTaligny = DUTaligny;
-
-  if( cmsdxaHisto.GetEntries() > 999 ) {
+  if( DUTaligniteration == 0 && cmsdxaHisto.GetEntries() > 999 ) {
 
     if( cmsdxaHisto.GetMaximum() > cmssxaHisto.GetMaximum() ) {
       cout << endl << cmsdxaHisto.GetTitle()
@@ -2912,7 +2478,7 @@ int main( int argc, char* argv[] )
 	   << endl << "sig " << fgp0->GetParameter(2)
 	   << endl << " BG " << fgp0->GetParameter(3)
 	   << endl;
-      newDUTalignx = fgp0->GetParameter(1);
+      DUTalignx = fgp0->GetParameter(1);
     }
     else {
       cout << endl << cmssxaHisto.GetTitle()
@@ -2931,7 +2497,7 @@ int main( int argc, char* argv[] )
 	   << endl << "sig " << fgp0->GetParameter(2)
 	   << endl << " BG " << fgp0->GetParameter(3)
 	   << endl;
-      newDUTalignx = fgp0->GetParameter(1);
+      DUTalignx = fgp0->GetParameter(1);
     }
 
     if( cmsdyaHisto.GetMaximum() > cmssyaHisto.GetMaximum() ) {
@@ -2951,7 +2517,7 @@ int main( int argc, char* argv[] )
 	   << endl << "sig " << fgp0->GetParameter(2)
 	   << endl << " BG " << fgp0->GetParameter(3)
 	   << endl;
-      newDUTaligny = fgp0->GetParameter(1);
+      DUTaligny = fgp0->GetParameter(1);
     }
     else {
       cout << endl << cmssyaHisto.GetTitle()
@@ -2970,15 +2536,14 @@ int main( int argc, char* argv[] )
 	   << endl << "sig " << fgp0->GetParameter(2)
 	   << endl << " BG " << fgp0->GetParameter(3)
 	   << endl;
-      newDUTaligny = fgp0->GetParameter(1);
+      DUTaligny = fgp0->GetParameter(1);
     }
 
   } // cmsdxa
 
   // finer alignment:
 
-  if( DUTaligniteration > 0 && fabs( newDUTalignx - DUTalignx ) < 0.1 &&
-      cmsdxHisto.GetEntries() > 999 ) {
+  if( DUTaligniteration > 0 && cmsdxHisto.GetEntries() > 999 ) {
 
     cout << endl << cmsdxHisto.GetTitle()
 	 << " bin " << cmsdxHisto.GetBinWidth(1)
@@ -2995,64 +2560,63 @@ int main( int argc, char* argv[] )
 	 << endl << "sig " << fgp0->GetParameter(2)
 	 << endl << " BG " << fgp0->GetParameter(3)
 	 << endl;
-    newDUTalignx = DUTalignx + fgp0->GetParameter(1);
+    DUTalignx += fgp0->GetParameter(1);
+
+  } // iteration
 
     // dxvsy -> rot:
 
-    if( cmsdxvsy.GetEntries() > 999 ) {
-      cmsdxvsy.Fit( "pol1", "q", "", -midx[iDUT]+0.2, midx[iDUT]-0.2 );
-      TF1 * fdxvsy = cmsdxvsy.GetFunction( "pol1" );
-      cout << endl << cmsdxvsy.GetTitle();
-      cout << ": extra rot " << upsignx*upsigny*fdxvsy->GetParameter(1) << endl;
-      DUTrot += upsignx*upsigny*fdxvsy->GetParameter(1);
-    }
-
-    // dxvstx -> dz:
-
-    if( cmsdxvstx.GetEntries() > 999 ) {
-      cmsdxvstx.Fit( "pol1", "q", "", -0.002, 0.002 );
-      TF1 * fdxvstx = cmsdxvstx.GetFunction( "pol1" );
-      cout << endl << cmsdxvstx.GetTitle();
-      cout << ": z shift " << upsignx*fdxvstx->GetParameter(1) << " mm" << endl;
-      DUTz += upsignx*fdxvstx->GetParameter(1);
-    }
-
+  if( DUTaligniteration > 1 && cmsdxvsy.GetEntries() > 999 ) {
+    cmsdxvsy.Fit( "pol1", "q", "", -midx[iDUT]+0.2, midx[iDUT]-0.2 );
+    TF1 * fdxvsy = cmsdxvsy.GetFunction( "pol1" );
+    cout << endl << cmsdxvsy.GetTitle();
+    cout << ": extra rot " << upsignx*upsigny*fdxvsy->GetParameter(1) << endl;
+    DUTrot += upsignx*upsigny*fdxvsy->GetParameter(1);
   }
 
-  if( DUTaligniteration > 0 && fabs( newDUTaligny - DUTaligny ) < 0.1 &&
-      cmsdyHisto.GetEntries() > 999 ) {
+  // dxvstx -> dz:
 
-    cout << endl << cmsdyHisto.GetTitle()
-	 << " bin " << cmsdyHisto.GetBinWidth(1)
+  if( DUTaligniteration > 2 && cmsdxvstx.GetEntries() > 999 ) {
+    cmsdxvstx.Fit( "pol1", "q", "", -0.002, 0.002 );
+    TF1 * fdxvstx = cmsdxvstx.GetFunction( "pol1" );
+    cout << endl << cmsdxvstx.GetTitle();
+    cout << ": z shift " << upsignx*fdxvstx->GetParameter(1) << " mm" << endl;
+    DUTz += upsignx*fdxvstx->GetParameter(1);
+  }
+
+  if( DUTaligniteration > 0 && cmsdycHisto.GetEntries() > 999 ) {
+
+    cout << endl << cmsdycHisto.GetTitle()
+	 << " bin " << cmsdycHisto.GetBinWidth(1)
 	 << endl;
     TF1 * fgp0 = new TF1( "fgp0", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", -0.5, 0.5 );
-    fgp0->SetParameter( 0, cmsdyHisto.GetMaximum() ); // amplitude
-    fgp0->SetParameter( 1, cmsdyHisto.GetBinCenter( cmsdyHisto.GetMaximumBin() ) );
-    fgp0->SetParameter( 2, 5*cmsdyHisto.GetBinWidth(1) ); // sigma
-    fgp0->SetParameter( 3, cmsdyHisto.GetBinContent(1) ); // BG
-    cmsdyHisto.Fit( "fgp0", "q" );
+    fgp0->SetParameter( 0, cmsdycHisto.GetMaximum() ); // amplitude
+    fgp0->SetParameter( 1, cmsdycHisto.GetBinCenter( cmsdycHisto.GetMaximumBin() ) );
+    fgp0->SetParameter( 2, 5*cmsdycHisto.GetBinWidth(1) ); // sigma
+    fgp0->SetParameter( 3, cmsdycHisto.GetBinContent(1) ); // BG
+    cmsdycHisto.Fit( "fgp0", "q" );
     cout << "Fit Gauss + BG:"
 	 << endl << "  A " << fgp0->GetParameter(0)
 	 << endl << "mid " << fgp0->GetParameter(1)
 	 << endl << "sig " << fgp0->GetParameter(2)
 	 << endl << " BG " << fgp0->GetParameter(3)
 	 << endl;
-    newDUTaligny = DUTaligny + fgp0->GetParameter(1);
+    DUTaligny += fgp0->GetParameter(1);
+
+  } // iter
 
     // dyvsy -> tilt:
 
-    if( fabs(DUTtilt0) > 5 && cmsdyvsy.GetEntries() > 999 ) {
-      cmsdyvsy.Fit( "pol1", "q", "", -3, 3 );
-      TF1 * fdyvsy = cmsdyvsy.GetFunction( "pol1" );
-      cout << endl << cmsdyvsy.GetTitle()
-	   << ": slope " << fdyvsy->GetParameter(1)
-	   << ", extra tilt " << fdyvsy->GetParameter(1)/wt*sa
-	   << " deg"
-	   << endl;
-      DUTtilt += fdyvsy->GetParameter(1)/wt*sa;
-    }
-
-  } // iter
+  if( DUTaligniteration > 0 && fabs(DUTtilt0) > 5 && cmsdyvsy.GetEntries() > 999 ) {
+    cmsdyvsy.Fit( "pol1", "q", "", -3, 3 );
+    TF1 * fdyvsy = cmsdyvsy.GetFunction( "pol1" );
+    cout << endl << cmsdyvsy.GetTitle()
+	 << ": slope " << fdyvsy->GetParameter(1)
+	 << ", extra tilt " << fdyvsy->GetParameter(1)/wt*sa
+	 << " deg"
+	 << endl;
+    DUTtilt += fdyvsy->GetParameter(1)/wt*sa;
+  }
 
   // write new DUT alignment:
   /*
@@ -3061,8 +2625,8 @@ int main( int argc, char* argv[] )
   DUTalignFile << "# DUT alignment for run " << run << endl;
   ++DUTaligniteration;
   DUTalignFile << "iteration " << DUTaligniteration << endl;
-  DUTalignFile << "alignx " << newDUTalignx << endl;
-  DUTalignFile << "aligny " << newDUTaligny << endl;
+  DUTalignFile << "alignx " << DUTalignx << endl;
+  DUTalignFile << "aligny " << DUTaligny << endl;
   DUTalignFile << "rot " << DUTrot << endl;
   DUTalignFile << "tilt " << DUTtilt << endl;
   DUTalignFile << "turn " << DUTturn << endl;
@@ -3074,13 +2638,21 @@ int main( int argc, char* argv[] )
        << " to " << DUTalignFileName.str() << endl
   */
   cout << endl;
-  cout << "alignx " << newDUTalignx << endl
-       << "aligny " << newDUTaligny << endl
+  cout << "alignx " << DUTalignx << endl
+       << "aligny " << DUTaligny << endl
        << "rot    " << DUTrot << endl
        << "tilt   " << DUTtilt << endl
        << "turn   " << DUTturn << endl
        << "dz     " << DUTz - zz[2] << endl
     ;
+
+  cout
+    << endl << "upsignx " << upsignx
+    << endl << "upsigny " << upsigny
+    << endl << "   xcut " << xcut
+    << endl << "   ycut " << ycut
+    << endl << " rowcut " << rowcut
+    << endl;
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // done

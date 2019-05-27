@@ -15,6 +15,16 @@ CXXFLAGS = -O2 -Wall -Wextra $(ROOTCFLAGS) -I/home/pitzl/eudaq/main/include -I/h
 # 2019: tried clang++
 # May 2019: ROOT crashes at Histo.Write(), back to g++
 
+scopeshrw: scopeshrw.cc
+	g++ $(CXXFLAGS) scopeshrw.cc -o scopeshrw \
+	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
+	@echo 'done: scopeshrw'
+
+scopesrw: scopesrw.cc
+	g++ $(CXXFLAGS) scopesrw.cc -o scopesrw \
+	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
+	@echo 'done: scopesrw'
+
 scopes1: scopes1.cc
 	g++ $(CXXFLAGS) scopes1.cc -o scopes1 \
 	$(ROOTLIBS) -L/home/pitzl/eudaq/lib -lEUDAQ
