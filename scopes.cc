@@ -3677,6 +3677,7 @@ int main( int argc, char * argv[] )
 	  if( chip0 == 109 && run >= 32277 ) dphcut = 20; // gain_1, noisy
 	  if( chip0 == 139 && run >= 32285 ) dphcut = 16; // gain_1, noisy
 
+	  if( chip0 == 119 ) dphcut = 12; // irrad, gain_1 Jun 2019
 	  if( chip0 == 120 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 120 && run >= 32582 ) dphcut = 24; // irrad, gain_1
 	  if( chip0 == 122 ) dphcut = 33; // irrad, gain_2
@@ -3684,11 +3685,13 @@ int main( int argc, char * argv[] )
 	  if( chip0 == 123 && run >= 32564 ) dphcut = 28; // irrad, gain_1
 	  if( chip0 == 124 ) dphcut = 20; // irrad, gain_1
 	  if( chip0 == 126 ) dphcut = 24; // irrad, gain_2, noise
+	  if( chip0 == 126 && run >= 36831 ) dphcut = 15; // irrad, gain_1, dp2 6 ADC
 	  if( chip0 == 128 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 130 ) dphcut = 33; // irrad, gain_2
 	  if( chip0 == 133 ) dphcut = 33; // irrad, gain_2 0.8 ke
 	  if( chip0 == 133 ) dphcut = 70; // irrad, gain_2 1.4 ke
 	  if( chip0 == 133 && run >= 32498 ) dphcut = 28; // irrad, gain_1
+	  if( chip0 == 133 && run >= 36803 ) dphcut = 15; // irrad, gain_1, dp2 6 ADC
 	  if( chip0 == 134 ) dphcut = 40; // irrad, gain_2 rms 13
 	  if( chip0 == 134 && run >= 32537 ) dphcut = 30; // irrad, gain_1 rms 9.6
 	  if( chip0 == 137 ) dphcut = 33; // irrad, gain_2
@@ -6737,7 +6740,7 @@ int main( int argc, char * argv[] )
     cout << endl;
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    // hot pixels:
+    // write hot pixels:
 
     cout << endl << "DUT hot pixel list for run " << run << endl;
 
@@ -6772,9 +6775,7 @@ int main( int argc, char * argv[] )
     cout << "hot " << pxset.size() << endl;
 
     for( auto px = pxset.begin(); px != pxset.end(); ++px ) {
-      cout << setw(3) << px->col << ", "
-	   << setw(3) << px->row << ":  "
-	   << px->cnt << endl;
+      //cout << setw(3) << px->col << ", " << setw(3) << px->row << ":  " << px->cnt << endl;
       oDUThotFile << "pix "
 		 << setw(3) << px->col
 		 << setw(5) << px->row

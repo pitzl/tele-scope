@@ -5737,7 +5737,7 @@ tilt 0  perfectly
 turn 0  perfectly
 
 run 31473 # 988  3728k  80 Hz  eff 99.996  10.93 ke at 0.0296
-    	  # effvs4t 99.982 ddt < 5 us
+          # effvs4t 99.982 ddt < 5 us
           # scopes1: low Q peak disappears with six-link: noise on out-of-time tracks
 
 #-------------------------------------------------------------------------------
@@ -9974,7 +9974,7 @@ run 33884   90k  3257  colq 6.06
 # what is the sensor temperature?
 # install 137i with PT1000
 
---------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Thu 11.10.2018
 
 # PROC600v3 802 in Datura
@@ -11998,6 +11998,7 @@ geo geo_2019_05e.dat = 0  152  305  428  582  731
 
 GeV 5.2
 # bias 120 V  scopeshrw.cc
+
 tilt 80
 run 36367  40.2  4051
 
@@ -12061,7 +12062,9 @@ geo geo_2019_05f.dat = 0  152  305  463  617  766
 # VB 800 V, IB 6.5 uA
 # gaincal at IA 50 mA
 gain /home/pitzl/psi/r4s/C/c166-icy-ia50-vb800-scancal-hold40-2019-05-23.dat
+
 # row-wise readout: scopeshrw.cc
+
 GeV 5.2
 
 tilt 72
@@ -12268,9 +12271,11 @@ run 36441   90.2  4140, current still going down
 
 run 36442  1662.8  4141, 8.6 GB
 
+# scopeshrw.cc
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sun 26.5.2019
-# shallow angle bias scan with 198i							
+# shallow angle bias scan with 198i
 
 # 800 V, 17.7 uA
 run 36443  250.2  4142
@@ -12293,23 +12298,27 @@ run 36448  250.2  4147
 # 800 V, 17.7 uA
 run 36449  781.2  4148
 
+run 36450  4200.2  4149
+
+# scopeshrw.cc
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Mon 27.5.2019
 
-chip 202 = FDB150Y R4S 50x50 Y2 p-spray default on straight  4E15 n  Sylgard				
+chip 202 = FDB150Y R4S 50x50 Y2 p-spray default on straight  4E15 n  Sylgard
 
-# chiller -25							
-# Peltier 4A 1.5V							
-# IA 41 ma, peaking at hold 40							
+# chiller -25
+# Peltier 4A 1.5V
+# IA 41 ma, peaking at hold 40
 # testpulses:
-# column 111 half dead							
-# row 91 dead from col 23							
-# col 2 dead							
+# column 111 half dead
+# row 91 dead from col 23
+# col 2 dead
 
 gain /home/pitzl/psi/r4s/C/c202-icy-ia41-vb400-scancal-hold40-2019-05-27.dat
 
 # same geo_2019_05f.dat = 0  152  305  463  617  766
-							
+
 # 800 V, 9.8 uA
 tilt 81
 run 36452   40.2  4151
@@ -12323,25 +12332,574 @@ run 36454  250.2  4153
 # 400
 run 36455  250.2  4154
 
-# 300
+# 300 V, 5.4 uA
 run 36457  250.2  4155
 
+# 200 V, 5.1 uA
+run 36458  250.2  4156
+
+# tilt scan
+# same geo_2019_05f.dat = 0  152  305  463  617  766
+
+# trigger scint vertical
+
+# chiller -24
+# Peltier 4A 1.5V
+# 800 V, 14.5 uA
+
+turn -0.2
+tilt 12
+run 36460  160.2  4160  dycq 9.7
+
+tilt 14
+run 36461  160.2  4161
+
+tilt 16
+run 36462  160.2  4162  dycq 8.44
+
+tilt 17.5
+run 36463  160.2  4163  dycq 7.95
+
+# 800 V, 16.7 uA rising
+
+tilt 19.4
+run 36464  160.2  4164  dycq 8.01
+
+tilt 21.3
+run 36465  160.2  4165  dycq 7.92
+
+tilt 23
+run 36466  160.2  4166
+
+# 800 V, 16 uA
+
+tilt 25
+run 34667  160.2  4167
+
+tilt 27
+run 34668  160.2  4168
+
+# 800 V, 10.4 uA
+
+tilt 29
+run 34669  160.2  4169
+
+tilt 31
+run 34670  160.2  4170
+
+tilt 33
+run 34671  160.2  4171
+
+tilt 10
+run 34672  4172
+
+# 800 V, 20.5 uA  jumped when changing the angle
+#                 are we squeezing the tubes?
+
+tilt 20
+
+# for the night: more of the best
+run 36475  4591.3  4175
+# bias current reached 30 uA
+# VB 800, 26 uA, IA 41 gaincal
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# further topics
+# Tue 28.5.2019
+
+chip 191 = FTH150P 50x50 P2 = open p-stop on straight  3.3E15p  Sylgard
+
+# chiller -24
+# Peltier 4.2 A, 1.5 V
+# IA 42 mA, pulse peaking at hold 40
+
+# same geo_2019_05f = 0  152  305  463  617  766
+
+gain /home/pitzl/psi/r4s/C/c191-icy-ia42-vb800-scancal-hold40-2019-05-28.dat
+
+tilt 80
+
+# VB 800, 6.2 uA
+run 36477   40.2  4180
+run 36478  250.2  4181
+
+bias 600, 4.6 uA
+run 36479  250.2  4182
+
+bias 400, 4.3 uA
+run 36480  250.2  4183
+
+bias 300, 3.5 uA
+run 36481  250.2  4184
+
+bias 200, 3.1 uA
+run 36482  250.2  4185
+
+# bias 800, 7.2 uA              
+tilt 11.7
+run 36485  160.2  4188  99.991
+
+tilt 13.4
+run 36486  160.2  4189  99.991  dycq 9.65
+
+tilt 15.3
+run 36487  160.2  4190  99.992  dycq 9.3
+
+tilt 17.1
+run 36488  160.2  4191  99.994  dycq 9.3
+
+# sixdyc = 12.7 => sixavg = 6.35
+
+tilt 18.9
+run 36489  160.2  4192  99.997  dycq 9.8
+
+tilt 20.8
+run 36490  160.2  4193  99.995  dycq 9.9
+
+tilt 22.6
+run 36491  160.2  4194  99.993  dycq 10.1
+
+tilt 24.6
+run 36492  160.2  4195  99.991  dycq 10.6
+
+tilt 26.5
+run 36494  160.2  4197  
+
+tilt 28.4
+run 36495  160.2  4198  
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# chip 144 = 50x50 FDB p-spray max imp  on rot90
-# has typical PH 255  see 34271 at room temp
-# operate at -25
-# vary IA: 30, 40, 50, 120 mA
+# Sun 2.6.2019
 
-# material budget imaging: Peltier, Armaflex, R4S PCB
+chip 176 = FTH150P R4S 50x50 P8 p-stop  max imp straight fresh
 
-# shallow angle with 50x50: broken clusters?
-# 50x50 on straight PCB: row-wise readout
-# chip 198 = FDB150P R4S 50x50 P1 p-stop  default straight  8E15 n  Sylgard 800V
-# chip 204 = FDB150Y R4S 50x50 Y2 p-spray default straight  8E15 n  Sylgard 800V
-# chip 202 = FDB150Y R4S 50x50 Y2 p-spray default straight  4E15 n  Sylgard 800V
+# IA 48 mA, shaping peak at hold 40, warm gain cal
 
-# chip 176 = FTH150P R4S 50x50 P8 p-stop  max imp straight
-# chip 225 = FDB150P R4S 50x50 P1 p-stop  default straight
-# chip 226 = FDB150P R4S 50x50 P1 p-stop  default straight
+gain /home/pitzl/psi/r4s/C/c176-warm-ia50-scancal-hold40-vb200-2019-06-02.dat
+
+geo geo_2019_05i.dat = 0  153  305  386  538  691
+
+tilt 21
+turn 0
+
+GeV 5.2
+
+run 36642   90.2  4217
+
+# diffusion enhanced resolution at low bias: 10,20,30,40,50,60
+
+tilt 19
+
+# bias 120
+run 36643  250.2  4218  99.998   q0 11.28  dycq 5.02
+
+# bias 60
+run 36644  160.2  4219  99.9987  q0 11.03  dycq 5.17
+
+# bias 50
+run 36645  160.2  4220  99.9987  q0 10.28  dycq 5.47
+
+# bias 40
+run 36646  160.2  4221  99.9962  q0 9.31  dycq 6.06
+
+# bias 30
+run 36647  160.2  4222  99.9974  q0 8.16  dycq 7.09
+
+# bias 20
+run 36648  160.2  4223  99.9987  q0 6.82  dycq 8.85
+
+# bias 10
+run 36649  160.2  4224  99.9987  q0 5.16  dycq 11.25
+
+# bias 200
+run 36650  160.2  4225  100.0  q0 11.39  dycq 5.00
+
+# gaincal for 176
+
+#-------------------------------------------------------------------------------
+# Mon 24.6.2019
+
+chip 119 FTH 50x50 P1 p-stop default    3.3E15p          
+
+gain /home/pitzl/psi/r4s/C/c119i-cold-ia45-scancal-hold40-vb100-2019-06-24.dat
+
+geo geo_2019_06a.dat = 0  152  305  410  53  715
+
+# Mimosa thr 6
+# Reference module D4294
+GeV 5.2
+              
+# rgsh > 700 kills IA
+# tespulse noisy columns 59 to 73
+# operate at IA 45 mA
+
+tilt 0
+turn 0
+
+# vb 400 V, ib 3.9 uA
+# chiller -22.4, Peltier 4.5 A 1.5V
+run  36783  160.2  4228
+
+# move 8 mm up
+run  36784   10.2  4229
+
+# move 16 mm down
+run  36785   10.2  4230  dp2 4.3 ADC
+
+# move 0.5 mm x
+
+run 36786  160.2  4231  eff 99.972
+
+for the night: vb 200 V, ib 3.3 uA
+run 36787  4190.2  4232  eff 99.79
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Tue 25.6.2019 continue vertical bias scan 119i
+chiller at -23  ib 3.1 uA
+
+# vb 300 V  ib 3.5 uA
+36789  160.2  4234  eff 99.96
+
+# vb 150 V  ib 2.9 uA
+run 36790  160.2  4235  eff 98.99
+
+# vb 100 V  ib 2.5 uA
+36791  160.2  4236  eff 94,40
+
+# vb 75 V, ib 2.2 uA
+run 36793  160.2  4238  eff 87.23
+
+# vb 125 V  ib 2.8 uA
+run 36794  160.2  4239
+
+# vb 175 V, ib 3.1 uA
+run 36795  4240
+
+# vb 600 V, ib 4.4 uA
+run 36796  160.2  4241  eff 99.99
+
+# vb 800 V, ib 5.6 uA
+run 36797  160.2  4242   eff 99.99
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+chip 133 FDB 50x50 Y2 p-spray default on straight 3.3E15 p/cm2
+
+# chiller -22.2, Peltier 4.2 A
+# same geo
+
+# gain calibration at 400V, 3.5 uA: 450 pixels without gain
+
+gain /home/pitzl/psi/r4s/C/c133i-cold-ia43-scancal-hold40-vb400-2019-06-25.dat
+
+# module trigger delay 4, yield 93%
+
+# 400V
+run 36803  160.2  4248  eff 99.07  gainless pixels are inefficient
+
+# 300V, 3 uA
+run 36804  160.2  4249  eff 98.71
+
+# 200V, 2.6 uA
+run 36805  160.2  4250  eff 95.34
+
+# 175V, 2.4 uA
+run 36806  160.2  4251  eff 92.70
+
+# 150V, 2.3 uA
+run 36807  160.2  4252
+
+# 250V  2.9 uA
+run 36808  160.2  4253  eff 98.05
+
+# 350V  3.3 uA
+run 36809  160.2      4254  eff 98.96
+
+# 500V  3.8 uA
+run 36810  160.2      4255  eff 99.28
+
+# 600V  4.2 uA
+run 36811  160.2      4256  eff 99.29
+
+# 800V  5.9 uA
+run 36812  160.2      4257  eff 99.5
+
+for the night: 200 V
+run 36813  7300.2      4258  module crashed after 1.76 M events at 21:20
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Wed 26.6.2019:
+# measure 133i at optimal angle
+
+geo geo_2019_06b.dat = 0  153  305  429  582  734
+
+# 800 V  6.3 uA
+tilt -21.5  forward
+run 36828  250.2      4274 eff. 99.88%  dycq 7.3
+
+# 200 V  3.2 uA
+run 36829  250.2      4275
+             
+# - - - - - - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+chip 126 FDB 50x50 P1 p-stop default on straight    3.3E15p
+
+# chiller -22  Peltier 4.2 A              
+
+gain /home/pitzl/psi/r4s/C/c126i-cold-ia42-scancal-vb400-2019-06-26.dat
+
+# same geo_2019_06b = 0  153  305  429  582  734              
+
+tilt -18.4  forward
+
+# 400 V
+
+run 36831  4277
+
+# 800 V
+
+tilt -19.8  forward
+
+run 36833  60.2  4279  dycq 8.2  dp2 6 ADC
+
+#-------------------------------------------------------------------------------
+# Thu 4.7.2019
+
+# PROC600v4 904 in Datura
+
+# bias -150V
+
+GeV 4.0
+
+# with MOD 4294: scopem.cc
+
+chip 904
+
+gain /home/pitzl/psi/dtb/tst400/cal904-ia28-trim36-2019-07-04.dat
+
+tilt 0
+turn 0
+
+geo geo_2019_07a.dat # 0  153  305  386  538  692
+
+# narrow gates: 3 + 4 ns
+
+# gate delay 0 ns
+run 37143  90.991  79  95  99.985
+
+# gate delay 2 ns
+run 37144  90.543  79  95
+
+# gate delay 4 ns
+run 37145  90.514  74  95
+
+# gate delay 6 ns
+run 37146  90.479  8  95
+
+# gate delay 8 ns
+run 37147  90.446  20  95
+
+# gate delay 10 ns
+run 37148  90.362  54  95
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+tilt 20.7
+
+# clock gate and scintillator pulse=6ns
+# Haupkollimator West -10 East +18 Endanschlag
+
+geo geo_2019_07b.dat # 0  153  305  393  546  698.5
+
+# gate delay 18
+run 37160  96.7  72  90  99.98  dyfcq3 8.3
+#                              sixdyc 7.72 => 3.86 um track
+
+# gate delay 14
+run 37161  92.0  72  91  99.6
+
+tilt 19.4
+# gate delay 18
+run 37163  99.98  dyfcq3 8.3
+
+# Vthrcomp 178 = 30 Vcal
+gain /home/pitzl/psi/dtb/tst400/cal904-ia28-trim30-2019-07-05.dat
+# over night
+run 37164  25M 37 GB  99.97  MOD drop 570 s  dyfcq3nod 6.55 => sig 5.3 um
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Fri 5.7.2019
+# PROC600v4 903 tilt scan
+
+tilt 18.5
+run 37165  521  99.97  dyfcq3nod 6.8
+
+tilt 17.5
+run 37168  554
+
+tilt 15.5
+run 37169  525
+
+tilt 13.5
+run 37170  557
+
+tilt 11.5
+run 37171  501
+
+tilt 9.5
+run 37172  502
+
+tilt 7.5
+run 37173  504
+
+tilt 5.5
+run 37175  502
+
+tilt 3.5
+run 37176  783
+
+tilt 2
+run 37177  502
+
+tilt 19.5
+run 37181  502
+
+tilt 20.5
+run 37182  501
+
+tilt 21.5
+run 37183  503
+
+tilt 23.5
+run 37184  501
+
+tilt 25.5
+run 37185  1913.7
+
+tilt 27.5
+run 37186  
+
+#27.5    37187  502  69  90
+#29.5    37188  502  67  90
+#31.5    37189  505  66  90
+#32.5    37191  502  65  90
+333.5    37193  502  64  90
+#34.5    37194  502  64  90
+#35.5    37195  502  63  90
+#37.5    37196  525  61  90
+#39.5    37197  504  59  90
+
+tilt 19.3
+#CtrlReg=29(11101) (was 21=10101)
+run 37198  501  74  90  DUT mean clustersize 2.006
+
+#CtrlReg=13(01101)
+run 37199  502  74  90  DUT mean clustersize 2.339
+
+#CtrlReg=5(00101)
+run 37200  501  74  91  DUT mean clustersize 2.725
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sat 6.7.2019
+
+# decorrelation: change DTB
+
+chip 907
+
+# dacParameters_c907_ia28-trim36.dat
+# VthrComp 178 => thr 30 Vcal
+
+# gaincal at vthr 178
+gain /home/pitzl/psi/dtb/tst400/cal907-ia28-trim30-2019-07-06.dat
+
+# same geo_2019_07b.dat # 0  153  305  393  546  698.5
+
+tilt 22
+run 37232
+
+tilt 19.8
+run 37233  503  99.97  dyfcq4nod 6.93
+
+tilt 19.3
+run 37234  502  99.96  dyfcq4nod 6.65  oddrow 6.36  everow 6.99
+
+tilt 18.8
+run 37235  502  99.96  dyfcq4nod 6.74
+
+tilt 18.3
+run 37237  533  
+
+tilt 18.8
+run 37238  530
+
+tilt 19.3
+run 37239  568  
+
+tilt 19.8
+run 37240  502  
+
+tilt 19.1
+run 37241  589  99.97    dyfcq4nod 6.89
+
+tilt 19.4
+run 37242  237.7
+run 37243  994.5  99.91  MOD drop 600 s
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+chip 905
+
+# Vthrcomp 188 = thr 30
+
+# default ctrlReg 21
+
+# chiller at +18 deg
+
+gain /home/pitzl/psi/dtb/tst400/cal905_18deg-ia28-trim30-2019-07-06.dat
+
+geo geo_2019_07a.dat # 0  153  305  386  538  692
+
+tilt 19.4
+run 37246  88.83   some ROC errors
+
+# VthrComp 186 => thr 30.7 Vcal
+
+run 37248  99.95  MOD drop 418 s
+
+# VthrComp 184  thr 31.4 Vcal
+
+run 37249  503  99.97 stable  dyfcq4nod 6.58
+
+# VthrComp 164  thr 43 Vcal
+run 37250  502
+
+# VthrComp 175  thr 36 Vcal
+run 37251  509
+
+# VthrComp 164, ctrl 5
+run 37252  524
+
+# VthrComp 164, ctrl 13
+run 37253  513
+
+# VthrComp 164, ctrl 29
+run 37254  502
+
+# VthrComp 186, ctrl 5
+run 37255  504
+
+# gaincal at vthr 186, chiller 18 deg
+# VthrComp 184: thr 31.38 Vcal
+# VthrComp 186: thr 30.68 Vcal
+# VthrComp 188: thr 29.77 Vcal
+# VthrComp 190: thr 28.58 Vcal
+# VthrComp 180: thr 33.09 Vcal
+# VthrComp 175: thr 36.32 Vcal
+# VthrComp 164: thr 43.17 Vcal
+
+# VthrComp 186, ctrl 21 over night
+run 37256
+run 37257  20280.327 GB
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#-------------------------------------------------------------------------------

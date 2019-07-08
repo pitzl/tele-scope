@@ -1,7 +1,8 @@
 
 // Daniel Pitzl, DESY, Feb 2016, Jan 2018, May 2019
 // telescope analysis with eudaq and openMP
-// updated from eudeq53
+// triplet alignment
+
 // produces align_run.dat
 
 // make tele
@@ -164,6 +165,36 @@ vector<cluster> getClus( vector <pixel> pb, int fCluCut = 1 ) // 1 = no gap
 } // getClus
 
 //------------------------------------------------------------------------------
+double GetFWHM( TH1 &h )
+{
+  int imax = h.GetMaximumBin();
+  double ymax = h.GetBinContent( imax );
+
+  double xl = h.GetBinCenter( imax );
+  for( int ii = imax; ii > 0; --ii ) { // from peak towards left
+    if( h.GetBinContent( ii ) > 0.5*ymax )
+      xl = h.GetBinCenter( ii ); // overwritten until found
+    else
+      break; // against later spikes
+  }
+
+  double xr = h.GetBinCenter( imax );
+  for( int ii = imax; ii <= h.GetNbinsX(); ++ii ) { // from peak towards right
+    if( h.GetBinContent( ii ) > 0.5*ymax )
+      xr = h.GetBinCenter( ii ); // overwritten until found
+    else
+      break; // against later spikes
+  }
+  double fwhm = xr-xl;
+  double dx = h.GetBinWidth( imax );
+  if( fwhm > 3.1*dx )
+    return fwhm;
+  else
+    return 3.1*dx;
+
+} // GetFWHM
+
+//------------------------------------------------------------------------------
 list < vector <cluster> > oneplane( unsigned ipl, list < vector <pixel> > pxlist )
 {
   list < vector < cluster > > clist;
@@ -248,8 +279,8 @@ int main( int argc, char* argv[] )
 
   } // argc
 
-  double f = 4.8/mom;
-  const double ang = sqrt( 0.005*0.005 + pow( 0.002*f, 2 ) ); // [rad]
+  double ff = 4.8/mom;
+  const double ang = sqrt( 0.005*0.005 + pow( 0.002*ff, 2 ) ); // [rad]
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // geometry:
@@ -311,7 +342,7 @@ int main( int argc, char* argv[] )
       }
 
       if( ipl < 0 || ipl > 5 ) { // Mimosa 1.6
-	cout << "geo wrong plane number " << ipl << endl;
+	//cout << "geo wrong plane number " << ipl << endl;
 	continue;
       }
 
@@ -372,8 +403,8 @@ int main( int argc, char* argv[] )
   geoFile.close();
 
   // for profile plots:
-  //double drng = 0.1*f; // narrow spacing
-  double drng = 0.2*f; // wide spacing [mm]
+  //double drng = 0.1*ff; // narrow spacing
+  double drng = 0.2*ff; // wide spacing [mm]
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // hot pixels:
@@ -535,11 +566,11 @@ int main( int argc, char* argv[] )
 
   ialignFile.close();
 
-  if( aligniteration == 0 ) f *= 3; // wider binning
+  if( aligniteration == 0 ) ff *= 3; // wider binning
 
   // z position for triplet-driplet matching = DUT material:
 
-  double DUTz = 0.5 * ( zz[3] + zz[4] ); // 0.5*(304+560) = 432
+  double DUTz = 0.5 * ( zz[2] + zz[3] );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // (re-)create root file:
@@ -594,6 +625,7 @@ int main( int argc, char* argv[] )
   TProfile dy4vsx[9];
 
   TProfile effvsx[9];
+  TProfile effvsy[9];
   TProfile effvsxm[9];
   TProfile effvsym[9];
   TProfile2D * effvsxmym[9];
@@ -656,10 +688,10 @@ int main( int argc, char* argv[] )
 
     hdx[ipl] = TH1I( Form( "dx%im", ipl ),
 		     Form( "plane %i-m dx;%i-m dx [mm];cluster pairs", ipl, ipl ),
-		     200, -2, 2 );
+		     400, -2, 2 );
     hdy[ipl] = TH1I( Form( "dy%im", ipl ),
 		     Form( "plane %i-m dy;%i-m dy [mm];cluster pairs", ipl, ipl ),
-		     200, -2, 2 );
+		     400, -2, 2 );
 
     dxvsx[ipl] = TProfile( Form( "dx%imvsx", ipl ),
 			   Form( "plane %i-m dx vs x;x [mm];<%i-m dx> [mm]", ipl, ipl ),
@@ -690,6 +722,9 @@ int main( int argc, char* argv[] )
     effvsx[ipl] = TProfile( Form( "eff%ivsx", ipl ),
 			     Form( "plane %i efficiency;x [mm];plane %i efficiency", ipl, ipl ),
 			     100, -midx[ipl], midx[ipl], -1, 2 );
+    effvsy[ipl] = TProfile( Form( "eff%ivsy", ipl ),
+			     Form( "plane %i efficiency;y [mm];plane %i efficiency", ipl, ipl ),
+			     100, -midy[ipl], midy[ipl], -1, 2 );
     effvsxm[ipl] = TProfile( Form( "eff%ivsxm", ipl ),
 			     Form( "plane %i efficiency;x mod 36.8 [#mum];plane %i efficiency", ipl, ipl ),
 			     74, 0, 2*ptchx[ipl]*1E3, -1, 2 );
@@ -712,24 +747,8 @@ int main( int argc, char* argv[] )
   TH1I htridy[2];
 
   TH1I htridxc[2];
-  TH1I htridyc[2];
   TH1I htridxci[2];
-  TH1I htridyci[2];
   TH1I htridxct[2];
-  TH1I htridyct[2];
-  TH1I htridyc1[2];
-  TH1I htridyc2[2];
-  TH1I htridyc3[2];
-  TH1I htridyc4[2];
-  TH1I htridyc5[2];
-  TH1I htridyc6[2];
-  TH1I htridycg[2];
-
-  TH1I htridxs1[2];
-  TH1I htridxs2[2];
-  TH1I htridxs3[2];
-  TH1I htridxs4[2];
-  TH1I htridxs5[2];
 
   TH1I htridxc1[2];
   TH1I htridxc2[2];
@@ -742,7 +761,7 @@ int main( int argc, char* argv[] )
   TProfile tridxvsx[2];
   TProfile tridxvsy[2];
   TProfile tridxvsxm[2];
-  TH2I * tridxvsdy[2];
+  TH2I * tridxdy[2];
   TProfile2D * tridxvsxmym[2];
   TProfile2D * tridyvsxmym[2];
   TProfile2D * tridxycvsxmym[2];
@@ -752,6 +771,17 @@ int main( int argc, char* argv[] )
   TProfile2D * trimadxvsxmym[2];
   TProfile tridxvstx[2];
   TProfile trimadxvstx[2];
+
+  TH1I htridyc[2];
+  TH1I htridyci[2];
+  TH1I htridyct[2];
+  TH1I htridyc1[2];
+  TH1I htridyc2[2];
+  TH1I htridyc3[2];
+  TH1I htridyc4[2];
+  TH1I htridyc5[2];
+  TH1I htridyc6[2];
+  TH1I htridycg[2];
 
   TProfile tridyvsx[2];
   TProfile tridyvsy[2];
@@ -819,54 +849,12 @@ int main( int argc, char* argv[] )
     htridx[itd] = TH1I( Form( "%sdx", tds.c_str() ),
 			Form( "%splet dx;%splet dx [#mum];%splets",
 			      tds.c_str(), tds.c_str(), tds.c_str() ),
-			200, -100, 100 );
+			500, -250, 250 );
 
     htridy[itd] = TH1I( Form( "%sdy", tds.c_str() ),
 			Form( "%splet dy;%splet dy [#mum];%splets",
 			      tds.c_str(), tds.c_str(), tds.c_str() ),
-			200, -100, 100 );
-    htridyc[itd] = TH1I( Form( "%sdyc", tds.c_str() ),
-			Form( "%splet dy;%splet dy [#mum];%splets",
-			      tds.c_str(), tds.c_str(), tds.c_str() ),
-			200, -100, 100 );
-    htridyci[itd] = TH1I( Form( "%sdyci", tds.c_str() ),
-			  Form( "isolated %splet dy;%splet dy [#mum];isolated %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-
-    htridyct[itd] = TH1I( Form( "%sdyct", tds.c_str() ),
-			  Form( "%splet dy;%splet dy [#mum];%splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-
-    htridyc1[itd] = TH1I( Form( "%sdyc1", tds.c_str() ),
-			  Form( "%splet dy 1-row;1-row %splet dy [#mum];1-row %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridyc2[itd] = TH1I( Form( "%sdyc2", tds.c_str() ),
-			  Form( "%splet dy 2-row;2-row %splet dy [#mum];2-row %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridyc3[itd] = TH1I( Form( "%sdyc3", tds.c_str() ),
-			  Form( "%splet dy 3-row;3-row %splet dy [#mum];3-row %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridyc4[itd] = TH1I( Form( "%sdyc4", tds.c_str() ),
-			  Form( "%splet dy 4-row;4-row %splet dy [#mum];4-row %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridyc5[itd] = TH1I( Form( "%sdyc5", tds.c_str() ),
-			  Form( "%splet dy 5-row;5-row %splet dy [#mum];5-row %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridyc6[itd] = TH1I( Form( "%sdyc6", tds.c_str() ),
-			  Form( "%splet dy 6-row;6-row %splet dy [#mum];6-row %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridycg[itd] = TH1I( Form( "%sdycg", tds.c_str() ),
-			  Form( "%splet dy good row;good-row %splet dy [#mum];good-row %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
+			500, -250, 250 );
 
     htridxc[itd] = TH1I( Form( "%sdxc", tds.c_str() ),
 			Form( "%splet dx;%splet dx [#mum];%splets",
@@ -881,49 +869,28 @@ int main( int argc, char* argv[] )
 				tds.c_str(), tds.c_str(), tds.c_str() ),
 			  200, -100, 100 );
 
-    htridxs1[itd] = TH1I( Form( "%sdxs1", tds.c_str() ),
-			  Form( "%splet dx 1-px;1-px %splet dx [#mum];1-px %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridxs2[itd] = TH1I( Form( "%sdxs2", tds.c_str() ),
-			  Form( "%splet dx 2-px;2-px %splet dx [#mum];2-px %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridxs3[itd] = TH1I( Form( "%sdxs3", tds.c_str() ),
-			  Form( "%splet dx 3-px;3-px %splet dx [#mum];3-px %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridxs4[itd] = TH1I( Form( "%sdxs4", tds.c_str() ),
-			  Form( "%splet dx 4-px;4-px %splet dx [#mum];4-px %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-    htridxs5[itd] = TH1I( Form( "%sdxs5", tds.c_str() ),
-			  Form( "%splet dx 5-px;5-px %splet dx [#mum];5-px %splets",
-				tds.c_str(), tds.c_str(), tds.c_str() ),
-			  200, -100, 100 );
-
     htridxc1[itd] = TH1I( Form( "%sdxc1", tds.c_str() ),
-			  Form( "%splet dx 1-col;1-col %splet dx [#mum];1-col %splets",
+			  Form( "%splet dx 1-col;%splet dx [#mum];1-col %splets",
 				tds.c_str(), tds.c_str(), tds.c_str() ),
 			  200, -100, 100 );
     htridxc2[itd] = TH1I( Form( "%sdxc2", tds.c_str() ),
-			  Form( "%splet dx 2-col;2-col %splet dx [#mum];2-col %splets",
+			  Form( "%splet dx 2-col;%splet dx [#mum];2-col %splets",
 				tds.c_str(), tds.c_str(), tds.c_str() ),
 			  200, -100, 100 );
     htridxc3[itd] = TH1I( Form( "%sdxc3", tds.c_str() ),
-			  Form( "%splet dx 3-col;3-col %splet dx [#mum];3-col %splets",
+			  Form( "%splet dx 3-col;%splet dx [#mum];3-col %splets",
 				tds.c_str(), tds.c_str(), tds.c_str() ),
 			  200, -100, 100 );
     htridxc4[itd] = TH1I( Form( "%sdxc4", tds.c_str() ),
-			  Form( "%splet dx 4-col;4-col %splet dx [#mum];4-col %splets",
+			  Form( "%splet dx 4-col;%splet dx [#mum];4-col %splets",
 				tds.c_str(), tds.c_str(), tds.c_str() ),
 			  200, -100, 100 );
     htridxc5[itd] = TH1I( Form( "%sdxc5", tds.c_str() ),
-			  Form( "%splet dx 5-col;5-col %splet dx [#mum];5-col %splets",
+			  Form( "%splet dx 5-col;%splet dx [#mum];5-col %splets",
 				tds.c_str(), tds.c_str(), tds.c_str() ),
 			  200, -100, 100 );
     htridxc6[itd] = TH1I( Form( "%sdxc6", tds.c_str() ),
-			  Form( "%splet dx 6-col;6-col %splet dx [#mum];6-col %splets",
+			  Form( "%splet dx 6-col;%splet dx [#mum];6-col %splets",
 				tds.c_str(), tds.c_str(), tds.c_str() ),
 			  200, -100, 100 );
     htridxcg[itd] = TH1I( Form( "%sdxcg", tds.c_str() ),
@@ -934,30 +901,30 @@ int main( int argc, char* argv[] )
     tridxvsx[itd] = TProfile( Form( "%sdxvsx", tds.c_str() ),
 			      Form( "%splet dx vs x;%splet xB [mm];<%splets #Deltax> [#mum]",
 				    tds.c_str(), tds.c_str(), tds.c_str() ),
-			      100, -midx[ipl], midx[ipl], -20, 20 );
+			      100, -midx[ipl], midx[ipl], -50, 50 );
     tridxvsy[itd] = TProfile( Form( "%sdxvsy", tds.c_str() ),
 			      Form( "%splet dx vs y;%splet yB [mm];<%splets #Deltax> [#mum]",
 				    tds.c_str(), tds.c_str(), tds.c_str() ),
-			      100, -midy[ipl], midy[ipl], -20, 20 );
+			      100, -midy[ipl], midy[ipl], -50, 50 );
     tridxvsxm[itd] = TProfile( Form( "%sdxvsxm", tds.c_str() ),
 			       Form( "%splet dx vs xmod;%splet xB mod 36.8 [#mum];<%splets #Deltax> [#mum]",
 				     tds.c_str(), tds.c_str(), tds.c_str() ),
-			       74, 0, 2*ptchx[ipl]*1E3, -20, 20 );
-    tridxvsdy[itd] = new
-      TH2I( Form( "%sdxvsdy", tds.c_str() ),
+			       74, 0, 2*ptchx[ipl]*1E3, -50, 50 );
+    tridxdy[itd] = new
+      TH2I( Form( "%sdxdy", tds.c_str() ),
 	    Form( "%splet #Deltay vs #Deltax;%splet #Deltax ;%splet #Deltay [#mum];%splets",
 		  tds.c_str(), tds.c_str(), tds.c_str(), tds.c_str() ),
-	    80, -20, 20, 80, -20, 20 );
+	    80, -50, 50, 80, -50, 50 );
     tridxvsxmym[itd] = new
       TProfile2D( Form( "%sdxvsxmym", tds.c_str() ),
 		  Form( "%splet #Deltax map;%splet xB mod 36.8 [#mum];%splet yB mod 36.8 [#mum];%splet <#Deltax> [#mum]",
 			tds.c_str(), tds.c_str(), tds.c_str(), tds.c_str() ),
-		  74, 0, 2*ptchx[ipl]*1E3, 74, 0, 2*ptchy[ipl]*1E3, -20, 20 );
+		  74, 0, 2*ptchx[ipl]*1E3, 74, 0, 2*ptchy[ipl]*1E3, -50, 50 );
     tridyvsxmym[itd] = new
       TProfile2D( Form( "%sdyvsxmym", tds.c_str() ),
 		  Form( "%splet #Deltay map;%splet xB mod 36.8 [#mum];%splet yB mod 36.8 [#mum];%splet <#Deltay> [#mum]",
 			tds.c_str(), tds.c_str(), tds.c_str(), tds.c_str() ),
-		  74, 0, 2*ptchx[ipl]*1E3, 74, 0, 2*ptchy[ipl]*1E3, -20, 20 );
+		  74, 0, 2*ptchx[ipl]*1E3, 74, 0, 2*ptchy[ipl]*1E3, -50, 50 );
     tridxycvsxmym[itd] = new
       TProfile2D( Form( "%sdxycvsxmym", tds.c_str() ),
 		  Form( "%splet #Deltax*y map;%splet xB mod 36.8 [#mum];%splet yB mod 36.8 [#mum];%splet <#Deltax#Deltay> [#mum^{2}]",
@@ -967,7 +934,7 @@ int main( int argc, char* argv[] )
       TProfile2D( Form( "%sdxyvsxmym", tds.c_str() ),
 		Form( "%splet #Deltax+y map;%splet xB mod 36.8 [#mum];%splet yB mod 36.8 [#mum];%splet <#Deltax+y> [#mum^{2}]",
 		      tds.c_str(), tds.c_str(), tds.c_str(), tds.c_str() ),
-		74, 0, 2*ptchx[ipl]*1E3, 74, 0, 2*ptchy[ipl]*1E3, -20, 20 );
+		74, 0, 2*ptchx[ipl]*1E3, 74, 0, 2*ptchy[ipl]*1E3, -50, 50 );
     tridxy2vsxmym[itd] = new
       TProfile2D( Form( "%sdxy2vsxmym", tds.c_str() ),
 		Form( "%splet #Deltaxy map;%splet xB mod 36.8 [#mum];%splet yB mod 36.8 [#mum];%splet <#Deltaxy> [#mum^{2}]",
@@ -988,25 +955,67 @@ int main( int argc, char* argv[] )
     tridxvstx[itd] = TProfile( Form( "%sdxvstx", tds.c_str() ),
 			       Form( "%splet dx vs tx;%splet slope x [mrad];<%splets #Deltax> [#mum]",
 				     tds.c_str(), tds.c_str(), tds.c_str() ),
-			       80, -2, 2, -20, 20 );
+			       80, -2, 2, -50, 50 );
     trimadxvstx[itd] =
       TProfile( Form( "%smadxvstx", tds.c_str() ),
 		Form( "%splet MAD(#Deltax) vs #theta_{x};%splet #theta_{x} [mrad];%splet MAD(#Deltax) [#mum]",
 		      tds.c_str(), tds.c_str(), tds.c_str() ),
 		100, -5, 5, 0, 50 );
+    htridyc[itd] = TH1I( Form( "%sdyc", tds.c_str() ),
+			Form( "%splet dy;%splet dy [#mum];%splets",
+			      tds.c_str(), tds.c_str(), tds.c_str() ),
+			200, -100, 100 );
+    htridyci[itd] = TH1I( Form( "%sdyci", tds.c_str() ),
+			  Form( "isolated %splet dy;%splet dy [#mum];isolated %splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
+
+    htridyct[itd] = TH1I( Form( "%sdyct", tds.c_str() ),
+			  Form( "%splet dy;%splet dy [#mum];%splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
+
+    htridyc1[itd] = TH1I( Form( "%sdyc1", tds.c_str() ),
+			  Form( "%splet dy 1-row;%splet dy [#mum];1-row %splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
+    htridyc2[itd] = TH1I( Form( "%sdyc2", tds.c_str() ),
+			  Form( "%splet dy 2-row;%splet dy [#mum];2-row %splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
+    htridyc3[itd] = TH1I( Form( "%sdyc3", tds.c_str() ),
+			  Form( "%splet dy 3-row;%splet dy [#mum];3-row %splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
+    htridyc4[itd] = TH1I( Form( "%sdyc4", tds.c_str() ),
+			  Form( "%splet dy 4-row;%splet dy [#mum];4-row %splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
+    htridyc5[itd] = TH1I( Form( "%sdyc5", tds.c_str() ),
+			  Form( "%splet dy 5-row;%splet dy [#mum];5-row %splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
+    htridyc6[itd] = TH1I( Form( "%sdyc6", tds.c_str() ),
+			  Form( "%splet dy 6-row;%splet dy [#mum];6-row %splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
+    htridycg[itd] = TH1I( Form( "%sdycg", tds.c_str() ),
+			  Form( "%splet dy good row;good-row %splet dy [#mum];good-row %splets",
+				tds.c_str(), tds.c_str(), tds.c_str() ),
+			  200, -100, 100 );
 
     tridyvsx[itd] = TProfile( Form( "%sdyvsx", tds.c_str() ),
 			      Form( "%splet dy vs x;%splet xB [mm];<%splets #Deltay> [#mum]",
 				    tds.c_str(), tds.c_str(), tds.c_str() ),
-			      100, -midx[ipl], midx[ipl], -20, 20 );
+			      100, -midx[ipl], midx[ipl], -50, 50 );
     tridyvsy[itd] = TProfile( Form( "%sdyvsy", tds.c_str() ),
 			      Form( "%splet dy vs y;%splet yB [mm];<%splets #Deltay> [#mum]",
 				    tds.c_str(), tds.c_str(), tds.c_str() ),
-			      100, -midy[ipl], midy[ipl], -20, 20 );
+			      100, -midy[ipl], midy[ipl], -50, 50 );
     tridyvsym[itd] = TProfile( Form( "%sdyvsym", tds.c_str() ),
 			       Form( "%splet dy vs ymod;%splet yB mod 36.8 [#mum];<%splets #Deltay> [#mum]",
 				     tds.c_str(), tds.c_str(), tds.c_str() ),
-			       74, 0, 2*ptchy[ipl]*1E3, -20, 20 );
+			       74, 0, 2*ptchy[ipl]*1E3, -50, 50 );
     trimadyvsym[itd] =
       TProfile( Form( "%smadyvsym", tds.c_str() ),
 		Form( "%splet MAD(#Deltay) vs ymod;%splet yB mod 36.8 [#mum];%splet MAD(#Deltay) [#mum]",
@@ -1022,7 +1031,7 @@ int main( int argc, char* argv[] )
     tridyvsty[itd] = TProfile( Form( "%sdyvsty", tds.c_str() ),
 			       Form( "%splet dy vs ty;%splet slope y [mrad];<%splets #Deltay> [#mum]",
 				     tds.c_str(), tds.c_str(), tds.c_str() ),
-			       80, -2, 2, -20, 20 );
+			       80, -2, 2, -50, 50 );
     trimadyvsty[itd] =
       TProfile( Form( "%smadyvsty", tds.c_str() ),
 		Form( "%splet MAD(#Deltay) vs #theta_{y};%splet #theta_{y} [mrad];%splet MAD(#Deltay) [#mum]",
@@ -1032,27 +1041,27 @@ int main( int argc, char* argv[] )
     tridxCvsx[itd] = TProfile( Form( "%sdxCvsx", tds.c_str() ),
 			       Form( "%splet dxC vs x;%splet x at C [mm];<%splets #Deltax C> [#mum]",
 				     tds.c_str(), tds.c_str(), tds.c_str() ),
-			       100, -midx[ipl], midx[ipl], -20, 20 );
+			       100, -midx[ipl], midx[ipl], -50, 50 );
     tridxCvsy[itd] = TProfile( Form( "%sdxCvsy", tds.c_str() ),
 			       Form( "%splet dxC vs y;%splet y at C [mm];<%splets #Deltax C> [#mum]",
 				     tds.c_str(), tds.c_str(), tds.c_str() ),
-			       100, -midy[ipl], midy[ipl], -20, 20 );
+			       100, -midy[ipl], midy[ipl], -50, 50 );
     tridyCvsx[itd] = TProfile( Form( "%sdyCvsx", tds.c_str() ),
 			       Form( "%splet dyC vs x;%splet x at C [mm];<%splets #Deltay C> [#mum]",
 				     tds.c_str(), tds.c_str(), tds.c_str() ),
-			       100, -midx[ipl], midx[ipl], -20, 20 );
+			       100, -midx[ipl], midx[ipl], -50, 50 );
     tridyCvsy[itd] = TProfile( Form( "%sdyCvsy", tds.c_str() ),
 			       Form( "%splet dy vs y;%splet y at C [mm];<%splets #Deltay C> [#mum]",
 				     tds.c_str(), tds.c_str(), tds.c_str() ),
-			       100, -midy[ipl], midy[ipl], -20, 20 );
+			       100, -midy[ipl], midy[ipl], -50, 50 );
     tridxCvsax[itd] = TProfile( Form( "%sdxCvsax", tds.c_str() ),
 				Form( "%splet dxC vs axAB;%splet AB slope x [mrad];<%splets #Deltax C> [#mum]",
 				      tds.c_str(), tds.c_str(), tds.c_str() ),
-				80, -2, 2, -20, 20 );
+				80, -2, 2, -50, 50 );
     tridyCvsay[itd] = TProfile( Form( "%sdyCvsay", tds.c_str() ),
 				Form( "%splet dyC vs ayAB;%splet AB slope y [mrad];<%splets #Deltay C> [#mum]",
 				      tds.c_str(), tds.c_str(), tds.c_str() ),
-				80, -2, 2, -20, 20 );
+				80, -2, 2, -50, 50 );
 
     htrix[itd] = TH1I( Form( "%sx", tds.c_str() ),
 		       Form( "%splet x;%splet x_{mid} [mm];%splets",
@@ -1165,52 +1174,52 @@ int main( int argc, char* argv[] )
 
     hexdx[ipl] = TH1I( Form( "exdx%i", ipl ),
 		       Form( "ex dx %i;dx tri - plane %i [#mum];triplet - cluster pairs", ipl, ipl ),
-		       200, -200*f, 200*f );
+		       200, -200*ff, 200*ff );
     hexdy[ipl] = TH1I( Form( "exdy%i", ipl ),
 		       Form( "ex dy %i;dy tri - plane %i [#mum];triplet - cluster pairs", ipl, ipl ),
-		       200, -200*f, 200*f );
+		       200, -200*ff, 200*ff );
     hexdxc[ipl] = TH1I( Form( "exdxc%i", ipl ),
 			Form( "ex dx %i;dx tri - plane %i [#mum];triplet - cluster pairs", ipl, ipl ),
-			200, -200*f, 200*f );
+			200, -200*ff, 200*ff );
     hexdyc[ipl] = TH1I( Form( "exdyc%i", ipl ),
 			Form( "ex dy %i;dy tri - plane %i [#mum];triplet - cluster pairs", ipl, ipl ),
-			200, -200*f, 200*f );
+			200, -200*ff, 200*ff );
 
     exdxvsy[ipl] = TProfile( Form( "exdxvsy%i", ipl ),
 			     Form( "ex dx vs y %i;y at %i [mm];<#Deltax> [#mum]", ipl, ipl ),
-			     100, -midy[ipl], midy[ipl], -200*f, 200*f );
+			     100, -midy[ipl], midy[ipl], -200*ff, 200*ff );
     exdyvsx[ipl] = TProfile( Form( "exdyvsx%i", ipl ),
 			     Form( "ex dy vs x %i;x at %i [mm];<#Deltay> [#mum]", ipl, ipl ),
-			     100, -midx[ipl], midx[ipl], -200*f, 200*f );
+			     100, -midx[ipl], midx[ipl], -200*ff, 200*ff );
 
     exdxvstx[ipl] =
       TProfile( Form( "exdxvstx%i", ipl ),
 		Form( "dx vs tx at %i;slope x [mrad];<#Deltax> at %i [#mum]", ipl, ipl ),
-		80, -2, 2, -100*f, 100*f );
+		80, -2, 2, -100*ff, 100*ff );
     exdyvsty[ipl] =
       TProfile( Form( "exdyvsty%i", ipl ),
 		Form( "dy vs ty at %i;slope y [mrad];<#Deltay> at %i [#mum]", ipl, ipl ),
-		80, -2, 2, -100*f, 100*f );
+		80, -2, 2, -100*ff, 100*ff );
 
     exmadxvstx[ipl] =
       TProfile( Form( "exmadxvstx%i", ipl ),
 		Form( "MAD x vs tx at %i;slope x [mrad];MAD #Deltax at %i [#mum]", ipl, ipl ),
-		80, -2*f, 2*f, 0, 100*f );
+		80, -2*ff, 2*ff, 0, 100*ff );
     exmadyvsty[ipl] =
       TProfile( Form( "exmadyvsty%i", ipl ),
 		Form( "MAD y vs ty at %i;slope y [mrad];MAD #Deltay at %i [#mum]", ipl, ipl ),
-		80, -2*f, 2*f, 0, 100*f );
+		80, -2*ff, 2*ff, 0, 100*ff );
 
   }  // ipl
 
   // driplets - triplets
 
-  TH1I hsixdx = TH1I( "sixdx", "six dx;#Deltax [mm];triplet-driplet pairs", 800, -2*f, 2*f );
-  TH1I hsixdy = TH1I( "sixdy", "six dy;#Deltay [mm];triplet-driplet pairs", 400, -1*f, 1*f );
+  TH1I hsixdx = TH1I( "sixdx", "six dx;#Deltax [mm];triplet-driplet pairs", 800, -2*ff, 2*ff );
+  TH1I hsixdy = TH1I( "sixdy", "six dy;#Deltay [mm];triplet-driplet pairs", 400, -1*ff, 1*ff );
 
-  TH1I hsixdxc = TH1I( "sixdxc", "six dx;#Deltax [#mum];triplet-driplet pairs", 400, -200*f, 200*f );
-  TH1I hsixdxcsid = TH1I( "sixdxcsid", "six dx Si;#Deltax [#mum];triplet-driplet pairs in Si", 400, -200*f, 200*f );
-  TH1I hsixdyc = TH1I( "sixdyc", "six dy;#Deltay [#mum];triplet-driplet pairs", 400, -200*f, 200*f );
+  TH1I hsixdxc = TH1I( "sixdxc", "six dx;#Deltax [#mum];triplet-driplet pairs", 400, -200*ff, 200*ff );
+  TH1I hsixdxcsid = TH1I( "sixdxcsid", "six dx Si;#Deltax [#mum];triplet-driplet pairs in Si", 400, -200*ff, 200*ff );
+  TH1I hsixdyc = TH1I( "sixdyc", "six dy;#Deltay [#mum];triplet-driplet pairs", 400, -200*ff, 200*ff );
 
   TH2I * hsixxy = new
     TH2I( "sixxy", "sixplet x-y;sixplet x_{mid} [mm];sixplet y_{mid} [mm];sixplets",
@@ -1219,82 +1228,105 @@ int main( int argc, char* argv[] )
   TProfile sixdxvsx =
     TProfile( "sixdxvsx",
 	      "six #Deltax vs x;xB [mm];<driplet - triplet #Deltax [#mum]",
-	      220, -11, 11, -100*f, 100*f );
+	      220, -11, 11, -100*ff, 100*ff );
   TProfile sixmadxvsx =
     TProfile( "sixmadxvsx",
 	      "six MAD x vs x;xB [mm];driplet - triplet MAD #Deltax [#mum]",
-	      220, -11, 11, 0, 100*f );
+	      220, -11, 11, 0, 100*ff );
   TProfile sixmadxvsy =
     TProfile( "sixmadxvsy",
 	      "six MAD x vs y;yB [mm];driplet - triplet MAD #Deltax [#mum]",
-	      110, -5.5, 5.5, 0, 100*f );
+	      110, -5.5, 5.5, 0, 100*ff );
   TProfile sixmadxvstx =
     TProfile( "sixmadxvstx",
 	      "six MAD x vs x;triplet #theta_{x} [mrad];driplet - triplet MAD #Deltax [#mum]",
-	      80, -2, 2, 0, 100*f );
+	      80, -2, 2, 0, 100*ff );
   TProfile sixmadxvsdtx =
     TProfile( "sixmadxvsdtx",
 	      "six MAD x vs x;driplet-triplet #Delta#theta_{x} [mrad];driplet - triplet MAD #Deltax [#mum]",
-	      80, -2, 2, 0, 100*f );
+	      80, -2, 2, 0, 100*ff );
   TProfile sixdxvsy =
     TProfile( "sixdxvsy",
 	      "six #Deltax vs y;yB [mm];<driplet - triplet #Deltax [#mum]",
-	      110, -5.5, 5.5, -100*f, 100*f );
+	      110, -5.5, 5.5, -100*ff, 100*ff );
   TProfile sixdxvstx =
     TProfile( "sixdxvstx",
 	      "six #Deltax vs slope x;slope x [mrad];<driplet - triplet #Deltax> [#mum]",
-	      80, -2, 2, -100*f, 100*f );
+	      80, -2, 2, -100*ff, 100*ff );
 
   TProfile sixdyvsx =
     TProfile( "sixdyvsx",
 	      "six #Deltay vs x;xB [mm];<driplet - triplet #Deltay [#mum]",
-	      220, -11, 11, -100*f, 100*f );
+	      220, -11, 11, -100*ff, 100*ff );
   TProfile sixmadyvsx =
     TProfile( "sixmadyvsx",
 	      "six MAD y vs x;xB [mm];driplet - triplet MAD #Deltay [#mum]",
-	      220, -11, 11, 0, 100*f );
+	      220, -11, 11, 0, 100*ff );
 
   TProfile sixdyvsy =
     TProfile( "sixdyvsy",
 	      "six #Deltay vs y;yB [mm];<driplet - triplet #Deltay [#mum]",
-	      110, -5.5, 5.5, -100*f, 100*f );
+	      110, -5.5, 5.5, -100*ff, 100*ff );
   TProfile sixdyvsty =
     TProfile( "sixdyvsty",
 	      "six #Deltay vs slope y;slope y [mrad];<driplet - triplet #Deltay> [#mum]",
-	      80, -2, 2, -100*f, 100*f );
+	      80, -2, 2, -100*ff, 100*ff );
   TProfile sixmadyvsy =
     TProfile( "sixmadyvsy",
 	      "six MAD y vs y;yB [mm];driplet - triplet MAD #Deltay [#mum]",
-	      110, -5.5, 5.5, 0, 100*f );
+	      110, -5.5, 5.5, 0, 100*ff );
   TProfile sixmadyvsty =
     TProfile( "sixmadyvsty",
 	      "six MAD y vs #theta_{y};triplet #theta_{y} [mrad];driplet - triplet MAD #Deltay [#mum]",
-	      80, -2, 2, 0, 100*f );
+	      80, -2, 2, 0, 100*ff );
   TProfile sixmadyvsdty =
     TProfile( "sixmadyvsdty",
 	      "six MAD y vs #Delta#theta_{y};driplet-triplet #Delta#theta_{y} [mrad];driplet - triplet MAD #Deltay [#mum]",
-	      80, -2, 2, 0, 100*f );
+	      80, -2, 2, 0, 100*ff );
 
   TProfile2D * sixdxyvsxy = new
     TProfile2D( "sixdxyvsxy",
 		"driplet - triplet #Delta_{xy} vs x-y;x_{mid} [mm];y_{mid} [mm];<sqrt(#Deltax^{2}+#Deltay^{2})> [mrad]",
-		110, -11, 11, 55, -5.5, 5.5, 0, 100*f );
+		110, -11, 11, 55, -5.5, 5.5, 0, 100*ff );
 
   TH1I hsixdtx( "sixdtx",
 		"driplet slope x - triplet slope x;driplet slope x - triplet slope x [mrad];driplet-triplet pairs",
-		200, -5*f, 5*f );
+		200, -5*ff, 5*ff );
   TH1I hsixdty( "sixdty",
 		"driplet slope y - triplet slope y;driplet slope y - triplet slope y [mrad];driplet-triplet pairs",
-		200, -5*f, 5*f );
+		200, -5*ff, 5*ff );
+
+  TProfile sixdtxvsx =
+    TProfile( "sixdtxvsx",
+	      "driplet - triplet slope_{x} vs x;x_{mid} [mm];<#Delta#theta_{x}> [mrad]",
+	      220, -11, 11, 0, 100*ff );
+  TProfile sixdtxvsy =
+    TProfile( "sixdtxvsy",
+	      "driplet - triplet slope_{x} vs y;y_{mid} [mm];<#Delta#theta_{x}> [mrad]",
+	      110, -5.5, 5.5, 0, 100*ff );
+
+  TProfile sixdtyvsx =
+    TProfile( "sixdtyvsx",
+	      "driplet - triplet slope_{y} vs x;x_{mid} [mm];<#Delta#theta_{y}> [mrad]",
+	      220, -11, 11, 0, 100*ff );
+  TProfile sixdtyvsy =
+    TProfile( "sixdtyvsy",
+	      "driplet - triplet slope_{y} vs y;y_{mid} [mm];<#Delta#theta_{y}> [mrad]",
+	      110, -5.5, 5.5, 0, 100*ff );
 
   TProfile sixdtvsx =
     TProfile( "sixdtvsx",
 	      "driplet - triplet slope_{xy} vs x;x_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [mrad]",
-	      220, -11, 11, 0, 100*f );
+	      220, -11, 11, 0, 100*ff );
+  TProfile sixdtvsy =
+    TProfile( "sixdtvsy",
+	      "driplet - triplet slope_{xy} vs y;y_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [mrad]",
+	      110, -5.5, 5.5, 0, 100*ff );
+
   TProfile2D * sixdtvsxy = new
     TProfile2D( "sixdtvsxy",
 		"driplet - triplet slope_{xy} vs x-y;x_{mid} [mm];y_{mid} [mm];<sqrt(#Delta#theta_{x}^{2}+#Delta#theta_{y}^{2})> [mrad]",
-		110, -11, 11, 55, -5.5, 5.5, 0, 100*f );
+		110, -11, 11, 55, -5.5, 5.5, 0, 100*ff );
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // event loop:
@@ -1581,7 +1613,7 @@ int main( int argc, char* argv[] )
   // alignment iterations:
 
   int maxiter = aligniteration + 1;
-  if( maxiter < 8 ) maxiter = 8;
+  if( maxiter < 9 ) maxiter = 9;
 
   for( ; aligniteration < maxiter; ++aligniteration ) {
 
@@ -1600,6 +1632,7 @@ int main( int argc, char* argv[] )
       dx4vsy[ipl].Reset();
       dy4vsx[ipl].Reset();
       effvsx[ipl].Reset();
+      effvsy[ipl].Reset();
       effvsxm[ipl].Reset();
       effvsym[ipl].Reset();
       effvsxmym[ipl]->Reset();
@@ -1622,7 +1655,7 @@ int main( int argc, char* argv[] )
       tridxvsx[itd].Reset();
       tridxvsy[itd].Reset();
       tridxvsxm[itd].Reset();
-      tridxvsdy[itd]->Reset();
+      tridxdy[itd]->Reset();
       tridxvsxmym[itd]->Reset();
       tridyvsxmym[itd]->Reset();
       tridxycvsxmym[itd]->Reset();
@@ -1632,12 +1665,6 @@ int main( int argc, char* argv[] )
       trimadxvsxmym[itd]->Reset();
       tridxvstx[itd].Reset();
       trimadxvstx[itd].Reset();
-
-      htridxs1[itd].Reset();
-      htridxs2[itd].Reset();
-      htridxs3[itd].Reset();
-      htridxs4[itd].Reset();
-      htridxs5[itd].Reset();
 
       htridxc1[itd].Reset();
       htridxc2[itd].Reset();
@@ -1739,7 +1766,12 @@ int main( int argc, char* argv[] )
     sixdxyvsxy->Reset();
     hsixdtx.Reset();
     hsixdty.Reset();
+    sixdtxvsx.Reset();
+    sixdtxvsy.Reset();
+    sixdtyvsx.Reset();
+    sixdtyvsy.Reset();
     sixdtvsx.Reset();
+    sixdtvsy.Reset();
     sixdtvsxy->Reset();
 
     // loop over events, correlate planes:
@@ -1748,7 +1780,7 @@ int main( int argc, char* argv[] )
     for( unsigned ipl = 0; ipl <= 5; ++ipl )
       evi[ipl] = clist[ipl].begin();
 
-    unsigned nev = 0;
+    iev = 0;
 
     cout << "tracking ev";
 
@@ -1759,10 +1791,11 @@ int main( int argc, char* argv[] )
       for( unsigned ipl = 0; ipl <= 5; ++ipl )
 	cl[ipl] = *evi[ipl];
 
-      ++nev;
-      if( nev%10000 == 0 )
-	cout << " " << nev << flush;
+      ++iev;
+      if( iev%10000 == 0 )
+	cout << " " << iev << flush;
 
+      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // final cluster plots:
 
       if( aligniteration == maxiter-1 ) {
@@ -1775,12 +1808,12 @@ int main( int argc, char* argv[] )
 
 	    hccol[ipl].Fill( cA->col );
 	    hcrow[ipl].Fill( cA->row );
-	    unsigned nrowA = cA->scr/(1024*1024);
-	    unsigned ncolA = (cA->scr - nrowA*1024*1024)/1024;
-	    unsigned npixA = cA->scr % 1024;
-	    hnpix[ipl].Fill( npixA );
-	    hncol[ipl].Fill( ncolA );
-	    hnrow[ipl].Fill( nrowA );
+	    unsigned nrow = cA->scr/(1024*1024);
+	    unsigned ncol = (cA->scr - nrow*1024*1024)/1024;
+	    unsigned npix = cA->scr % 1024;
+	    hnpix[ipl].Fill( npix );
+	    hncol[ipl].Fill( ncol );
+	    hnrow[ipl].Fill( nrow );
 	    hmindxy[ipl].Fill( cA->mindxy );
 
 	  } // clus
@@ -1789,8 +1822,12 @@ int main( int argc, char* argv[] )
 
       } // laster iter
 
-      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       // cluster pair correlations:
+
+      double twocut = 2; // [mm]
+      if( aligniteration >= 1 )
+	twocut = 0.5;
 
       for( int itd = 0; itd < 2; ++itd ) { // triplets 0-1-2 and driplets 3-4-5
 
@@ -1834,12 +1871,16 @@ int main( int argc, char* argv[] )
 	      double dx = xB - xA;
 	      double dy = yB - yA;
 	      hxx[ipl]->Fill( xA, xB );
-	      hdx[ipl].Fill( dx ); // for shift: fixed sign
-	      hdy[ipl].Fill( dy );
-	      dxvsx[ipl].Fill( xB, dx*sign ); // for turn angle: sign along track
-	      dxvsy[ipl].Fill( yB, dx      );
-	      dyvsx[ipl].Fill( xB, dy      );
-	      dyvsy[ipl].Fill( yB, dy*sign ); // for tilt angle: sign along track
+	      if( fabs(dy) < twocut ) {
+		hdx[ipl].Fill( dx ); // for shift: fixed sign
+		dxvsx[ipl].Fill( xB, dx*sign ); // for turn angle: sign along track
+		dxvsy[ipl].Fill( yB, dx      );
+	      }
+	      if( fabs(dx) < twocut ) {
+		hdy[ipl].Fill( dy );
+		dyvsx[ipl].Fill( xB, dy      );
+		dyvsy[ipl].Fill( yB, dy*sign ); // for tilt angle: sign along track
+	      }
 
 	    } // clusters
 
@@ -1853,8 +1894,8 @@ int main( int argc, char* argv[] )
       // telescope plane efficiency:
 
       double isoCut = 0.30/ptchx[1]; // [px]
-      double triCut = 0.05; // [mm]
-      double effCut = 0.25; // [mm]
+      double triCut = 0.025*ff; // [mm]
+      double effCut = 0.100*ff; // [mm]
 
       for( int ipl = 0; ipl <= 5; ++ipl ) {
 
@@ -1976,12 +2017,12 @@ int main( int argc, char* argv[] )
 		double dy4 = yD - yr;
 
 		if( fabs( dy4 ) < effCut ) {
-		  hdx4[ipl].Fill( dx4 );
-		  dx4vsy[ipl].Fill( yr, dx4 );
+		  hdx4[ipl].Fill( dx4*1E3 );
+		  dx4vsy[ipl].Fill( yr, dx4*1E3 );
 		}
 		if( fabs( dx4 ) < effCut ) {
-		  hdy4[ipl].Fill( dy4 );
-		  dy4vsx[ipl].Fill( xr, dy4 );
+		  hdy4[ipl].Fill( dy4*1E3 );
+		  dy4vsx[ipl].Fill( xr, dy4*1E3 );
 		}
 
 		if( fabs( dx4 ) > effCut ) continue;
@@ -1994,6 +2035,7 @@ int main( int argc, char* argv[] )
 	      } // cl D
 
 	      effvsx[ipl].Fill( xr, nm );
+	      effvsy[ipl].Fill( yr, nm );
 
 	      double xmod2 = fmod( xr + sizex[ipl] + 0.5*ptchx[ipl], 2*ptchx[ipl] );
 	      double ymod2 = fmod( yr + sizey[ipl] + 0.5*ptchy[ipl], 2*ptchy[ipl] );
@@ -2016,7 +2058,7 @@ int main( int argc, char* argv[] )
       vector <triplet> triplets;
       vector <triplet> driplets;
 
-      double tricut = 0.050; // [mm]
+      double tricut = 0.025*ff; // [mm]
 
       for( int itd = 0; itd < 2; ++itd ) { // triplets 0-1-2 and driplets 3-4-5
 
@@ -2138,61 +2180,57 @@ int main( int argc, char* argv[] )
 	      bool goodnrowB = 1;
 	      if( nrowB == 2 || nrowB > 4 ) goodnrowB = 0;
 
-	      if( fabs( dym ) < 0.02 ) {
+	      if( fabs( dym ) < tricut ) {
 
 		htridxc[itd].Fill( dxm*1E3 );
 		if( iso ) htridxci[itd].Fill( dxm*1E3 );
-		tridxvsx[itd].Fill( xm, dxm*1E3 );
-		tridxvsy[itd].Fill( ym, dxm*1E3 );
+
+		tridxvsx[itd].Fill( xr, dxm*1E3 );
+		tridxvsy[itd].Fill( yr, dxm*1E3 );
+		tridxvstx[itd].Fill( slpx*1E3, dxm*1E3 ); // adjust zpos, same sign
+
 		tridxvsxm[itd].Fill( xmod2*1E3, dxm*1E3 );
+
 		trimadxvsxm[itd].Fill( xmod2*1E3, fabs(dxm)*1E3 );
 		trimadxvsxmym[itd]->Fill( xmod2*1E3, ymod2*1E3, fabs(dxm)*1E3 );
-		tridxvstx[itd].Fill( slpx*1E3, dxm*1E3 ); // adjust zpos, same sign
 		trimadxvstx[itd].Fill( slpx*1E3, fabs(dxm)*1E3 ); // U-shape
-		if( fabs( slpx < 0.001 ) )
+
+		if( fabs( slpx < 0.001 ) ) {
+
 		  htridxct[itd].Fill( dxm*1E3 );
 
-		if(      npixB == 1 )
-		  htridxs1[itd].Fill( dxm*1E3 ); // 4.2 um
-		else if( npixB == 2 )
-		  htridxs2[itd].Fill( dxm*1E3 ); // 4.0 um
-		else if( npixB == 3 )
-		  htridxs3[itd].Fill( dxm*1E3 ); // 3.8 um
-		else if( npixB == 4 )
-		  htridxs4[itd].Fill( dxm*1E3 ); // 4.3 um
-		else
-		  htridxs5[itd].Fill( dxm*1E3 ); // 3.6 um
+		  if(      ncolB == 1 )
+		    htridxc1[itd].Fill( dxm*1E3 ); // 3.5 um
+		  else if( ncolB == 2 )
+		    htridxc2[itd].Fill( dxm*1E3 ); // 4.2 um
+		  else if( ncolB == 3 )
+		    htridxc3[itd].Fill( dxm*1E3 ); // 3.5 um
+		  else if( ncolB == 4 )
+		    htridxc4[itd].Fill( dxm*1E3 ); // 3.5 um
+		  else if( ncolB == 5 )
+		    htridxc5[itd].Fill( dxm*1E3 ); // 
+		  else
+		    htridxc6[itd].Fill( dxm*1E3 ); // 
 
-		if(      ncolB == 1 )
-		  htridxc1[itd].Fill( dxm*1E3 ); // 3.5 um
-		else if( ncolB == 2 )
-		  htridxc2[itd].Fill( dxm*1E3 ); // 4.2 um
-		else if( ncolB == 3 )
-		  htridxc3[itd].Fill( dxm*1E3 ); // 3.5 um
-		else if( ncolB == 4 )
-		  htridxc4[itd].Fill( dxm*1E3 ); // 3.5 um
-		else if( ncolB == 5 )
-		  htridxc5[itd].Fill( dxm*1E3 ); // 
-		else
-		  htridxc6[itd].Fill( dxm*1E3 ); // 
+		  if( goodncolA && goodncolB && goodncolC )
+		    htridxcg[itd].Fill( dxm*1E3 ); // 
 
-		if( goodncolA && goodncolB && goodncolC )
-		  htridxcg[itd].Fill( dxm*1E3 ); // 
+		} // slpx
 
 	      } // dy
 
-	      if( fabs( dxm ) < 0.02 ) {
+	      if( fabs( dxm ) < tricut ) {
 
 		htridyc[itd].Fill( dym*1E3 );
 		if( iso ) htridyci[itd].Fill( dym*1E3 );
-		tridyvsx[itd].Fill( xm, dym*1E3 );
-		tridyvsy[itd].Fill( ym, dym*1E3 );
+		tridyvsx[itd].Fill( xr, dym*1E3 );
+		tridyvsy[itd].Fill( yr, dym*1E3 );
 		tridyvsym[itd].Fill( ymod2*1E3, dym*1E3 );
 		trimadyvsym[itd].Fill( ymod2*1E3, fabs(dym)*1E3 );
 		trimadyvsxmym[itd]->Fill( xmod2*1E3, ymod2*1E3, fabs(dym)*1E3 );
 		tridyvsty[itd].Fill( slpy*1E3, dym*1E3 );
 		trimadyvsty[itd].Fill( slpy*1E3, fabs(dym)*1E3 ); // U-shape
-		if( fabs( slpy < 0.001 ) )
+		if( fabs( slpy ) < 0.001 )
 		  htridyct[itd].Fill( dym*1E3 );
 
 		if(      nrowB == 1 )
@@ -2213,20 +2251,23 @@ int main( int argc, char* argv[] )
 
 	      }
 
-	      if( fabs( dxm ) < 0.020 && fabs( dym ) < 0.020 ) { // for tight z spacing
+	      // cut x and y:
+
+	      if( fabs( dxm ) < tricut &&
+		  fabs( dym ) < tricut ) {
+
+		htrincol[itd].Fill( ncolB );
+		htrinrow[itd].Fill( nrowB );
+		htrinpix[itd].Fill( npixB );
 
 		tridxvsxmym[itd]->Fill( xmod2*1E3, ymod2*1E3, dxm * 1E3 );
 		tridyvsxmym[itd]->Fill( xmod2*1E3, ymod2*1E3, dym * 1E3 );
-		tridxvsdy[itd]->Fill( dxm*1E3, dym*1E3 ); // correlated residuals? no
+		tridxdy[itd]->Fill( dxm*1E3, dym*1E3 ); // correlated residuals? no
 		tridxycvsxmym[itd]->Fill( xmod2*1E3, ymod2*1E3, dxm * dym * 1E6 ); // correlation map
 		tridxyvsxmym[itd]->Fill( xmod2*1E3, ymod2*1E3, ( dxm + dym ) * 1E3 ); // shift
 		tridxy2vsxmym[itd]->Fill( xmod2*1E3, ymod2*1E3, ( dxm*dxm + dym*dym ) * 1E6 ); // resolution
 
-	      }
-
-	      // store triplets:
-
-	      if( fabs( dxm ) < tricut && fabs( dym ) < tricut ) {
+		// store triplets:
 
 		triplet tri;
 		tri.xm = xavg2;
@@ -2257,10 +2298,6 @@ int main( int argc, char* argv[] )
 		htrixy[itd]->Fill( xavg2, yavg2 );
 		htritx[itd].Fill( slpx*1E3 );
 		htrity[itd].Fill( slpy*1E3 );
-
-		htrincol[itd].Fill( ncolB );
-		htrinrow[itd].Fill( nrowB );
-		htrinpix[itd].Fill( npixB );
 
 		htrixmod[itd].Fill( xmod2*1E3 );
 		if(      ncolB == 1 )
@@ -2310,7 +2347,7 @@ int main( int argc, char* argv[] )
       } // triplets and driplets
 
       hntri.Fill( triplets.size() );
-      ntrivsev.Fill( nev, triplets.size() );
+      ntrivsev.Fill( iev, triplets.size() );
       hndri.Fill( driplets.size() );
 
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2417,7 +2454,9 @@ int main( int argc, char* argv[] )
       } // driplets
 
       // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      // match triplets and driplets, measure offset
+      // match triplets and driplets, measure kink angles
+
+      double sixcut = 0.025*ff; // [mm]
 
       for( unsigned int iA = 0; iA < triplets.size(); ++iA ) { // i = A = upstream
 
@@ -2459,7 +2498,7 @@ int main( int argc, char* argv[] )
 	  hsixdx.Fill( dx ); // for align fit
 	  hsixdy.Fill( dy ); // for align fit
 
-	  if( fabs(dy) < 0.100 ) {
+	  if( fabs(dy) < sixcut ) {
 
 	    hsixdxc.Fill( dx*1E3 );
 
@@ -2475,7 +2514,7 @@ int main( int argc, char* argv[] )
 
 	  } // dy
 
-	  if( fabs(dx) < 0.100 ) {
+	  if( fabs(dx) < sixcut ) {
 
 	    hsixdyc.Fill( dy*1E3 );
 
@@ -2491,15 +2530,30 @@ int main( int argc, char* argv[] )
 
 	  // compare slopes:
 
-	  if( fabs(dy) < 0.100 && fabs(dx) < 0.100 ) {
+	  if( fabs(dy) < sixcut && fabs(dx) < sixcut ) {
 
 	    hsixxy->Fill( xA, yA );
 	    sixdxyvsxy->Fill( xA, yA, dxy );
 
-	    hsixdtx.Fill( dtx*1E3 );
-	    hsixdty.Fill( dty*1E3 );
-	    sixdtvsx.Fill( xA, dtxy );
-	    sixdtvsxy->Fill( xA, yA, dtxy );
+	    if( xA > -8.6 && xA < 7.4 ) {
+	      sixdtxvsy.Fill( yA, dtx*1E3 );
+	      sixdtyvsy.Fill( yA, dty*1E3 );
+	      sixdtvsy.Fill( yA, dtxy*1E3 );
+	    }
+
+	    if( yA > -4.6 && yA < 5.1 ) {
+	      sixdtxvsx.Fill( xA, dtx*1E3 );
+	      sixdtyvsx.Fill( xA, dty*1E3 );
+	      sixdtvsx.Fill( xA, dtxy*1E3 );
+	    }
+
+	    if( xA > -8.6 && xA < 7.4 &&
+		yA > -4.6 && yA < 5.1 ) {
+	      hsixdtx.Fill( dtx*1E3 );
+	      hsixdty.Fill( dty*1E3 );
+	    }
+
+	    sixdtvsxy->Fill( xA, yA, dtxy*1E3 );
 
 	  } // match
 
@@ -2538,95 +2592,205 @@ int main( int argc, char* argv[] )
 
     cout << endl << "alignment fits:" << endl;
 
-    for( int ipl = 0; ipl <= 5; ++ipl ) {
+    if( aligniteration < 3 ) {
 
-      double nb = hdx[ipl].GetNbinsX();
-      double ne = hdx[ipl].GetSumOfWeights();
-      double nm = hdx[ipl].GetMaximum();
+      for( int ipl = 0; ipl <= 5; ++ipl ) {
 
-      cout << endl << hdx[ipl].GetTitle() << endl;
-      if( nm < 99 ) {
-	cout << "  peak " << nm << " not enough" << endl;
-	continue;
-      }
+	double nb = hdx[ipl].GetNbinsX();
+	double ne = hdx[ipl].GetSumOfWeights();
+	double nm = hdx[ipl].GetMaximum();
 
-      cout << "  Inside  " << ne << " (" << ne/nb << " per bin)" << endl;
-      cout << "  Maximum " << nm << " (factor " << nm/ne*nb << " above mean)" << endl;
-      cout << "  at " << hdx[ipl].GetBinCenter( hdx[ipl].GetMaximumBin() )
-	   << endl;
+	cout << endl << hdx[ipl].GetTitle() << endl;
+	if( nm < 99 ) {
+	  cout << "  peak " << nm << " not enough" << endl;
+	  continue;
+	}
 
-      TF1 * fgp0x = new TF1( "fgp0x", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", -1, 1 );
-      fgp0x->SetParameter( 0, nm ); // amplitude
-      fgp0x->SetParameter( 1, hdx[ipl].GetBinCenter( hdx[ipl].GetMaximumBin() ) );
-      fgp0x->SetParameter( 2, 0.05 ); // sigma
-      fgp0x->SetParameter( 3, hdx[ipl].GetBinContent(1) ); // BG
-      hdx[ipl].Fit( "fgp0x", "q" );
-      cout << "Fit Gauss + BG:"
-	   << endl << "  A " << fgp0x->GetParameter(0)
-	   << endl << "mid " << fgp0x->GetParameter(1)
-	   << endl << "sig " << fgp0x->GetParameter(2)
-	   << endl << " BG " << fgp0x->GetParameter(3)
-	   << endl;
+	double fwhmx = GetFWHM( hdx[ipl] );
+	double xm = hdx[ipl].GetBinCenter( hdx[ipl].GetMaximumBin() );
+	cout << "  Inside  " << ne << " (" << ne/nb << " per bin)" << endl;
+	cout << "  Maximum " << nm << " (factor " << nm/ne*nb << " above mean)" << endl;
+	cout << "  at " << xm << endl;
+	cout << "  fwhm " << fwhmx << endl;
 
-      alignx[ipl] += fgp0x->GetParameter(1);
-
-      // dy:
-
-      nb = hdy[ipl].GetNbinsX();
-      ne = hdy[ipl].GetSumOfWeights();
-      nm = hdy[ipl].GetMaximum();
-      cout << endl << hdy[ipl].GetTitle() << endl;
-      cout << "  Inside  " << ne << " (" << ne/nb << " per bin)" << endl;
-      cout << "  Maximum " << nm << " (factor " << nm/ne*nb << " above mean)" << endl;
-      cout << "  at " << hdy[ipl].GetBinCenter( hdy[ipl].GetMaximumBin() )
-	   << endl;
-
-      TF1 * fgp0y = new TF1( "fgp0y", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", -1, 1 );
-      fgp0y->SetParameter( 0, nm ); // amplitude
-      fgp0y->SetParameter( 1, hdy[ipl].GetBinCenter( hdy[ipl].GetMaximumBin() ) );
-      fgp0y->SetParameter( 2, 0.05 ); // sigma
-      fgp0y->SetParameter( 3, hdy[ipl].GetBinContent(1) ); // BG
-      hdy[ipl].Fit( "fgp0y", "q" );
-      cout << "Fit Gauss + BG:"
-	   << endl << "  A " << fgp0y->GetParameter(0)
-	   << endl << "mid " << fgp0y->GetParameter(1)
-	   << endl << "sig " << fgp0y->GetParameter(2)
-	   << endl << " BG " << fgp0y->GetParameter(3)
-	   << endl;
-
-      aligny[ipl] += fgp0y->GetParameter(1);
-
-      // x-y rotation:
-
-      if( aligniteration >= 1 && dyvsx[ipl].GetEntries() > 999 ) {
-
-	dyvsx[ipl].Fit( "pol1", "q", "", -midx[ipl], midx[ipl] );
-	TF1 * fdyvsx = dyvsx[ipl].GetFunction( "pol1" );
-	cout << endl << dyvsx[ipl].GetTitle()
-	     << " slope " << fdyvsx->GetParameter(1)
-	     << " = rot"
+	TF1 * fgp0x = new TF1( "fgp0x", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", xm-fwhmx, xm+fwhmx );
+	fgp0x->SetParameter( 0, nm ); // amplitude
+	fgp0x->SetParameter( 1, xm );
+	fgp0x->SetParameter( 2, 0.5*fwhmx ); // sigma
+	fgp0x->SetParameter( 3, hdx[ipl].GetBinContent(1) ); // BG
+	hdx[ipl].Fit( "fgp0x", "qr" );
+	cout << "Fit Gauss + BG:"
+	     << endl << "  A " << fgp0x->GetParameter(0)
+	     << endl << "mid " << fgp0x->GetParameter(1) << " mm"
+	     << endl << "sig " << fgp0x->GetParameter(2) << " mm"
+	     << endl << " BG " << fgp0x->GetParameter(3)
 	     << endl;
-	roty[ipl] -= fdyvsx->GetParameter(1); // sign
 
-      }
+	alignx[ipl] += fgp0x->GetParameter(1);
 
-      if( aligniteration >= 1 && dxvsy[ipl].GetEntries() > 999 ) {
+	delete fgp0x;
 
-	dxvsy[ipl].Fit( "pol1", "q", "", -midy[ipl], midy[ipl] );
-	TF1 * fdxvsy = dxvsy[ipl].GetFunction( "pol1" );
-	cout << endl << dxvsy[ipl].GetTitle()
+	// dy:
+
+	nb = hdy[ipl].GetNbinsX();
+	ne = hdy[ipl].GetSumOfWeights();
+	nm = hdy[ipl].GetMaximum();
+	double fwhmy = GetFWHM( hdy[ipl] );
+	double ym = hdy[ipl].GetBinCenter( hdy[ipl].GetMaximumBin() );
+
+	cout << endl << hdy[ipl].GetTitle() << endl;
+	cout << "  Inside  " << ne << " (" << ne/nb << " per bin)" << endl;
+	cout << "  Maximum " << nm << " (factor " << nm/ne*nb << " above mean)" << endl;
+	cout << "  at " << ym << endl;
+	cout << "  fwhm " << fwhmy << endl;
+
+	TF1 * fgp0y = new TF1( "fgp0y", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", ym-fwhmy, ym+fwhmy );
+	fgp0y->SetParameter( 0, nm ); // amplitude
+	fgp0y->SetParameter( 1, ym );
+	fgp0y->SetParameter( 2, 0.5*fwhmy ); // sigma
+	fgp0y->SetParameter( 3, hdy[ipl].GetBinContent(1) ); // BG
+	hdy[ipl].Fit( "fgp0y", "qr" );
+	cout << "Fit Gauss + BG:"
+	     << endl << "  A " << fgp0y->GetParameter(0)
+	     << endl << "mid " << fgp0y->GetParameter(1) << " mm"
+	     << endl << "sig " << fgp0y->GetParameter(2) << " mm"
+	     << endl << " BG " << fgp0y->GetParameter(3)
+	     << endl;
+
+	aligny[ipl] += fgp0y->GetParameter(1);
+
+	delete fgp0y;
+
+	// x-y rotation:
+
+	if( aligniteration >= 1 && dxvsy[ipl].GetEntries() > 999 ) {
+
+	  dxvsy[ipl].Fit( "pol1", "q", "", -midy[ipl], midy[ipl] );
+	  TF1 * fdxvsy = dxvsy[ipl].GetFunction( "pol1" );
+	  cout << endl << dxvsy[ipl].GetTitle()
+	       << " slope " << fdxvsy->GetParameter(1)
+	       << " = rotx"
+	       << endl;
+	  rotx[ipl] += fdxvsy->GetParameter(1);
+
+	}
+
+	if( aligniteration >= 1 && dyvsx[ipl].GetEntries() > 999 ) {
+
+	  dyvsx[ipl].Fit( "pol1", "q", "", -midx[ipl], midx[ipl] );
+	  TF1 * fdyvsx = dyvsx[ipl].GetFunction( "pol1" );
+	  cout << endl << dyvsx[ipl].GetTitle()
+	       << " slope " << fdyvsx->GetParameter(1)
+	       << " = roty"
+	       << endl;
+	  roty[ipl] -= fdyvsx->GetParameter(1); // sign
+
+	}
+
+      } // ipl
+
+    } // iter
+
+    // tridx:
+
+    if( aligniteration >= 3 && htridx[1].GetMaximum() > 99 ) {
+
+      for( int itd = 0; itd < 2; ++itd ) { // triplets 0-1-2 and driplets 3-4-5
+
+	int ib = 0;
+	int im = 1; // mid plane triplet
+	int ie = 2;
+	if( itd == 1 ) {
+	  ib = 3;
+	  im = 4; // mid plane driplet
+	  ie = 5;
+	}
+
+	double nb = htridxc[itd].GetNbinsX();
+	double ne = htridxc[itd].GetSumOfWeights();
+	double nm = htridxc[itd].GetMaximum();
+	double fwhmx = GetFWHM( htridxc[itd] );
+	double xm = htridxc[itd].GetBinCenter( htridxc[itd].GetMaximumBin() );
+	cout << endl << htridxc[itd].GetTitle() << endl;
+	cout << "  Inside  " << ne << " (" << ne/nb << " per bin)" << endl;
+	cout << "  Maximum " << nm << " (factor " << nm/ne*nb << " above mean)" << endl;
+	cout << "  at " << xm << endl;
+	cout << "  fwhm " << fwhmx << endl;
+
+	TF1 * fgp0x = new TF1( "fgp0x", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", xm-fwhmx, xm+fwhmx );
+	fgp0x->SetParameter( 0, nm ); // amplitude
+	fgp0x->SetParameter( 1, xm );
+	fgp0x->SetParameter( 2, 0.5*fwhmx ); // sigma
+	fgp0x->SetParameter( 3, htridxc[itd].GetBinContent(1) ); // BG
+	htridxc[itd].Fit( "fgp0x", "qr" );
+	cout << "Fit Gauss + BG:"
+	     << endl << "  A " << fgp0x->GetParameter(0)
+	     << endl << "mid " << fgp0x->GetParameter(1) << " um"
+	     << endl << "sig " << fgp0x->GetParameter(2) << " um"
+	     << endl << " BG " << fgp0x->GetParameter(3)
+	     << endl;
+
+	alignx[ib] -= 0.5*fgp0x->GetParameter(1)*1E-3; // um -> mm
+	alignx[ie] -= 0.5*fgp0x->GetParameter(1)*1E-3;
+
+	// dy:
+
+	nb = htridyc[itd].GetNbinsX();
+	ne = htridyc[itd].GetSumOfWeights();
+	nm = htridyc[itd].GetMaximum();
+	double fwhmy = GetFWHM( htridyc[itd] );
+	double ym = htridyc[itd].GetBinCenter( htridyc[itd].GetMaximumBin() );
+	cout << endl << htridyc[itd].GetTitle() << endl;
+	cout << "  Inside  " << ne << " (" << ne/nb << " per bin)" << endl;
+	cout << "  Maximum " << nm << " (factor " << nm/ne*nb << " above mean)" << endl;
+	cout << "  at " << ym << endl;
+	cout << "  fwhm " << fwhmy << endl;
+
+	TF1 * fgp0y = new TF1( "fgp0y", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", ym-fwhmy, ym+fwhmy );
+	fgp0y->SetParameter( 0, nm ); // amplitude
+	fgp0y->SetParameter( 1, ym );
+	fgp0y->SetParameter( 2, 0.5*fwhmy ); // sigma
+	fgp0y->SetParameter( 3, htridyc[itd].GetBinContent(1) ); // BG
+	htridyc[itd].Fit( "fgp0y", "qr" );
+	cout << "Fit Gauss + BG:"
+	     << endl << "  A " << fgp0y->GetParameter(0)
+	     << endl << "mid " << fgp0y->GetParameter(1) << " um"
+	     << endl << "sig " << fgp0y->GetParameter(2) << " um"
+	     << endl << " BG " << fgp0y->GetParameter(3)
+	     << endl;
+
+	// update:
+
+	aligny[ib] -= 0.5*fgp0y->GetParameter(1)*1E-3; // um -> mm
+	aligny[ie] -= 0.5*fgp0y->GetParameter(1)*1E-3;
+
+	// x-y rotation:
+
+	tridxvsy[itd].Fit( "pol1", "q", "", -midy[im], midy[im] );
+	TF1 * fdxvsy = tridxvsy[itd].GetFunction( "pol1" );
+	cout << endl << tridxvsy[itd].GetTitle()
 	     << " slope " << fdxvsy->GetParameter(1)
-	     << " = rot"
+	     << " = mrad rot"
 	     << endl;
-	rotx[ipl] += fdxvsy->GetParameter(1);
+	rotx[ib] -= 0.5*fdxvsy->GetParameter(1)*1E-3;
+	rotx[ie] -= 0.5*fdxvsy->GetParameter(1)*1E-3;
 
-      }
+	tridyvsx[itd].Fit( "pol1", "q", "", -midx[im], midx[im] );
+	TF1 * fdyvsx = tridyvsx[itd].GetFunction( "pol1" );
+	cout << endl << tridyvsx[itd].GetTitle()
+	     << " slope " << fdyvsx->GetParameter(1)
+	     << " = mrad rot"
+	     << endl;
+	roty[ib] += 0.5*fdyvsx->GetParameter(1)*1E-3;
+	roty[ie] += 0.5*fdyvsx->GetParameter(1)*1E-3;
 
-    } // ipl
+      } // itd
+
+    } // aligniteration
 
     // z-shift:
 
-    if( aligniteration >= 3 ) {
+    if( aligniteration >= 4 ) {
 
       for( int itd = 0; itd < 2; ++itd ) { // upstream and downstream
 
@@ -2672,28 +2836,30 @@ int main( int argc, char* argv[] )
 
     // driplet vs triplet:
 
-    if( aligniteration >= 4 && hsixdx.GetMaximum() > 99 ) {
+    if( aligniteration >= 5 && hsixdx.GetMaximum() > 99 ) {
 
       double nb = hsixdx.GetNbinsX();
       double ne = hsixdx.GetSumOfWeights();
       double nm = hsixdx.GetMaximum();
+      double fwhmx = GetFWHM( hsixdx );
+      double xm = hsixdx.GetBinCenter( hsixdx.GetMaximumBin() );
 
       cout << endl << hsixdx.GetTitle() << endl;
       cout << "  Inside  " << ne << " (" << ne/nb << " per bin)" << endl;
       cout << "  Maximum " << nm << " (factor " << nm/ne*nb << " above mean)" << endl;
-      cout << "  at " << hsixdx.GetBinCenter( hsixdx.GetMaximumBin() )
-	   << endl;
+      cout << "  at " << xm << endl;
+      cout << "  fwhm " << fwhmx << endl;
 
-      TF1 * fgp0x = new TF1( "fgp0x", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", -1, 1 );
+      TF1 * fgp0x = new TF1( "fgp0x", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", xm-fwhmx, xm+fwhmx );
       fgp0x->SetParameter( 0, nm ); // amplitude
-      fgp0x->SetParameter( 1, hsixdx.GetBinCenter( hsixdx.GetMaximumBin() ) );
-      fgp0x->SetParameter( 2, 0.05 ); // sigma
+      fgp0x->SetParameter( 1, xm );
+      fgp0x->SetParameter( 2, 0.5*fwhmx ); // sigma
       fgp0x->SetParameter( 3, hsixdx.GetBinContent(1) ); // BG
-      hsixdx.Fit( "fgp0x", "q" );
+      hsixdx.Fit( "fgp0x", "qr" );
       cout << "Fit Gauss + BG:"
 	   << endl << "  A " << fgp0x->GetParameter(0)
-	   << endl << "mid " << fgp0x->GetParameter(1)
-	   << endl << "sig " << fgp0x->GetParameter(2)
+	   << endl << "mid " << fgp0x->GetParameter(1)*1E3 << " um"
+	   << endl << "sig " << fgp0x->GetParameter(2)*1E3 << " um"
 	   << endl << " BG " << fgp0x->GetParameter(3)
 	   << endl;
 
@@ -2702,35 +2868,41 @@ int main( int argc, char* argv[] )
       nb = hsixdy.GetNbinsX();
       ne = hsixdy.GetSumOfWeights();
       nm = hsixdy.GetMaximum();
+      double fwhmy = GetFWHM( hsixdy );
+      double ym = hsixdy.GetBinCenter( hsixdy.GetMaximumBin() );
+
       cout << endl << hsixdy.GetTitle() << endl;
       cout << "  Inside  " << ne << " (" << ne/nb << " per bin)" << endl;
       cout << "  Maximum " << nm << " (factor " << nm/ne*nb << " above mean)" << endl;
-      cout << "  at " << hsixdy.GetBinCenter( hsixdy.GetMaximumBin() )
-	   << endl;
+      cout << "  at " << ym << endl;
+      cout << "  fwhm " << fwhmy << endl;
 
-      TF1 * fgp0y = new TF1( "fgp0y", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", -1, 1 );
+      TF1 * fgp0y = new TF1( "fgp0y", "[0]*exp(-0.5*((x-[1])/[2])^2)+[3]", ym-fwhmy, ym+fwhmy );
       fgp0y->SetParameter( 0, nm ); // amplitude
-      fgp0y->SetParameter( 1, hsixdy.GetBinCenter( hsixdy.GetMaximumBin() ) );
-      fgp0y->SetParameter( 2, 0.05 ); // sigma
+      fgp0y->SetParameter( 1, ym );
+      fgp0y->SetParameter( 2, 0.5*fwhmy ); // sigma
       fgp0y->SetParameter( 3, hsixdy.GetBinContent(1) ); // BG
-      hsixdy.Fit( "fgp0y", "q" );
+      hsixdy.Fit( "fgp0y", "qr" );
       cout << "Fit Gauss + BG:"
 	   << endl << "  A " << fgp0y->GetParameter(0)
-	   << endl << "mid " << fgp0y->GetParameter(1)
-	   << endl << "sig " << fgp0y->GetParameter(2)
+	   << endl << "mid " << fgp0y->GetParameter(1)*1E3 << " um"
+	   << endl << "sig " << fgp0y->GetParameter(2)*1E3 << " um"
 	   << endl << " BG " << fgp0y->GetParameter(3)
 	   << endl;
 
       // update driplet planes:
 
       for( int ipl = 3; ipl <= 5; ++ipl ) {
-	alignx[ipl] += fgp0x->GetParameter(1);
+	alignx[ipl] += fgp0x->GetParameter(1); // [mm]
 	aligny[ipl] += fgp0y->GetParameter(1);
       }
 
+      delete fgp0x;
+      delete fgp0y;
+
     } // aligniteration
 
-    if( aligniteration >= 5 && hsixdx.GetMaximum() > 99 ) {
+    if( aligniteration >= 6 && hsixdx.GetMaximum() > 99 ) {
 
       // x-y rotation from profiles:
 
@@ -2739,9 +2911,9 @@ int main( int argc, char* argv[] )
 	TF1 * fdxvsy = sixdxvsy.GetFunction( "pol1" );
 	cout << endl << sixdxvsy.GetTitle()
 	     << " slope " << fdxvsy->GetParameter(1)
-	     << " mu/mm" << endl;
+	     << " mu/mm rotx" << endl;
 	for( int ipl = 3; ipl <= 5; ++ipl )
-	  rotx[ipl] += fdxvsy->GetParameter(1)*1E-3;
+	  rotx[ipl] += fdxvsy->GetParameter(1)*1E-3; // um -> mm
       }
 
       if( sixdyvsx.GetEntries() > 999 ) {
@@ -2749,16 +2921,16 @@ int main( int argc, char* argv[] )
 	TF1 * fdyvsx = sixdyvsx.GetFunction( "pol1" );
 	cout << endl << sixdyvsx.GetTitle()
 	     << " slope " << fdyvsx->GetParameter(1)
-	     << " mu/mm" << endl;
+	     << " mu/mm roty" << endl;
 	for( int ipl = 3; ipl <= 5; ++ipl )
 	  roty[ipl] -= fdyvsx->GetParameter(1)*1E-3; // sign
       }
 
     } // aligniteration
 
-      // dz from dx vs tx:
+    // dz from dx vs tx:
 
-    if( aligniteration >= 6 && sixdxvstx.GetEntries() > 999 ) {
+    if( aligniteration >= 7 && sixdxvstx.GetEntries() > 999 ) {
 
       sixdxvstx.Fit( "pol1", "q", "", -1, 1 ); // [mu/mrad]
       TF1 * f1 = sixdxvstx.GetFunction( "pol1" );
@@ -2776,30 +2948,34 @@ int main( int argc, char* argv[] )
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // write alignment to file:
 
-  ofstream alignFile( alignFileName.str() );
+  if( mom > 2.7 ) {
 
-  alignFile << "# telescope alignment for run " << run << endl;
+    ofstream alignFile( alignFileName.str() );
 
-  alignFile << "iteration " << aligniteration << endl;
+    alignFile << "# telescope alignment for run " << run << endl;
 
-  for( int ipl = 0; ipl <= 5; ++ipl ) {
-    alignFile << endl;
-    alignFile << "plane " << ipl << endl;
-    alignFile << "shiftx " << alignx[ipl] << endl;
-    alignFile << "shifty " << aligny[ipl] << endl;
-    alignFile << "shiftz " << alignz[ipl] << endl;
-    alignFile << "rotxvsy " << rotx[ipl] << endl;
-    alignFile << "rotyvsx " << roty[ipl] << endl;
-  } // ipl
+    alignFile << "iteration " << aligniteration << endl;
 
-  alignFile.close();
+    for( int ipl = 0; ipl <= 5; ++ipl ) {
+      alignFile << endl;
+      alignFile << "plane " << ipl << endl;
+      alignFile << "shiftx " << alignx[ipl] << endl;
+      alignFile << "shifty " << aligny[ipl] << endl;
+      alignFile << "shiftz " << alignz[ipl] << endl;
+      alignFile << "rotxvsy " << rotx[ipl] << endl;
+      alignFile << "rotyvsx " << roty[ipl] << endl;
+    } // ipl
 
-  cout << endl
-       << "wrote telescope alignment iteration " << aligniteration
-       << " to " << alignFileName.str()
-       << endl;
-  if( aligniteration <= 7 )
-    cout << endl << "need more align iterations: please run again!" << endl;
+    alignFile.close();
+
+    cout << endl
+	 << "wrote telescope alignment iteration " << aligniteration
+	 << " to " << alignFileName.str()
+	 << endl;
+    if( aligniteration <= 8 )
+      cout << endl << "need more align iterations: please run again!" << endl;
+
+  } // high p
 
   cout << endl << histoFile->GetName() << endl;
 
